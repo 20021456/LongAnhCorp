@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Phân quyền · Long Anh Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="admin-shell.jsx"></script>
+<script type="text/babel">
+  const style = document.createElement('style');
+  style.textContent = ADMIN_GLOBAL_CSS + `
+    .rl-tabs { display:flex; gap:0; border-bottom:1px solid var(--ad-line); margin-bottom:24px; }
+    .rl-tab { padding:11px 18px; font-size:13.5px; font-weight:500; cursor:pointer;
+          color:var(--ad-text-soft); border-bottom:2px solid transparent; margin-bottom:-1px;
+          display:flex; align-items:center; gap:8px; }
+    .rl-tab.on { color:var(--ad-primary); border-color:var(--ad-primary); font-weight:600; }
+    .rl-tab .badge { background:var(--ad-line-soft); color:var(--ad-text-soft);
+          font-size:11px; font-weight:600; padding:2px 7px; border-radius:99px; }
+    .rl-tab.on .badge { background:var(--ad-primary-soft); color:var(--ad-primary); }
+
+    .rl-roles { display:grid; grid-template-columns:repeat(4, 1fr); gap:14px;
+          margin-bottom:24px; }
+    .rl-role { background:#fff; border:1px solid var(--ad-line); border-radius:10px;
+          padding:16px 18px; cursor:pointer; transition:.15s; position:relative; }
+    .rl-role:hover { border-color:#cdd2da; box-shadow:var(--ad-shadow); }
+    .rl-role.on { border-color:var(--ad-primary); box-shadow:0 0 0 3px var(--ad-primary-soft); }
+    .rl-role .ico { width:34px; height:34px; border-radius:8px; display:flex;
+          align-items:center; justify-content:center; margin-bottom:10px; flex:none; }
+    .rl-role h4 { margin:0; font-size:14.5px; font-weight:600; }
+    .rl-role p { margin:3px 0 10px; font-size:12.5px; color:var(--ad-text-mute);
+          line-height:1.45; min-height:34px; }
+    .rl-role .meta { display:flex; align-items:center; justify-content:space-between;
+          font-size:11.5px; color:var(--ad-text-soft); padding-top:10px;
+          border-top:1px solid var(--ad-line-soft); }
+    .rl-role .lock { position:absolute; top:14px; right:14px; color:var(--ad-text-mute); }
+
+    .rl-matrix { background:#fff; border:1px solid var(--ad-line);
+          border-radius:10px; overflow:hidden; }
+    .rl-matrix-head { display:flex; align-items:center; gap:14px; padding:14px 18px;
+          border-bottom:1px solid var(--ad-line-soft); }
+    .rl-matrix-head h3 { margin:0; font-size:15px; font-weight:600; flex:1; }
+    .rl-matrix table { width:100%; border-collapse:collapse; font-size:13px; }
+    .rl-matrix th, .rl-matrix td { padding:11px 14px; text-align:left;
+          border-bottom:1px solid var(--ad-line-soft); }
+    .rl-matrix th { font-size:11px; font-weight:600; color:var(--ad-text-mute);
+          letter-spacing:.05em; text-transform:uppercase; background:#FAFAFB; }
+    .rl-matrix th.col, .rl-matrix td.col { text-align:center; width:90px; }
+    .rl-matrix tr:last-child td { border-bottom:0; }
+    .rl-matrix .module { font-weight:600; }
+    .rl-matrix .group-row td { background:#F4F5F7; font-weight:600; font-size:11.5px;
+          color:var(--ad-text-mute); letter-spacing:.05em; text-transform:uppercase;
+          padding:8px 14px; }
+
+    .rl-toggle { width:34px; height:20px; background:var(--ad-line); border-radius:99px;
+          position:relative; cursor:pointer; transition:.15s; display:inline-block;
+          vertical-align:middle; }
+    .rl-toggle::after { content:''; position:absolute; top:2px; left:2px; width:16px;
+          height:16px; background:#fff; border-radius:50%; transition:.18s;
+          box-shadow:0 1px 2px rgba(0,0,0,.2); }
+    .rl-toggle.on { background:var(--ad-primary); }
+    .rl-toggle.on::after { left:16px; }
+    .rl-toggle.dis { opacity:.4; cursor:not-allowed; }
+    .rl-toggle.dis.on { background:var(--ad-text-mute); }
+
+    .rl-perm-set { display:flex; gap:6px; justify-content:center; }
+    .rl-pill { font-size:10.5px; padding:3px 8px; border-radius:99px;
+          font-weight:600; letter-spacing:.03em; text-transform:uppercase; }
+    .rl-pill.r { background:#E0F2FE; color:#075985; }
+    .rl-pill.w { background:#DCFCE7; color:#166534; }
+    .rl-pill.d { background:#FEE2E2; color:#991B1B; }
+    .rl-pill.no { background:var(--ad-line-soft); color:var(--ad-text-mute); }
+
+    .rl-members table img.av { width:32px; height:32px; border-radius:50%; }
+    .rl-av { width:32px; height:32px; border-radius:50%; display:inline-flex;
+          align-items:center; justify-content:center; color:#fff; font-weight:600;
+          font-size:12px; flex:none; }
+  `;
+  document.head.appendChild(style);
+
+  const ROLES = [
+    { id: 'owner', name: 'Chủ sở hữu', desc: 'Toàn quyền hệ thống. Không thể bị xóa hoặc chỉnh sửa quyền.', members: 1, color: '#7C2D12', bg: '#FEF3C7', icon: 'star', locked: true },
+    { id: 'admin', name: 'Quản trị viên', desc: 'Quản lý toàn bộ nội dung, sản phẩm, người dùng.', members: 2, color: '#0F3D7A', bg: '#E8EFF8', icon: 'shield' },
+    { id: 'editor', name: 'Biên tập viên', desc: 'Tạo và chỉnh sửa nội dung, sản phẩm. Không quản trị người dùng.', members: 4, color: '#15803D', bg: '#DCFCE7', icon: 'edit' },
+    { id: 'viewer', name: 'Chỉ xem', desc: 'Chỉ xem dữ liệu, không thể chỉnh sửa hay xuất bản.', members: 3, color: '#475569', bg: '#F1F5F9', icon: 'eye' },
+  ];
+
+  const PERM_GROUPS = [
+    { name: 'Nội dung', items: [
+      { mod: 'Trang', desc: 'Trang chủ, Giới thiệu, Liên hệ…' },
+      { mod: 'Sản phẩm', desc: 'Danh sách & form chi tiết' },
+      { mod: 'Tin tức', desc: 'Bài viết & danh mục' },
+      { mod: 'Gallery', desc: 'Thư viện ảnh chung' },
+    ]},
+    { name: 'Tương tác', items: [
+      { mod: 'Liên hệ', desc: 'Form submissions từ website' },
+      { mod: 'Đăng ký nhận tin', desc: 'Email subscribers' },
+    ]},
+    { name: 'Cấu hình', items: [
+      { mod: 'Cài đặt site', desc: 'Thương hiệu, liên hệ, social' },
+      { mod: 'Menu & Ngôn ngữ', desc: 'Menu nav, multi-language' },
+      { mod: 'SEO mặc định', desc: 'Meta tags, robots.txt' },
+    ]},
+    { name: 'Hệ thống', items: [
+      { mod: 'Phân quyền', desc: 'Quản lý vai trò & người dùng' },
+      { mod: 'Audit log', desc: 'Nhật ký truy cập' },
+    ]},
+  ];
+
+  // role -> { module: [r,w,p,d] }
+  const PERMS = {
+    owner: { all: [true, true, true, true] },
+    admin: {
+      'Trang': [true, true, true, true], 'Sản phẩm': [true, true, true, true],
+      'Tin tức': [true, true, true, true], 'Gallery': [true, true, true, true],
+      'Liên hệ': [true, true, true, true], 'Đăng ký nhận tin': [true, true, true, true],
+      'Cài đặt site': [true, true, true, false], 'Menu & Ngôn ngữ': [true, true, true, false],
+      'SEO mặc định': [true, true, true, false],
+      'Phân quyền': [true, true, false, false], 'Audit log': [true, false, false, false],
+    },
+    editor: {
+      'Trang': [true, true, false, false], 'Sản phẩm': [true, true, true, false],
+      'Tin tức': [true, true, true, true], 'Gallery': [true, true, false, true],
+      'Liên hệ': [true, false, false, false], 'Đăng ký nhận tin': [true, false, false, false],
+      'Cài đặt site': [true, false, false, false], 'Menu & Ngôn ngữ': [true, false, false, false],
+      'SEO mặc định': [true, true, false, false],
+      'Phân quyền': [false, false, false, false], 'Audit log': [false, false, false, false],
+    },
+    viewer: {
+      'Trang': [true, false, false, false], 'Sản phẩm': [true, false, false, false],
+      'Tin tức': [true, false, false, false], 'Gallery': [true, false, false, false],
+      'Liên hệ': [true, false, false, false], 'Đăng ký nhận tin': [true, false, false, false],
+      'Cài đặt site': [true, false, false, false], 'Menu & Ngôn ngữ': [true, false, false, false],
+      'SEO mặc định': [true, false, false, false],
+      'Phân quyền': [false, false, false, false], 'Audit log': [true, false, false, false],
+    },
+  };
+
+  const MEMBERS = [
+    { name: 'Anh Nam', email: 'nam@long-anh.com', role: 'owner', initials: 'AN', color: '#0F3D7A', last: 'Đang online', joined: '01/2010', mfa: true },
+    { name: 'Lê Hùng', email: 'hung@long-anh.com', role: 'admin', initials: 'LH', color: '#C8A24B', last: '14:32 hôm nay', joined: '03/2018', mfa: true },
+    { name: 'Phan Mai', email: 'mai@long-anh.com', role: 'admin', initials: 'PM', color: '#15803D', last: '12:10 hôm nay', joined: '06/2020', mfa: false },
+    { name: 'Trần Linh', email: 'linh@long-anh.com', role: 'editor', initials: 'TL', color: '#7C3AED', last: '2 giờ trước', joined: '02/2022', mfa: true },
+    { name: 'Đỗ Huy', email: 'huy@long-anh.com', role: 'editor', initials: 'DH', color: '#DB2777', last: 'Hôm qua', joined: '08/2022', mfa: false },
+    { name: 'Vũ Thảo', email: 'thao@long-anh.com', role: 'editor', initials: 'VT', color: '#0891B2', last: '3 ngày trước', joined: '11/2023', mfa: true },
+    { name: 'Bùi Quân', email: 'quan@long-anh.com', role: 'editor', initials: 'BQ', color: '#B45309', last: 'Tuần trước', joined: '01/2024', mfa: false, status: 'pending' },
+    { name: 'Ngô Minh', email: 'minh@long-anh.com', role: 'viewer', initials: 'NM', color: '#475569', last: '5 ngày trước', joined: '05/2024', mfa: true },
+    { name: 'Lý Hà', email: 'ha@long-anh.com', role: 'viewer', initials: 'LH', color: '#0F766E', last: '2 tuần trước', joined: '09/2024', mfa: false },
+    { name: 'Khách hàng demo', email: 'demo@long-anh.com', role: 'viewer', initials: 'KD', color: '#94A3B8', last: '1 tháng trước', joined: '03/2025', mfa: false, status: 'inactive' },
+  ];
+
+  const ACTIONS = ['Xem', 'Sửa', 'Xuất bản', 'Xóa'];
+
+  function PermPills({ perms = [false, false, false, false] }) {
+    const labels = ['R', 'W', 'P', 'D'];
+    const cls = ['r', 'w', 'w', 'd'];
+    return (
+      <div className="rl-perm-set">
+        {perms.map((p, i) => (
+          <span key={i} className={`rl-pill ${p ? cls[i] : 'no'}`} title={ACTIONS[i]}>
+            {labels[i]}
+          </span>
+        ))}
+      </div>
+    );
+  }
+
+  function getPerms(role, mod) {
+    if (role === 'owner') return [true, true, true, true];
+    return PERMS[role][mod] || [false, false, false, false];
+  }
+
+  function RolesPage() {
+    const [tab, setTab] = React.useState('matrix');
+    const [selectedRole, setSelectedRole] = React.useState('admin');
+    const curRole = ROLES.find(r => r.id === selectedRole);
+
+    const Header = (
+      <>
+        <button className="ad-btn"><AdIcon name="download" size={13} /> Xuất CSV</button>
+        <button className="ad-btn"><AdIcon name="plus" size={13} /> Tạo vai trò mới</button>
+        <button className="ad-btn primary"><AdIcon name="plus" size={13} /> Mời thành viên</button>
+      </>
+    );
+
+    return (
+      <AdPage active="roles"
+        crumb={[{ label: 'Trang chủ', href: 'dashboard.html' }, { label: 'Phân quyền' }]}
+        title="Phân quyền & Thành viên"
+        sub="4 vai trò · 10 thành viên · 1 đang chờ duyệt"
+        actions={Header}>
+
+        <div className="rl-tabs">
+          {[
+            ['matrix', 'Ma trận quyền', 'shield'],
+            ['members', 'Thành viên', 'users', 10],
+            ['invites', 'Lời mời', 'mail', 1],
+            ['logs', 'Nhật ký truy cập', 'activity'],
+          ].map(([k, l, ic, b]) => (
+            <div key={k} className={`rl-tab ${tab === k ? 'on' : ''}`} onClick={() => setTab(k)}>
+              <AdIcon name={ic} size={14} /> {l}
+              {b ? <span className="badge">{b}</span> : null}
+            </div>
+          ))}
+        </div>
+
+        {tab === 'matrix' && (
+          <>
+            <div className="rl-roles">
+              {ROLES.map(r => (
+                <div key={r.id} className={`rl-role ${selectedRole === r.id ? 'on' : ''}`}
+                     onClick={() => setSelectedRole(r.id)}>
+                  {r.locked && <span className="lock"><AdIcon name="shield" size={13} /></span>}
+                  <div className="ico" style={{ background: r.bg, color: r.color }}>
+                    <AdIcon name={r.icon} size={17} />
+                  </div>
+                  <h4>{r.name}</h4>
+                  <p>{r.desc}</p>
+                  <div className="meta">
+                    <span>{r.members} thành viên</span>
+                    <span style={{ color: 'var(--ad-primary)', fontWeight: 600 }}>
+                      {selectedRole === r.id ? 'Đang chỉnh sửa →' : 'Chỉnh sửa →'}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="rl-matrix">
+              <div className="rl-matrix-head">
+                <div className="ico" style={{
+                  width: 32, height: 32, borderRadius: 7,
+                  background: curRole.bg, color: curRole.color,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                }}>
+                  <AdIcon name={curRole.icon} size={15} />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <h3>Quyền của vai trò: {curRole.name}</h3>
+                  <p style={{ margin: '2px 0 0', fontSize: 12.5, color: 'var(--ad-text-mute)' }}>
+                    R = Xem · W = Sửa · P = Xuất bản · D = Xóa
+                    {curRole.locked && ' · Vai trò khóa, không thể chỉnh sửa'}
+                  </p>
+                </div>
+                {!curRole.locked && (
+                  <>
+                    <button className="ad-btn sm">
+                      <AdIcon name="copy" size={12} /> Copy từ vai trò khác
+                    </button>
+                    <button className="ad-btn sm primary">
+                      <AdIcon name="check" size={12} /> Lưu thay đổi
+                    </button>
+                  </>
+                )}
+              </div>
+              <table>
+                <thead>
+                  <tr>
+                    <th style={{ width: '34%' }}>Module</th>
+                    <th>Quyền chi tiết</th>
+                    <th className="col">Bật / Tắt</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {PERM_GROUPS.map(g => (
+                    <React.Fragment key={g.name}>
+                      <tr className="group-row"><td colSpan="3">{g.name}</td></tr>
+                      {g.items.map(it => {
+                        const perms = getPerms(selectedRole, it.mod);
+                        const anyOn = perms.some(p => p);
+                        return (
+                          <tr key={it.mod}>
+                            <td>
+                              <div className="module">{it.mod}</div>
+                              <div style={{ fontSize: 12, color: 'var(--ad-text-mute)' }}>
+                                {it.desc}
+                              </div>
+                            </td>
+                            <td><PermPills perms={perms} /></td>
+                            <td className="col">
+                              <span className={`rl-toggle ${anyOn ? 'on' : ''} ${curRole.locked ? 'dis' : ''}`} />
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </React.Fragment>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
+        )}
+
+        {tab === 'members' && (
+          <div className="rl-members">
+            <div className="ad-table-wrap">
+              <div className="ad-toolbar">
+                <input className="ad-input" style={{ width: 280 }}
+                       placeholder="Tìm theo tên, email…" />
+                <select className="ad-select" style={{ width: 160 }}>
+                  <option>Tất cả vai trò</option>
+                  {ROLES.map(r => <option key={r.id}>{r.name}</option>)}
+                </select>
+                <select className="ad-select" style={{ width: 140 }}>
+                  <option>Mọi trạng thái</option>
+                  <option>Đang hoạt động</option>
+                  <option>Tạm khóa</option>
+                  <option>Chờ duyệt</option>
+                </select>
+                <div className="grow" />
+                <span style={{ fontSize: 12, color: 'var(--ad-text-mute)' }}>
+                  {MEMBERS.length} thành viên
+                </span>
+              </div>
+              <table className="ad-table">
+                <thead>
+                  <tr>
+                    <th style={{ width: 36 }}><input type="checkbox" /></th>
+                    <th>Thành viên</th>
+                    <th style={{ width: 160 }}>Vai trò</th>
+                    <th style={{ width: 100 }}>2FA</th>
+                    <th style={{ width: 160 }}>Hoạt động cuối</th>
+                    <th style={{ width: 110 }}>Tham gia</th>
+                    <th style={{ width: 120 }}></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {MEMBERS.map((m, i) => {
+                    const role = ROLES.find(r => r.id === m.role);
+                    return (
+                      <tr key={i}>
+                        <td><input type="checkbox" /></td>
+                        <td>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                            <span className="rl-av" style={{ background: m.color }}>{m.initials}</span>
+                            <div>
+                              <div style={{ fontWeight: 600 }}>
+                                {m.name}
+                                {m.status === 'pending' &&
+                                  <span className="ad-badge sched" style={{ marginLeft: 8, fontSize: 10 }}>
+                                    <span className="dot" />Chờ duyệt
+                                  </span>}
+                                {m.status === 'inactive' &&
+                                  <span className="ad-badge hide" style={{ marginLeft: 8, fontSize: 10 }}>
+                                    <span className="dot" />Tạm khóa
+                                  </span>}
+                              </div>
+                              <div style={{ fontSize: 12.5, color: 'var(--ad-text-mute)' }}>
+                                {m.email}
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <span className="ad-badge" style={{
+                            background: role.bg, color: role.color,
+                            border: `1px solid ${role.color}33`,
+                          }}>
+                            <AdIcon name={role.icon} size={11} /> {role.name}
+                          </span>
+                        </td>
+                        <td>
+                          {m.mfa ? (
+                            <span style={{ color: 'var(--ad-success)', fontSize: 12.5,
+                                           display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                              <AdIcon name="check" size={13} /> Bật
+                            </span>
+                          ) : (
+                            <span style={{ color: 'var(--ad-warning)', fontSize: 12.5,
+                                           display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                              <AdIcon name="alert" size={13} /> Tắt
+                            </span>
+                          )}
+                        </td>
+                        <td style={{ color: m.last === 'Đang online' ? 'var(--ad-success)' : 'var(--ad-text-soft)',
+                                     fontWeight: m.last === 'Đang online' ? 500 : 400 }}>
+                          {m.last === 'Đang online' && (
+                            <span style={{ display: 'inline-block', width: 8, height: 8,
+                                           borderRadius: '50%', background: 'var(--ad-success)',
+                                           marginRight: 6, verticalAlign: 'middle' }} />
+                          )}
+                          {m.last}
+                        </td>
+                        <td style={{ color: 'var(--ad-text-soft)' }}>{m.joined}</td>
+                        <td>
+                          <div className="row-actions" style={{ justifyContent: 'flex-end' }}>
+                            <button className="ad-btn ghost sm">Sửa vai trò</button>
+                            <button className="ad-btn ghost sm"><AdIcon name="more" size={13} /></button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {tab === 'invites' && (
+          <div className="ad-table-wrap">
+            <div style={{ padding: 18, borderBottom: '1px solid var(--ad-line-soft)',
+                          display: 'flex', gap: 12, alignItems: 'flex-end' }}>
+              <AdField label="Email người nhận">
+                <input className="ad-input" placeholder="email@long-anh.com" style={{ width: 280 }} />
+              </AdField>
+              <AdField label="Vai trò">
+                <select className="ad-select" style={{ width: 180 }}>
+                  {ROLES.filter(r => !r.locked).map(r => <option key={r.id}>{r.name}</option>)}
+                </select>
+              </AdField>
+              <AdField label="Hết hạn sau">
+                <select className="ad-select" style={{ width: 140 }}>
+                  <option>3 ngày</option><option>7 ngày</option><option>30 ngày</option>
+                </select>
+              </AdField>
+              <button className="ad-btn primary" style={{ height: 36 }}>
+                <AdIcon name="mail" size={13} /> Gửi lời mời
+              </button>
+            </div>
+            <table className="ad-table">
+              <thead>
+                <tr>
+                  <th>Email</th>
+                  <th style={{ width: 160 }}>Vai trò</th>
+                  <th style={{ width: 140 }}>Người gửi</th>
+                  <th style={{ width: 140 }}>Hết hạn</th>
+                  <th style={{ width: 110 }}>Trạng thái</th>
+                  <th style={{ width: 140 }}></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style={{ fontWeight: 500 }}>quan@long-anh.com</td>
+                  <td><span className="ad-badge" style={{ background: '#DCFCE7', color: '#15803D' }}>Biên tập viên</span></td>
+                  <td>Anh Nam</td>
+                  <td style={{ color: 'var(--ad-text-soft)' }}>Còn 4 ngày</td>
+                  <td><span className="ad-badge sched"><span className="dot" />Chờ duyệt</span></td>
+                  <td>
+                    <div className="row-actions" style={{ justifyContent: 'flex-end' }}>
+                      <button className="ad-btn ghost sm"><AdIcon name="copy" size={12} /> Copy link</button>
+                      <button className="ad-btn ghost sm"><AdIcon name="refresh" size={12} /></button>
+                      <button className="ad-btn ghost sm danger"><AdIcon name="x" size={13} /></button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {tab === 'logs' && (
+          <div className="ad-table-wrap">
+            <div className="ad-toolbar">
+              <input className="ad-input" style={{ width: 240 }} placeholder="Tìm sự kiện…" />
+              <select className="ad-select" style={{ width: 160 }}>
+                <option>Mọi sự kiện</option>
+                <option>Đăng nhập</option>
+                <option>Sửa nội dung</option>
+                <option>Xuất bản</option>
+                <option>Xóa</option>
+              </select>
+              <select className="ad-select" style={{ width: 160 }}>
+                <option>Mọi thành viên</option>
+                {MEMBERS.slice(0, 5).map(m => <option key={m.email}>{m.name}</option>)}
+              </select>
+              <input type="date" className="ad-input" style={{ width: 150 }} />
+            </div>
+            <table className="ad-table">
+              <thead>
+                <tr>
+                  <th style={{ width: 160 }}>Thời gian</th>
+                  <th style={{ width: 200 }}>Người dùng</th>
+                  <th>Hành động</th>
+                  <th style={{ width: 120 }}>IP</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  ['14:32', 'Lê Hùng', 'admin', 'LH', '#C8A24B', 'Cập nhật nội dung trang Trang chủ — section Hero', '14.232.45.12'],
+                  ['14:18', 'Phan Mai', 'admin', 'PM', '#15803D', 'Trả lời liên hệ #4523 từ Nguyễn Văn A', '113.190.22.5'],
+                  ['13:45', 'Trần Linh', 'editor', 'TL', '#7C3AED', 'Tạo sản phẩm mới — Đá Marble Trắng Tuyết', '14.232.45.18'],
+                  ['11:20', 'Anh Nam', 'owner', 'AN', '#0F3D7A', 'Đăng nhập (2FA OK)', '14.232.45.12'],
+                  ['10:55', 'Đỗ Huy', 'editor', 'DH', '#DB2777', 'Xuất bản bài viết "Quy trình kiểm định CaCO₃"', '113.190.22.7'],
+                  ['09:30', 'Lê Hùng', 'admin', 'LH', '#C8A24B', 'Đổi vai trò Vũ Thảo: Viewer → Editor', '14.232.45.12'],
+                  ['08:42', 'Vũ Thảo', 'editor', 'VT', '#0891B2', 'Upload 8 ảnh vào Gallery > Sản phẩm', '113.190.22.18'],
+                  ['Hôm qua', 'Anh Nam', 'owner', 'AN', '#0F3D7A', 'Cập nhật cài đặt site — Hotline', '14.232.45.12'],
+                ].map((r, i) => (
+                  <tr key={i}>
+                    <td style={{ color: 'var(--ad-text-soft)', fontVariantNumeric: 'tabular-nums' }}>{r[0]}</td>
+                    <td>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                        <span className="rl-av" style={{ background: r[4], width: 26, height: 26, fontSize: 11 }}>{r[3]}</span>
+                        <span style={{ fontWeight: 500 }}>{r[1]}</span>
+                      </div>
+                    </td>
+                    <td>{r[5]}</td>
+                    <td style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 12,
+                                 color: 'var(--ad-text-mute)' }}>{r[6]}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div className="ad-pag">
+              <div>Hiển thị 1 – 8 của 1,247 sự kiện</div>
+              <div className="ad-pag-pages">
+                <button>‹</button>
+                <button className="on">1</button>
+                <button>2</button>
+                <button>3</button>
+                <button>…</button>
+                <button>›</button>
+              </div>
+            </div>
+          </div>
+        )}
+      </AdPage>
+    );
+  }
+  ReactDOM.createRoot(document.getElementById('root')).render(<RolesPage />);
+</script>
+</body>
+</html>

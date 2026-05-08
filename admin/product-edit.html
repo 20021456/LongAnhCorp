@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sửa sản phẩm · Long Anh Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="admin-shell.jsx"></script>
+<script type="text/babel">
+  const style = document.createElement('style');
+  style.textContent = ADMIN_GLOBAL_CSS + `
+    .pe-grid { display:grid; grid-template-columns: 1fr 320px; gap:24px; align-items:flex-start; }
+    .pe-side { display:flex; flex-direction:column; gap:16px; position:sticky; top:80px; }
+    .pe-langtabs { display:flex; gap:0; border-bottom:1px solid var(--ad-line); margin-bottom:24px; }
+    .pe-langtab { padding:10px 18px; font-size:13.5px; font-weight:500; cursor:pointer;
+          color:var(--ad-text-soft); border-bottom:2px solid transparent; margin-bottom:-1px;
+          display:flex; align-items:center; gap:8px; }
+    .pe-langtab.on { color:var(--ad-primary); border-color:var(--ad-primary); font-weight:600; }
+    .ed-toolbar { display:flex; gap:2px; padding:6px; border-bottom:1px solid var(--ad-line);
+          background:#FAFAFB; }
+    .ed-toolbar button { width:28px; height:28px; border:0; background:transparent;
+          border-radius:4px; cursor:pointer; color:var(--ad-text-soft);
+          display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:600; }
+    .ed-toolbar button:hover { background:var(--ad-line-soft); color:var(--ad-text); }
+    .ed-toolbar .div { width:1px; background:var(--ad-line); margin:4px 4px; }
+    .ed-content { padding:16px; min-height:200px; font-size:14px; line-height:1.7; outline:none; }
+    .gallery-grid { display:grid; grid-template-columns:repeat(4, 1fr); gap:10px; }
+    .gallery-item { aspect-ratio:1; border-radius:6px; overflow:hidden; position:relative;
+          background:var(--ad-line-soft); cursor:pointer; }
+    .gallery-item img { width:100%; height:100%; object-fit:cover; }
+    .gallery-item .x { position:absolute; top:4px; right:4px; width:22px; height:22px;
+          background:rgba(0,0,0,.6); color:#fff; border:0; border-radius:50%; cursor:pointer;
+          display:flex; align-items:center; justify-content:center; }
+    .gallery-add { aspect-ratio:1; border:1.5px dashed var(--ad-line); border-radius:6px;
+          display:flex; align-items:center; justify-content:center; flex-direction:column;
+          color:var(--ad-text-mute); cursor:pointer; gap:4px; font-size:11px; }
+    .gallery-add:hover { border-color:var(--ad-primary); color:var(--ad-primary); }
+  `;
+  document.head.appendChild(style);
+
+  function ProductEdit() {
+    const [lang, setLang] = React.useState('vi');
+
+    const SaveBar = (
+      <>
+        <a href="../a-industrial-modern.html#products" target="_blank" className="ad-btn">
+          <AdIcon name="eye" size={13} /> Xem trên web
+        </a>
+        <button className="ad-btn"><AdIcon name="save" size={13} /> Lưu nháp</button>
+        <button className="ad-btn primary"><AdIcon name="check" size={13} /> Xuất bản</button>
+      </>
+    );
+
+    return (
+      <AdPage active="products"
+        crumb={[
+          { label: 'Trang chủ', href: 'dashboard.html' },
+          { label: 'Sản phẩm', href: 'products.html' },
+          { label: 'Đá Granite Đỏ Nghệ An' },
+        ]}
+        title={<><a href="products.html" style={{ color: 'var(--ad-text-mute)', marginRight: 8 }}><AdIcon name="arrowLeft" size={20} /></a>Đá Granite Đỏ Nghệ An</>}
+        sub={<>SKU: GRT-DO-001 · <AdBadge status="pub" /></>}
+        actions={SaveBar}>
+
+        <div className="pe-langtabs">
+          <div className={`pe-langtab ${lang === 'vi' ? 'on' : ''}`} onClick={() => setLang('vi')}>
+            🇻🇳 Tiếng Việt
+          </div>
+          <div className={`pe-langtab ${lang === 'en' ? 'on' : ''}`} onClick={() => setLang('en')}>
+            🇬🇧 English
+          </div>
+        </div>
+
+        <div className="pe-grid">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <div className="ad-card">
+              <div className="ad-card-head"><h3>Thông tin cơ bản</h3></div>
+              <div style={{ padding: 18, display: 'flex', flexDirection: 'column', gap: 14 }}>
+                <AdField label="Tên sản phẩm" req>
+                  <input className="ad-input" defaultValue="Đá Granite Đỏ Nghệ An" />
+                </AdField>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: 10 }}>
+                  <AdField label="Slug (URL)" help="Tự động tạo từ tên — long-anh.com/san-pham/...">
+                    <input className="ad-input" defaultValue="da-granite-do-nghe-an" />
+                  </AdField>
+                  <AdField label="">
+                    <button className="ad-btn" style={{ marginTop: 22 }}>
+                      <AdIcon name="refresh" size={13} /> Tạo lại
+                    </button>
+                  </AdField>
+                </div>
+                <AdField label="Mã sản phẩm (SKU)">
+                  <input className="ad-input" defaultValue="GRT-DO-001" />
+                </AdField>
+                <AdField label="Mô tả ngắn"
+                         help="Hiển thị ở thẻ sản phẩm trên trang chủ và list">
+                  <textarea className="ad-textarea"
+                            defaultValue="Đá Granite đỏ vân kim cương khai thác trực tiếp tại mỏ Quỳ Hợp – Nghệ An, độ cứng cao, vân tự nhiên đẹp." />
+                </AdField>
+              </div>
+            </div>
+
+            <div className="ad-card">
+              <div className="ad-card-head">
+                <h3>Nội dung chi tiết</h3>
+                <p>Soạn nội dung trang sản phẩm</p>
+              </div>
+              <div className="ed-toolbar">
+                <button title="Đậm"><b>B</b></button>
+                <button title="Nghiêng"><i>I</i></button>
+                <button title="Gạch chân"><u>U</u></button>
+                <div className="div" />
+                <button title="Heading 1">H1</button>
+                <button title="Heading 2">H2</button>
+                <button title="Heading 3">H3</button>
+                <div className="div" />
+                <button title="Danh sách"><AdIcon name="list" size={13} /></button>
+                <button title="Liên kết"><AdIcon name="link" size={13} /></button>
+                <button title="Ảnh"><AdIcon name="image" size={13} /></button>
+                <div className="div" />
+                <button title="Mã"><code style={{ fontFamily: 'monospace', fontSize: 12 }}>&lt;/&gt;</code></button>
+              </div>
+              <div className="ed-content" contentEditable suppressContentEditableWarning>
+                <p>Đá Granite Đỏ Nghệ An là loại đá tự nhiên cao cấp, được khai thác trực tiếp tại mỏ Quỳ Hợp — vùng nguyên liệu nổi tiếng nhất Việt Nam.</p>
+                <p>Với độ cứng cao (Mohs 6-7), khả năng chịu mài mòn và chịu lực vượt trội, sản phẩm phù hợp cho cả công trình nội thất và ngoại thất.</p>
+                <p><b>Đặc điểm nổi bật:</b></p>
+                <ul style={{ paddingLeft: 22, margin: '8px 0' }}>
+                  <li>Vân kim cương đỏ tự nhiên, đồng đều</li>
+                  <li>Độ bóng cao sau khi đánh bóng</li>
+                  <li>Chịu nhiệt, chịu lực, chống thấm tốt</li>
+                  <li>Quy cách đa dạng theo yêu cầu</li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="ad-card">
+              <div className="ad-card-head">
+                <h3>Thư viện ảnh sản phẩm</h3>
+                <p>6 ảnh · kéo để sắp xếp · ảnh đầu là ảnh đại diện</p>
+              </div>
+              <div style={{ padding: 16 }}>
+                <div className="gallery-grid">
+                  {[
+                    '../assets/da-nguyen-lieu-cao-cap.webp',
+                    '../assets/da-nguyen-lieu-cao-cap2.webp',
+                    '../assets/da-slab-sieu-trang.webp',
+                    '../assets/co-so-ha-tang.jpg',
+                    '../assets/kho-da-nguyen-lieu.webp',
+                    '../assets/nha-may-bot-sieu-min.webp',
+                  ].map((src, i) => (
+                    <div key={i} className="gallery-item">
+                      <img src={src} alt="" />
+                      {i === 0 && (
+                        <div style={{
+                          position: 'absolute', top: 6, left: 6, background: 'var(--ad-primary)',
+                          color: '#fff', fontSize: 10, fontWeight: 600, padding: '2px 7px',
+                          borderRadius: 4, letterSpacing: '.04em', textTransform: 'uppercase',
+                        }}>Đại diện</div>
+                      )}
+                      <button className="x"><AdIcon name="x" size={11} /></button>
+                    </div>
+                  ))}
+                  <div className="gallery-add">
+                    <AdIcon name="upload" size={18} />
+                    Thêm ảnh
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="ad-card">
+              <div className="ad-card-head">
+                <h3>Thông số kỹ thuật</h3>
+                <p>Hiển thị dạng bảng trên trang sản phẩm</p>
+              </div>
+              <div style={{ padding: 16 }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
+                  <thead>
+                    <tr>
+                      <th style={{ textAlign: 'left', padding: '8px 10px', fontWeight: 600,
+                                   color: 'var(--ad-text-mute)', fontSize: 11.5,
+                                   textTransform: 'uppercase', letterSpacing: '.04em' }}>Tham số</th>
+                      <th style={{ textAlign: 'left', padding: '8px 10px', fontWeight: 600,
+                                   color: 'var(--ad-text-mute)', fontSize: 11.5,
+                                   textTransform: 'uppercase', letterSpacing: '.04em' }}>Giá trị</th>
+                      <th style={{ width: 40 }}></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[
+                      ['Hàm lượng CaCO₃', '≥ 98.5%'],
+                      ['Độ trắng', '≥ 96%'],
+                      ['Cỡ hạt D50', '1–10 µm'],
+                      ['Độ ẩm', '≤ 0.2%'],
+                      ['Độ cứng', 'Mohs 6-7'],
+                      ['Quy cách', '60×60cm, 60×120cm, theo yêu cầu'],
+                    ].map((r, i) => (
+                      <tr key={i}>
+                        <td style={{ padding: '4px 4px 4px 0' }}>
+                          <input className="ad-input" defaultValue={r[0]} style={{ height: 32 }} />
+                        </td>
+                        <td style={{ padding: '4px 4px' }}>
+                          <input className="ad-input" defaultValue={r[1]} style={{ height: 32 }} />
+                        </td>
+                        <td>
+                          <button className="ad-btn ghost sm" title="Xóa">
+                            <AdIcon name="trash" size={12} />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                <button className="ad-btn ghost sm" style={{ marginTop: 10 }}>
+                  <AdIcon name="plus" size={13} /> Thêm dòng
+                </button>
+              </div>
+            </div>
+
+            <div className="ad-card">
+              <div className="ad-card-head"><h3>SEO & Mạng xã hội</h3></div>
+              <div style={{ padding: 18, display: 'flex', flexDirection: 'column', gap: 14 }}>
+                <AdField label="Meta title" help="42/60 ký tự">
+                  <input className="ad-input" defaultValue="Đá Granite Đỏ Nghệ An | Long Anh" />
+                </AdField>
+                <AdField label="Meta description" help="138/160 ký tự">
+                  <textarea className="ad-textarea"
+                            defaultValue="Đá Granite Đỏ Nghệ An vân kim cương tự nhiên, độ cứng Mohs 6-7. Khai thác trực tiếp tại Quỳ Hợp. Báo giá theo m², theo dự án." />
+                </AdField>
+              </div>
+            </div>
+          </div>
+
+          <aside className="pe-side">
+            <div className="ad-card">
+              <div className="ad-card-head"><h3>Trạng thái</h3></div>
+              <div style={{ padding: 14, display: 'flex', flexDirection: 'column', gap: 10 }}>
+                <select className="ad-select" defaultValue="pub">
+                  <option value="draft">Bản nháp</option>
+                  <option value="pub">Đã xuất bản</option>
+                  <option value="sched">Hẹn giờ</option>
+                  <option value="hide">Đã ẩn</option>
+                </select>
+                <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 13 }}>
+                  <span>Sản phẩm nổi bật</span>
+                  <AdSwitch on={true} onChange={() => {}} />
+                </label>
+                <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 13 }}>
+                  <span>Hiển thị trên trang chủ</span>
+                  <AdSwitch on={true} onChange={() => {}} />
+                </label>
+              </div>
+            </div>
+
+            <div className="ad-card">
+              <div className="ad-card-head"><h3>Phân loại</h3></div>
+              <div style={{ padding: 14, display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <AdField label="Danh mục">
+                  <select className="ad-select">
+                    <option>Đá trang trí</option>
+                    <option>Bột đá phủ</option>
+                    <option>Đá Slab</option>
+                    <option>Đá xẻ</option>
+                  </select>
+                </AdField>
+                <AdField label="Tags">
+                  <div className="ad-tags">
+                    <span className="ad-tag">đỏ<button><AdIcon name="x" size={10} /></button></span>
+                    <span className="ad-tag">nghệ-an<button><AdIcon name="x" size={10} /></button></span>
+                    <span className="ad-tag">granite<button><AdIcon name="x" size={10} /></button></span>
+                    <input placeholder="Thêm…" />
+                  </div>
+                </AdField>
+              </div>
+            </div>
+
+            <div className="ad-card">
+              <div className="ad-card-head"><h3>Thương mại</h3></div>
+              <div style={{ padding: 14, display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <AdField label="Giá tham khảo">
+                  <div style={{ display: 'flex', gap: 6 }}>
+                    <input className="ad-input" defaultValue="Liên hệ" />
+                    <select className="ad-select" style={{ width: 80 }}>
+                      <option>VND</option>
+                      <option>USD</option>
+                    </select>
+                  </div>
+                </AdField>
+                <AdField label="Đơn vị">
+                  <select className="ad-select" defaultValue="m²">
+                    <option>m²</option>
+                    <option>kg</option>
+                    <option>tấn</option>
+                    <option>tấm</option>
+                  </select>
+                </AdField>
+                <AdField label="Xuất xứ">
+                  <input className="ad-input" defaultValue="Quỳ Hợp, Nghệ An" />
+                </AdField>
+                <AdField label="Tồn kho">
+                  <select className="ad-select" defaultValue="in">
+                    <option value="in">Còn hàng</option>
+                    <option value="pre">Đặt trước</option>
+                    <option value="out">Hết hàng</option>
+                  </select>
+                </AdField>
+              </div>
+            </div>
+
+            <div className="ad-card">
+              <div className="ad-card-head">
+                <h3>Sản phẩm liên quan</h3>
+              </div>
+              <div style={{ padding: 12, display: 'flex', flexDirection: 'column', gap: 6 }}>
+                {['Đá Marble Trắng Tuyết', 'Đá Slab siêu trắng'].map((p, i) => (
+                  <div key={i} style={{
+                    display: 'flex', alignItems: 'center', gap: 8, padding: '6px 8px',
+                    border: '1px solid var(--ad-line)', borderRadius: 6, fontSize: 12.5,
+                  }}>
+                    <div style={{ width: 30, height: 24, borderRadius: 4,
+                                  background: 'var(--ad-line-soft)' }} />
+                    <span style={{ flex: 1 }}>{p}</span>
+                    <button style={{ border: 0, background: 'transparent', cursor: 'pointer',
+                                     color: 'var(--ad-text-mute)' }}>
+                      <AdIcon name="x" size={12} />
+                    </button>
+                  </div>
+                ))}
+                <button className="ad-btn ghost sm">
+                  <AdIcon name="plus" size={12} /> Thêm sản phẩm
+                </button>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </AdPage>
+    );
+  }
+  ReactDOM.createRoot(document.getElementById('root')).render(<ProductEdit />);
+</script>
+</body>
+</html>

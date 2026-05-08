@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Trang · Long Anh Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="admin-shell.jsx"></script>
+<script type="text/babel">
+  const style = document.createElement('style');
+  style.textContent = ADMIN_GLOBAL_CSS;
+  document.head.appendChild(style);
+
+  const PAGES = [
+    { id: 'home',     name: 'Trang chủ',         slug: '/',                 sections: 8, status: 'pub',   updated: '2 giờ trước', updater: 'AN', star: true },
+    { id: 'about',    name: 'Giới thiệu',        slug: '/gioi-thieu',       sections: 6, status: 'pub',   updated: '1 ngày trước', updater: 'LH' },
+    { id: 'products', name: 'Sản phẩm',          slug: '/san-pham',         sections: 4, status: 'pub',   updated: '3 ngày trước', updater: 'AN' },
+    { id: 'news',     name: 'Tin tức',           slug: '/tin-tuc',          sections: 3, status: 'pub',   updated: '1 tuần trước', updater: 'LH' },
+    { id: 'contact',  name: 'Liên hệ',           slug: '/lien-he',          sections: 3, status: 'pub',   updated: '2 tuần trước', updater: 'AN' },
+    { id: 'apps',     name: 'Ứng dụng sản phẩm', slug: '/ung-dung',         sections: 5, status: 'draft', updated: '5 giờ trước', updater: 'LH' },
+    { id: 'qc',       name: 'Quy trình QC',      slug: '/quy-trinh-qc',     sections: 4, status: 'sched', updated: '1 ngày trước', updater: 'AN' },
+    { id: 'careers',  name: 'Tuyển dụng',        slug: '/tuyen-dung',       sections: 2, status: 'hide',  updated: '3 tuần trước', updater: 'AN' },
+  ];
+
+  function PagesList() {
+    const [filter, setFilter] = React.useState('all');
+    const filtered = filter === 'all' ? PAGES : PAGES.filter(p => p.status === filter);
+
+    const Header = (
+      <>
+        <button className="ad-btn">
+          <AdIcon name="download" size={14} /> Xuất
+        </button>
+        <a href="page-edit-home.html" className="ad-btn primary">
+          <AdIcon name="plus" size={14} /> Thêm trang
+        </a>
+      </>
+    );
+
+    return (
+      <AdPage active="pages"
+        crumb={[{ label: 'Trang chủ', href: 'dashboard.html' }, { label: 'Trang' }]}
+        title="Trang"
+        sub={`${PAGES.length} trang · 6 đã xuất bản · 1 nháp · 1 hẹn giờ`}
+        actions={Header}>
+
+        <div className="ad-table-wrap">
+          <div className="ad-toolbar">
+            <div style={{ position: 'relative', width: 280 }}>
+              <AdIcon name="search" size={14} />
+              <input className="ad-input" style={{ paddingLeft: 32 }}
+                     placeholder="Tìm theo tên, slug…" />
+              <span style={{ position: 'absolute', left: 10, top: '50%',
+                             transform: 'translateY(-50%)', color: 'var(--ad-text-mute)' }}>
+                <AdIcon name="search" size={14} />
+              </span>
+            </div>
+            <select className="ad-select" style={{ width: 150 }}>
+              <option>Tất cả ngôn ngữ</option>
+              <option>Tiếng Việt</option>
+              <option>English</option>
+            </select>
+            <div style={{ display: 'flex', gap: 4, padding: 3,
+                          background: 'var(--ad-line-soft)', borderRadius: 6 }}>
+              {[['all', 'Tất cả'], ['pub', 'Đã xuất bản'], ['draft', 'Nháp'],
+                ['sched', 'Hẹn giờ'], ['hide', 'Đã ẩn']].map(([k, l]) => (
+                <button key={k} onClick={() => setFilter(k)}
+                        style={{
+                          border: 0, background: filter === k ? '#fff' : 'transparent',
+                          padding: '4px 11px', borderRadius: 4, fontSize: 12.5, fontWeight: 500,
+                          color: filter === k ? 'var(--ad-text)' : 'var(--ad-text-soft)',
+                          boxShadow: filter === k ? 'var(--ad-shadow)' : 'none', cursor: 'pointer',
+                        }}>{l}</button>
+              ))}
+            </div>
+            <div className="grow" />
+            <button className="ad-btn ghost sm">
+              <AdIcon name="filter" size={13} /> Lọc thêm
+            </button>
+          </div>
+
+          <table className="ad-table">
+            <thead>
+              <tr>
+                <th style={{ width: 36 }}><input type="checkbox" /></th>
+                <th>Tên trang</th>
+                <th style={{ width: 200 }}>Đường dẫn</th>
+                <th style={{ width: 100 }}>Sections</th>
+                <th style={{ width: 130 }}>Trạng thái</th>
+                <th style={{ width: 200 }}>Sửa lần cuối</th>
+                <th style={{ width: 140 }}></th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map(p => (
+                <tr key={p.id}>
+                  <td><input type="checkbox" /></td>
+                  <td>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                      <div style={{
+                        width: 32, height: 32, borderRadius: 6,
+                        background: 'var(--ad-primary-soft)', color: 'var(--ad-primary)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none',
+                      }}>
+                        <AdIcon name="file" size={15} />
+                      </div>
+                      <div>
+                        <div style={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: 6 }}>
+                          {p.name}
+                          {p.star && <AdIcon name="star" size={13} />}
+                        </div>
+                        <div style={{ fontSize: 12, color: 'var(--ad-text-mute)' }}>
+                          ID: {p.id}
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><code style={{
+                    fontFamily: 'JetBrains Mono,ui-monospace,monospace',
+                    fontSize: 12, color: 'var(--ad-text-soft)',
+                    background: 'var(--ad-line-soft)', padding: '2px 7px', borderRadius: 4,
+                  }}>{p.slug}</code></td>
+                  <td>{p.sections} sections</td>
+                  <td><AdBadge status={p.status} /></td>
+                  <td>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <div style={{
+                        width: 22, height: 22, borderRadius: '50%',
+                        background: 'var(--ad-primary)', color: '#fff',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        fontWeight: 600, fontSize: 9.5,
+                      }}>{p.updater}</div>
+                      <div>
+                        <div>{p.updated}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div className="row-actions" style={{ justifyContent: 'flex-end' }}>
+                      <a href={p.id === 'home' ? 'page-edit-home.html' : '#'}
+                         className="ad-btn ghost sm" title="Sửa">
+                        <AdIcon name="edit" size={13} />
+                      </a>
+                      <button className="ad-btn ghost sm" title="Xem"><AdIcon name="eye" size={13} /></button>
+                      <button className="ad-btn ghost sm" title="Nhân bản"><AdIcon name="copy" size={13} /></button>
+                      <button className="ad-btn ghost sm" title="Thêm"><AdIcon name="more" size={13} /></button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          <div className="ad-pag">
+            <div>Hiển thị 1 – {filtered.length} của {filtered.length} trang</div>
+            <div className="ad-pag-pages">
+              <button>‹</button>
+              <button className="on">1</button>
+              <button>›</button>
+            </div>
+          </div>
+        </div>
+      </AdPage>
+    );
+  }
+  ReactDOM.createRoot(document.getElementById('root')).render(<PagesList />);
+</script>
+</body>
+</html>

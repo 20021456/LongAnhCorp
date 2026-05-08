@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Liên hệ · Long Anh Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="admin-shell.jsx"></script>
+<script type="text/babel">
+  const style = document.createElement('style');
+  style.textContent = ADMIN_GLOBAL_CSS + `
+    .ct-layout { display:grid; grid-template-columns:1fr 1.4fr; gap:0;
+          background:#fff; border:1px solid var(--ad-line); border-radius:10px;
+          overflow:hidden; min-height:640px; }
+    .ct-list { border-right:1px solid var(--ad-line-soft); display:flex; flex-direction:column; }
+    .ct-row { padding:13px 16px; border-bottom:1px solid var(--ad-line-soft);
+          cursor:pointer; display:flex; gap:12px; align-items:flex-start; }
+    .ct-row:hover { background:#FBFBFC; }
+    .ct-row.on { background:var(--ad-primary-soft); border-left:3px solid var(--ad-primary);
+          padding-left:13px; }
+    .ct-row .av { width:34px; height:34px; border-radius:50%; background:var(--ad-primary);
+          color:#fff; display:flex; align-items:center; justify-content:center;
+          font-weight:600; font-size:12px; flex:none; }
+    .ct-row .body { flex:1; min-width:0; }
+    .ct-row .top { display:flex; justify-content:space-between; align-items:center;
+          margin-bottom:2px; }
+    .ct-row .name { font-weight:600; font-size:13.5px; }
+    .ct-row .name.unread::before { content:''; display:inline-block; width:8px; height:8px;
+          background:var(--ad-primary); border-radius:50%; margin-right:6px; vertical-align:middle; }
+    .ct-row .when { font-size:11.5px; color:var(--ad-text-mute); }
+    .ct-row .subj { font-size:13px; color:var(--ad-text-soft); margin-bottom:3px;
+          overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .ct-row .preview { font-size:12.5px; color:var(--ad-text-mute);
+          overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+    .ct-detail { display:flex; flex-direction:column; }
+    .ct-dhead { padding:18px 22px; border-bottom:1px solid var(--ad-line-soft); }
+    .ct-dhead h2 { margin:0 0 6px; font-size:18px; font-weight:600; }
+    .ct-dhead .meta { display:flex; gap:14px; font-size:12.5px;
+          color:var(--ad-text-soft); flex-wrap:wrap; }
+    .ct-dhead .meta b { color:var(--ad-text); font-weight:600; }
+    .ct-dactions { padding:12px 22px; border-bottom:1px solid var(--ad-line-soft);
+          display:flex; gap:8px; flex-wrap:wrap; }
+    .ct-dbody { padding:22px; flex:1; font-size:14px; line-height:1.7;
+          color:var(--ad-text); white-space:pre-wrap; }
+    .ct-notes { background:#FFFBEB; border-top:1px solid var(--ad-line-soft);
+          padding:14px 22px; }
+    .ct-notes h4 { font-size:11.5px; font-weight:600; color:#A16207;
+          letter-spacing:.04em; text-transform:uppercase; margin:0 0 8px; }
+    .ct-notes textarea { width:100%; border:1px solid #FDE68A; border-radius:6px;
+          padding:8px 10px; background:#FFFEF7; min-height:60px; font-size:13px; outline:none; }
+  `;
+  document.head.appendChild(style);
+
+  const SUBMISSIONS = [
+    { id: 1, name: 'Nguyễn Văn A', av: 'NA', subj: 'Hỏi giá đá Granite Đỏ', when: '14:32', date: '06/05/2026', unread: true,
+      email: 'nguyenvana@example.com', phone: '0912 345 678', company: 'Cty TNHH Nội thất Việt',
+      body: 'Chào team Long Anh,\n\nCông ty chúng tôi đang triển khai dự án nội thất mặt tiền cho 1 chuỗi showroom 5 tầng tại Hà Nội. Chúng tôi quan tâm đến đá Granite Đỏ Nghệ An.\n\nXin gửi báo giá cho:\n- Số lượng: ~800m²\n- Quy cách: 60×60cm\n- Thời gian giao: trong tháng 6/2026\n\nXin cảm ơn,\nNguyễn Văn A — Trưởng phòng dự án' },
+    { id: 2, name: 'Trần Thị B', av: 'TB', subj: 'Báo giá bột đá phủ số lượng lớn', when: '11:20', date: '06/05/2026', unread: true,
+      email: 'tranthib@nhuaviet.com', phone: '0987 654 321', company: 'Nhựa Việt Hưng',
+      body: 'Anh chị cho mình xin báo giá Bột đá phủ Stearic Acid CCR-T1, số lượng 200 tấn/tháng. Có thể ký hợp đồng dài hạn 12 tháng.\n\nCảm ơn.' },
+    { id: 3, name: 'Lê Văn C', av: 'LC', subj: 'Phản hồi chất lượng lô hàng tháng 4', when: '16:00', date: '05/05/2026', unread: false,
+      email: 'levanc@sondong.vn', phone: '0901 234 567', company: 'Sơn Đông Á',
+      body: 'Lô hàng nhận tháng 4 chất lượng tốt, độ trắng đạt yêu cầu. Cảm ơn team.' },
+    { id: 4, name: 'Phạm Thị D', av: 'PD', subj: 'Yêu cầu COA cho lô CCR-T1 #4582', when: '09:15', date: '05/05/2026', unread: false,
+      email: 'phamthid@cosmetic.vn', phone: '0934 567 890', company: 'Mỹ phẩm Sao Mai',
+      body: 'Bên mình cần COA + MSDS cho lô #4582 nhận hôm 03/05. Nhờ team gửi lại qua email này. Cảm ơn.' },
+    { id: 5, name: 'Hoàng Văn E', av: 'HE', subj: 'Đăng ký làm đại lý phân phối', when: '14:50', date: '04/05/2026', unread: true,
+      email: 'hoangvane@example.com', phone: '0978 123 456', company: 'Cá nhân',
+      body: 'Em là chủ doanh nghiệp tại Đà Nẵng, em muốn đăng ký làm đại lý phân phối sản phẩm bột đá của Long Anh tại miền Trung. Anh chị tư vấn giúp em điều kiện và thủ tục với ạ.' },
+    { id: 6, name: 'Mai Anh', av: 'MA', subj: 'Yêu cầu mẫu đá trang trí', when: '10:30', date: '04/05/2026', unread: true,
+      email: 'maianh@arc.vn', phone: '0945 678 901', company: 'Kiến trúc ARC',
+      body: 'Bên em đang thiết kế biệt thự, cần mẫu các loại đá trang trí Long Anh để khách lựa chọn. Anh chị có thể gửi sample box không?' },
+  ];
+
+  function ContactsList() {
+    const [tab, setTab] = React.useState('unread');
+    const [sel, setSel] = React.useState(0);
+
+    const filtered = tab === 'all' ? SUBMISSIONS
+                   : tab === 'unread' ? SUBMISSIONS.filter(s => s.unread)
+                   : SUBMISSIONS.filter(s => !s.unread);
+
+    const cur = filtered[sel] || SUBMISSIONS[0];
+    const unreadCount = SUBMISSIONS.filter(s => s.unread).length;
+
+    return (
+      <AdPage active="contacts" full
+        crumb={[{ label: 'Trang chủ', href: 'dashboard.html' }, { label: 'Liên hệ' }]}
+        title="Liên hệ"
+        sub={`${unreadCount} chưa đọc · ${SUBMISSIONS.length} tổng`}
+        actions={<button className="ad-btn"><AdIcon name="download" size={13} /> Xuất Excel</button>}>
+
+        <div style={{ marginBottom: 16, display: 'flex', gap: 4, padding: 4,
+                      background: 'var(--ad-line-soft)', borderRadius: 7, width: 'fit-content' }}>
+          {[
+            ['all', `Tất cả ${SUBMISSIONS.length}`],
+            ['unread', `Chưa đọc ${unreadCount}`],
+            ['read', `Đã đọc ${SUBMISSIONS.length - unreadCount}`],
+            ['done', `Đã xử lý 0`],
+            ['spam', `Spam 0`],
+          ].map(([k, l]) => (
+            <button key={k} onClick={() => { setTab(k); setSel(0); }}
+                    style={{
+                      border: 0, background: tab === k ? '#fff' : 'transparent',
+                      padding: '6px 14px', borderRadius: 5, fontSize: 12.5, fontWeight: 500,
+                      color: tab === k ? 'var(--ad-text)' : 'var(--ad-text-soft)',
+                      boxShadow: tab === k ? 'var(--ad-shadow)' : 'none', cursor: 'pointer',
+                    }}>{l}</button>
+          ))}
+        </div>
+
+        <div className="ct-layout">
+          <div className="ct-list">
+            {filtered.map((s, i) => (
+              <div key={s.id} className={`ct-row ${i === sel ? 'on' : ''}`}
+                   onClick={() => setSel(i)}>
+                <div className="av">{s.av}</div>
+                <div className="body">
+                  <div className="top">
+                    <span className={`name ${s.unread ? 'unread' : ''}`}>{s.name}</span>
+                    <span className="when">{s.when}</span>
+                  </div>
+                  <div className="subj">{s.subj}</div>
+                  <div className="preview">{s.body.split('\n')[0]}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="ct-detail">
+            <div className="ct-dhead">
+              <h2>{cur.subj}</h2>
+              <div className="meta">
+                <span><b>Từ:</b> {cur.name}</span>
+                <span>📧 {cur.email}</span>
+                <span>📞 {cur.phone}</span>
+                <span>🏢 {cur.company}</span>
+                <span style={{ marginLeft: 'auto' }}>{cur.date} · {cur.when}</span>
+              </div>
+            </div>
+            <div className="ct-dactions">
+              <button className="ad-btn primary"><AdIcon name="mail" size={13} /> Trả lời email</button>
+              <button className="ad-btn"><AdIcon name="check" size={13} /> Đã xử lý</button>
+              <button className="ad-btn"><AdIcon name="copy" size={13} /> Sao chép thông tin</button>
+              <div style={{ flex: 1 }} />
+              <button className="ad-btn ghost danger"><AdIcon name="x" size={13} /> Spam</button>
+              <button className="ad-btn ghost danger"><AdIcon name="trash" size={13} /></button>
+            </div>
+            <div className="ct-dbody">{cur.body}</div>
+            <div className="ct-notes">
+              <h4>📝 Ghi chú nội bộ (chỉ admin thấy)</h4>
+              <textarea placeholder="Ghi chú để team biết tình trạng xử lý…"
+                        defaultValue="Đã forward cho a. Hùng - phòng kinh doanh xử lý báo giá. ETA phản hồi: trong 4h." />
+            </div>
+          </div>
+        </div>
+      </AdPage>
+    );
+  }
+  ReactDOM.createRoot(document.getElementById('root')).render(<ContactsList />);
+</script>
+</body>
+</html>

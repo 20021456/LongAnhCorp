@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Thư viện ảnh · Long Anh Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="admin-shell.jsx"></script>
+<script type="text/babel">
+  const style = document.createElement('style');
+  style.textContent = ADMIN_GLOBAL_CSS + `
+    .mb-layout { display:grid; grid-template-columns:200px 1fr 320px; gap:0;
+          background:#fff; border:1px solid var(--ad-line); border-radius:10px;
+          overflow:hidden; min-height:600px; }
+    .mb-folders { border-right:1px solid var(--ad-line-soft); padding:14px 10px; }
+    .mb-folders h4 { font-size:11px; font-weight:600; color:var(--ad-text-mute);
+          letter-spacing:.06em; text-transform:uppercase; margin:8px 8px 6px; }
+    .mb-folder { display:flex; align-items:center; gap:9px; padding:7px 9px;
+          border-radius:5px; cursor:pointer; font-size:13px; color:var(--ad-text-soft); }
+    .mb-folder:hover { background:var(--ad-line-soft); color:var(--ad-text); }
+    .mb-folder.on { background:var(--ad-primary-soft); color:var(--ad-primary); font-weight:600; }
+    .mb-folder .count { margin-left:auto; font-size:11px; color:var(--ad-text-mute);
+          font-weight:500; }
+    .mb-folder.on .count { color:var(--ad-primary); }
+    .mb-main { display:flex; flex-direction:column; min-width:0; }
+    .mb-grid { display:grid; grid-template-columns:repeat(4, 1fr); gap:10px;
+          padding:14px; overflow-y:auto; flex:1; }
+    .mb-tile { aspect-ratio:1; border-radius:6px; overflow:hidden;
+          position:relative; cursor:pointer; background:var(--ad-line-soft);
+          border:2px solid transparent; }
+    .mb-tile img { width:100%; height:100%; object-fit:cover; }
+    .mb-tile.sel { border-color:var(--ad-primary); }
+    .mb-tile .ck { position:absolute; top:6px; left:6px; width:18px; height:18px;
+          border:1.5px solid #fff; border-radius:4px; background:rgba(0,0,0,.25); }
+    .mb-tile.sel .ck { background:var(--ad-primary); border-color:var(--ad-primary); }
+    .mb-tile .meta { position:absolute; left:0; right:0; bottom:0;
+          background:linear-gradient(transparent,rgba(0,0,0,.75)); padding:18px 8px 6px;
+          color:#fff; font-size:11px; }
+    .mb-detail { border-left:1px solid var(--ad-line-soft);
+          display:flex; flex-direction:column; }
+    .mb-detail .preview { aspect-ratio:1; background:#FAFAFB; }
+    .mb-detail .preview img { width:100%; height:100%; object-fit:contain; }
+    .mb-detail .body { padding:16px; flex:1; overflow-y:auto;
+          display:flex; flex-direction:column; gap:14px; }
+    .mb-detail .actions { padding:14px 16px; border-top:1px solid var(--ad-line-soft);
+          display:flex; gap:6px; }
+    .mb-info { font-size:12.5px; }
+    .mb-info dt { color:var(--ad-text-mute); }
+    .mb-info dd { margin:2px 0 8px; }
+    .mb-usage { background:var(--ad-info-soft); border-radius:6px; padding:10px 12px;
+          font-size:12px; color:#1D4ED8; }
+    .mb-usage b { display:block; margin-bottom:4px; }
+  `;
+  document.head.appendChild(style);
+
+  const IMAGES = [
+    { src: '../assets/da-nguyen-lieu-cao-cap.webp', name: 'da-nguyen-lieu-cao-cap.webp', size: '1.4MB', dim: '1920×1280', folder: 'product' },
+    { src: '../assets/da-nguyen-lieu-cao-cap2.webp', name: 'da-nguyen-lieu-cao-cap2.webp', size: '1.2MB', dim: '1920×1280', folder: 'product' },
+    { src: '../assets/da-slab-sieu-trang.webp', name: 'da-slab-sieu-trang.webp', size: '982KB', dim: '1600×1200', folder: 'product' },
+    { src: '../assets/bot-caco3-sieu-min.webp', name: 'bot-caco3-sieu-min.webp', size: '740KB', dim: '1600×1200', folder: 'product' },
+    { src: '../assets/bot-sieu-min.webp', name: 'bot-sieu-min.webp', size: '688KB', dim: '1600×1200', folder: 'product' },
+    { src: '../assets/nha-may-bot-sieu-min.webp', name: 'nha-may-bot-sieu-min.webp', size: '1.1MB', dim: '1920×1080', folder: 'banner' },
+    { src: '../assets/nha-may-bot-sieu-min-3.webp', name: 'nha-may-bot-sieu-min-3.webp', size: '1.3MB', dim: '1920×1080', folder: 'banner' },
+    { src: '../assets/co-so-ha-tang.jpg', name: 'co-so-ha-tang.jpg', size: '2.1MB', dim: '2400×1600', folder: 'banner' },
+    { src: '../assets/kho-hang.webp', name: 'kho-hang.webp', size: '890KB', dim: '1920×1280', folder: 'gallery' },
+    { src: '../assets/kho-hang-2.webp', name: 'kho-hang-2.webp', size: '950KB', dim: '1920×1280', folder: 'gallery' },
+    { src: '../assets/kho-da-nguyen-lieu.webp', name: 'kho-da-nguyen-lieu.webp', size: '1.0MB', dim: '1920×1280', folder: 'gallery' },
+    { src: '../assets/kho-hang-xuat-khau.webp', name: 'kho-hang-xuat-khau.webp', size: '870KB', dim: '1920×1280', folder: 'gallery' },
+    { src: '../assets/kiem-dinh.jpg', name: 'kiem-dinh.jpg', size: '1.6MB', dim: '2048×1536', folder: 'banner' },
+    { src: '../assets/bao-bi-sieu-trang.jpg', name: 'bao-bi-sieu-trang.jpg', size: '1.1MB', dim: '1920×1280', folder: 'product' },
+    { src: '../assets/hero-sw.png', name: 'hero-sw.png', size: '347KB', dim: '2048×1521', folder: 'product' },
+    { src: '../assets/long-anh-logo.png', name: 'long-anh-logo.png', size: '24KB', dim: '512×512', folder: 'logo' },
+  ];
+
+  function MediaLibrary() {
+    const [folder, setFolder] = React.useState('all');
+    const [selected, setSelected] = React.useState(0);
+
+    const filtered = folder === 'all' ? IMAGES : IMAGES.filter(i => i.folder === folder);
+    const item = filtered[selected] || IMAGES[0];
+
+    const folders = [
+      { id: 'all', name: 'Tất cả', icon: 'image', count: IMAGES.length },
+      { id: 'product', name: 'Sản phẩm', icon: 'rock', count: IMAGES.filter(i => i.folder === 'product').length },
+      { id: 'gallery', name: 'Gallery', icon: 'grid', count: IMAGES.filter(i => i.folder === 'gallery').length },
+      { id: 'banner', name: 'Banner', icon: 'layers', count: IMAGES.filter(i => i.folder === 'banner').length },
+      { id: 'logo', name: 'Logo & icons', icon: 'star', count: IMAGES.filter(i => i.folder === 'logo').length },
+    ];
+
+    const Header = (
+      <>
+        <button className="ad-btn"><AdIcon name="folder" size={13} /> Tạo folder</button>
+        <button className="ad-btn primary"><AdIcon name="upload" size={13} /> Upload ảnh</button>
+      </>
+    );
+
+    return (
+      <AdPage active="gallery" full
+        crumb={[{ label: 'Trang chủ', href: 'dashboard.html' }, { label: 'Thư viện ảnh' }]}
+        title="Thư viện ảnh"
+        sub={`${IMAGES.length} ảnh · 17.4 MB · auto-WebP convert đang bật`}
+        actions={Header}>
+
+        <div className="mb-layout">
+          {/* Folders */}
+          <div className="mb-folders">
+            <h4>Folders</h4>
+            {folders.map(f => (
+              <div key={f.id} className={`mb-folder ${folder === f.id ? 'on' : ''}`}
+                   onClick={() => { setFolder(f.id); setSelected(0); }}>
+                <AdIcon name={f.icon} size={14} />
+                <span>{f.name}</span>
+                <span className="count">{f.count}</span>
+              </div>
+            ))}
+            <h4 style={{ marginTop: 18 }}>Tags</h4>
+            {['đá tự nhiên', 'bột đá', 'kho hàng', 'nhà máy'].map(t => (
+              <div key={t} className="mb-folder">
+                <span style={{ width: 6, height: 6, borderRadius: '50%',
+                               background: 'var(--ad-text-mute)' }} />
+                <span>{t}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Grid */}
+          <div className="mb-main">
+            <div className="ad-toolbar" style={{ borderBottom: '1px solid var(--ad-line-soft)' }}>
+              <input className="ad-input" style={{ width: 240 }} placeholder="Tìm theo tên, alt…" />
+              <select className="ad-select" style={{ width: 130 }}>
+                <option>Mọi loại</option>
+                <option>JPG/PNG</option>
+                <option>WebP</option>
+                <option>SVG</option>
+              </select>
+              <select className="ad-select" style={{ width: 130 }}>
+                <option>Mới nhất</option>
+                <option>Cũ nhất</option>
+                <option>Tên A→Z</option>
+                <option>Kích thước</option>
+              </select>
+              <div className="grow" />
+              <span style={{ fontSize: 12, color: 'var(--ad-text-mute)' }}>
+                Đang chọn 1 ảnh
+              </span>
+            </div>
+            <div className="mb-grid">
+              {filtered.map((img, i) => (
+                <div key={i} className={`mb-tile ${i === selected ? 'sel' : ''}`}
+                     onClick={() => setSelected(i)}>
+                  <img src={img.src} alt={img.name} />
+                  <div className="ck">
+                    {i === selected && (
+                      <AdIcon name="check" size={10} />
+                    )}
+                  </div>
+                  <div className="meta">{img.dim}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Detail panel */}
+          <div className="mb-detail">
+            <div className="preview">
+              <img src={item.src} alt={item.name} />
+            </div>
+            <div className="body">
+              <div>
+                <div style={{ fontWeight: 600, fontSize: 13.5, wordBreak: 'break-all' }}>
+                  {item.name}
+                </div>
+                <div style={{ fontSize: 12, color: 'var(--ad-text-mute)', marginTop: 2 }}>
+                  {item.dim} · {item.size}
+                </div>
+              </div>
+
+              <dl className="mb-info">
+                <dt>Upload bởi</dt>
+                <dd>Anh Nam · 06/05/2026 14:32</dd>
+                <dt>Folder</dt>
+                <dd>{item.folder}</dd>
+              </dl>
+
+              <AdField label="Alt text" req help="Mô tả ảnh cho SEO & screen readers">
+                <input className="ad-input" defaultValue="Đá nguyên liệu cao cấp Long Anh" />
+              </AdField>
+              <AdField label="Caption (tùy chọn)">
+                <textarea className="ad-textarea" style={{ minHeight: 60 }}
+                          defaultValue="Khu vực kho đá nguyên liệu nhập từ mỏ Quỳ Hợp." />
+              </AdField>
+              <AdField label="Tags">
+                <div className="ad-tags">
+                  <span className="ad-tag">đá<button><AdIcon name="x" size={10} /></button></span>
+                  <span className="ad-tag">nguyên liệu<button><AdIcon name="x" size={10} /></button></span>
+                  <input placeholder="Thêm…" />
+                </div>
+              </AdField>
+
+              <div className="mb-usage">
+                <b>📍 Đang được dùng ở:</b>
+                <div>• Sản phẩm "Đá Granite Đỏ Nghệ An"</div>
+                <div>• Trang chủ — Section "Về Long Anh"</div>
+              </div>
+            </div>
+            <div className="actions">
+              <button className="ad-btn sm"><AdIcon name="edit" size={12} /> Crop</button>
+              <button className="ad-btn sm"><AdIcon name="refresh" size={12} /> Replace</button>
+              <button className="ad-btn sm"><AdIcon name="download" size={12} /></button>
+              <div style={{ flex: 1 }} />
+              <button className="ad-btn sm danger"><AdIcon name="trash" size={12} /></button>
+            </div>
+          </div>
+        </div>
+      </AdPage>
+    );
+  }
+  ReactDOM.createRoot(document.getElementById('root')).render(<MediaLibrary />);
+</script>
+</body>
+</html>

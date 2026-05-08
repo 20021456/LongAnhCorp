@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sản phẩm · Long Anh Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="admin-shell.jsx"></script>
+<script type="text/babel">
+  const style = document.createElement('style');
+  style.textContent = ADMIN_GLOBAL_CSS + `
+    .pl-grid { display:grid; grid-template-columns:repeat(4, 1fr); gap:16px; padding:16px; }
+    .pl-card { background:#fff; border:1px solid var(--ad-line); border-radius:10px;
+          overflow:hidden; transition:.18s; cursor:pointer; position:relative; }
+    .pl-card:hover { border-color:#cdd2da; box-shadow:var(--ad-shadow); transform:translateY(-2px); }
+    .pl-card .img { aspect-ratio:4 / 3; background:var(--ad-line-soft); position:relative; }
+    .pl-card .img img { width:100%; height:100%; object-fit:cover; }
+    .pl-card .img .ck { position:absolute; top:8px; left:8px; width:18px; height:18px;
+          border:1.5px solid #fff; background:rgba(0,0,0,.2); border-radius:4px; }
+    .pl-card .body { padding:12px 14px 14px; }
+    .pl-card .body h4 { margin:0 0 4px; font-size:13.5px; font-weight:600;
+          line-height:1.35; }
+    .pl-card .body .cat { font-size:11.5px; color:var(--ad-text-mute);
+          letter-spacing:.04em; text-transform:uppercase; font-weight:500; }
+    .pl-card .body .meta { display:flex; align-items:center; justify-content:space-between;
+          margin-top:10px; padding-top:10px; border-top:1px solid var(--ad-line-soft);
+          font-size:12px; color:var(--ad-text-soft); }
+  `;
+  document.head.appendChild(style);
+
+  const PRODUCTS = [
+    { name: 'Bột đá phủ Stearic Acid (CCR-T1)', cat: 'Bột đá phủ', img: '../assets/bot-caco3-sieu-min.webp', status: 'pub', updated: '2h trước', stock: 'Còn hàng' },
+    { name: 'Bột đá tráng phủ siêu mịn D50 1µm', cat: 'Bột đá tráng phủ', img: '../assets/bot-sieu-min.webp', status: 'pub', updated: '5h trước', stock: 'Còn hàng' },
+    { name: 'Bột đá tráng không phủ U25', cat: 'Bột đá tráng', img: '../assets/bot-caco3-sieu-min.webp', status: 'pub', updated: '1 ngày', stock: 'Còn hàng' },
+    { name: 'Đá Slab siêu trắng 1.8x2.7m', cat: 'Đá Slab', img: '../assets/da-slab-sieu-trang.webp', status: 'pub', updated: '1 ngày', stock: 'Còn hàng' },
+    { name: 'Đá xẻ quy cách 60×60cm', cat: 'Đá xẻ', img: '../assets/da-nguyen-lieu-cao-cap.webp', status: 'pub', updated: '2 ngày', stock: 'Đặt trước' },
+    { name: 'Đá Granite Đỏ Nghệ An', cat: 'Đá trang trí', img: '../assets/da-nguyen-lieu-cao-cap2.webp', status: 'pub', updated: '3 ngày', stock: 'Còn hàng' },
+    { name: 'Đá Marble Trắng Tuyết', cat: 'Đá trang trí', img: '../assets/da-slab-sieu-trang.webp', status: 'draft', updated: '3 ngày', stock: '—' },
+    { name: 'Bột đá CaCO₃ U10 không phủ', cat: 'Bột đá tráng', img: '../assets/bot-sieu-min.webp', status: 'pub', updated: '5 ngày', stock: 'Còn hàng' },
+  ];
+
+  function ProductsList() {
+    const [view, setView] = React.useState('grid');
+
+    const Header = (
+      <>
+        <button className="ad-btn"><AdIcon name="download" size={13} /> Xuất Excel</button>
+        <a href="product-edit.html" className="ad-btn primary">
+          <AdIcon name="plus" size={13} /> Thêm sản phẩm
+        </a>
+      </>
+    );
+
+    return (
+      <AdPage active="products"
+        crumb={[{ label: 'Trang chủ', href: 'dashboard.html' }, { label: 'Sản phẩm' }]}
+        title="Sản phẩm"
+        sub="127 sản phẩm · 124 đã xuất bản · 3 nháp"
+        actions={Header}>
+
+        <div className="ad-table-wrap">
+          <div className="ad-toolbar">
+            <input className="ad-input" style={{ width: 280 }}
+                   placeholder="Tìm theo tên sản phẩm, mã…" />
+            <select className="ad-select" style={{ width: 170 }}>
+              <option>Tất cả danh mục</option>
+              <option>Bột đá phủ</option>
+              <option>Bột đá tráng</option>
+              <option>Đá Slab</option>
+              <option>Đá xẻ</option>
+              <option>Đá trang trí</option>
+            </select>
+            <select className="ad-select" style={{ width: 140 }}>
+              <option>Mọi trạng thái</option>
+              <option>Đã xuất bản</option>
+              <option>Bản nháp</option>
+              <option>Đã ẩn</option>
+            </select>
+            <div className="grow" />
+            <div style={{ display: 'flex', gap: 2, padding: 3,
+                          background: 'var(--ad-line-soft)', borderRadius: 6 }}>
+              <button onClick={() => setView('grid')}
+                      style={{
+                        border: 0, background: view === 'grid' ? '#fff' : 'transparent',
+                        width: 28, height: 26, borderRadius: 4, cursor: 'pointer',
+                        boxShadow: view === 'grid' ? 'var(--ad-shadow)' : 'none',
+                        color: view === 'grid' ? 'var(--ad-text)' : 'var(--ad-text-mute)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      }}><AdIcon name="grid" size={14} /></button>
+              <button onClick={() => setView('list')}
+                      style={{
+                        border: 0, background: view === 'list' ? '#fff' : 'transparent',
+                        width: 28, height: 26, borderRadius: 4, cursor: 'pointer',
+                        boxShadow: view === 'list' ? 'var(--ad-shadow)' : 'none',
+                        color: view === 'list' ? 'var(--ad-text)' : 'var(--ad-text-mute)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      }}><AdIcon name="list" size={14} /></button>
+            </div>
+          </div>
+
+          {view === 'grid' ? (
+            <div className="pl-grid">
+              {PRODUCTS.map((p, i) => (
+                <a href="product-edit.html" key={i} className="pl-card">
+                  <div className="img">
+                    <img src={p.img} alt={p.name} />
+                    <div className="ck" />
+                    <div style={{ position: 'absolute', top: 8, right: 8 }}>
+                      <AdBadge status={p.status} />
+                    </div>
+                  </div>
+                  <div className="body">
+                    <div className="cat">{p.cat}</div>
+                    <h4>{p.name}</h4>
+                    <div className="meta">
+                      <span>{p.stock}</span>
+                      <span>{p.updated}</span>
+                    </div>
+                  </div>
+                </a>
+              ))}
+            </div>
+          ) : (
+            <table className="ad-table">
+              <thead>
+                <tr>
+                  <th style={{ width: 36 }}><input type="checkbox" /></th>
+                  <th>Sản phẩm</th>
+                  <th style={{ width: 140 }}>Danh mục</th>
+                  <th style={{ width: 110 }}>Trạng thái</th>
+                  <th style={{ width: 110 }}>Tồn kho</th>
+                  <th style={{ width: 130 }}>Sửa lần cuối</th>
+                  <th style={{ width: 140 }}></th>
+                </tr>
+              </thead>
+              <tbody>
+                {PRODUCTS.map((p, i) => (
+                  <tr key={i}>
+                    <td><input type="checkbox" /></td>
+                    <td>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                        <img src={p.img} className="ad-thumb" alt="" />
+                        <div style={{ fontWeight: 500 }}>{p.name}</div>
+                      </div>
+                    </td>
+                    <td><span className="ad-badge hide"><span className="dot" />{p.cat}</span></td>
+                    <td><AdBadge status={p.status} /></td>
+                    <td>{p.stock}</td>
+                    <td style={{ color: 'var(--ad-text-soft)' }}>{p.updated}</td>
+                    <td>
+                      <div className="row-actions" style={{ justifyContent: 'flex-end' }}>
+                        <a href="product-edit.html" className="ad-btn ghost sm"><AdIcon name="edit" size={13} /></a>
+                        <button className="ad-btn ghost sm"><AdIcon name="copy" size={13} /></button>
+                        <button className="ad-btn ghost sm"><AdIcon name="more" size={13} /></button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+
+          <div className="ad-pag">
+            <div>Hiển thị 1 – 8 của 127 sản phẩm</div>
+            <div className="ad-pag-pages">
+              <button>‹</button>
+              <button className="on">1</button>
+              <button>2</button>
+              <button>3</button>
+              <button>…</button>
+              <button>16</button>
+              <button>›</button>
+            </div>
+          </div>
+        </div>
+      </AdPage>
+    );
+  }
+  ReactDOM.createRoot(document.getElementById('root')).render(<ProductsList />);
+</script>
+</body>
+</html>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dashboard · Long Anh Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+<template id="__bundler_thumbnail">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    <rect width="100" height="100" fill="#0F3D7A"/>
+    <rect x="20" y="20" width="60" height="60" rx="8" fill="#fff"/>
+    <rect x="28" y="32" width="20" height="3" rx="1.5" fill="#0F3D7A"/>
+    <rect x="28" y="40" width="32" height="3" rx="1.5" fill="#C8A24B"/>
+    <rect x="28" y="52" width="44" height="14" rx="3" fill="#E8EFF8"/>
+  </svg>
+</template>
+<div id="root"></div>
+<script type="text/babel" src="admin-shell.jsx"></script>
+<script type="text/babel">
+  const style = document.createElement('style');
+  style.textContent = ADMIN_GLOBAL_CSS + `
+    .dash-grid { display:grid; gap:16px; }
+    .dash-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:24px; }
+    .dash-stat { background:#fff; border:1px solid var(--ad-line); border-radius:10px;
+          padding:18px 20px; }
+    .dash-stat-head { display:flex; align-items:center; justify-content:space-between;
+          color:var(--ad-text-soft); font-size:13px; font-weight:500; margin-bottom:14px; }
+    .dash-stat-icon { width:32px; height:32px; border-radius:8px; display:flex;
+          align-items:center; justify-content:center; }
+    .dash-stat-num { font-size:30px; font-weight:700; letter-spacing:-.02em; line-height:1; }
+    .dash-stat-delta { display:inline-flex; align-items:center; gap:4px; font-size:12px;
+          font-weight:600; margin-top:8px; padding:2px 7px; border-radius:99px; }
+    .dash-stat-delta.up { background:var(--ad-success-soft); color:#15803D; }
+    .dash-stat-delta.flat { background:var(--ad-line-soft); color:var(--ad-text-soft); }
+    .dash-2col { display:grid; grid-template-columns:1.6fr 1fr; gap:16px; margin-bottom:24px; }
+    .dash-chart { height:240px; padding:18px; }
+    .dash-chart svg { width:100%; height:100%; }
+    .dash-news-item { display:flex; align-items:center; gap:12px; padding:11px 18px;
+          border-bottom:1px solid var(--ad-line-soft); font-size:13px; }
+    .dash-news-item:last-child { border-bottom:0; }
+    .dash-news-item img { width:42px; height:32px; border-radius:5px; object-fit:cover; flex:none; }
+    .dash-news-item .meta { font-size:11.5px; color:var(--ad-text-mute); margin-top:2px; }
+    .dash-news-item:hover { background:#FBFBFC; }
+    .dash-quick { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:24px; }
+    .dash-quick a { display:flex; align-items:center; gap:11px; padding:14px 16px;
+          background:#fff; border:1px solid var(--ad-line); border-radius:10px;
+          font-size:13.5px; font-weight:500; transition:.15s; }
+    .dash-quick a:hover { border-color:var(--ad-primary); background:var(--ad-primary-soft);
+          color:var(--ad-primary); }
+    .dash-quick .ico { width:32px; height:32px; border-radius:7px; display:flex;
+          align-items:center; justify-content:center; flex:none; }
+    .dash-act { display:flex; gap:14px; padding:13px 18px;
+          border-bottom:1px solid var(--ad-line-soft); align-items:flex-start; }
+    .dash-act:last-child { border-bottom:0; }
+    .dash-act-time { font-family:'JetBrains Mono',ui-monospace,monospace; font-size:11.5px;
+          color:var(--ad-text-mute); flex:none; min-width:46px; padding-top:2px; }
+    .dash-act-av { width:26px; height:26px; border-radius:50%; background:var(--ad-primary);
+          color:#fff; display:flex; align-items:center; justify-content:center;
+          font-weight:600; font-size:10.5px; flex:none; }
+    .dash-act-av.sys { background:var(--ad-line); color:var(--ad-text-soft); }
+    .dash-act-body { font-size:13px; line-height:1.55; }
+    .dash-act-body b { font-weight:600; }
+    .dash-act-body a { color:var(--ad-primary); font-weight:500; }
+  `;
+  document.head.appendChild(style);
+
+  function StatCard({ icon, iconBg, iconColor, label, num, delta, deltaType = 'up' }) {
+    return (
+      <div className="dash-stat">
+        <div className="dash-stat-head">
+          <span>{label}</span>
+          <div className="dash-stat-icon" style={{ background: iconBg, color: iconColor }}>
+            <AdIcon name={icon} size={17} />
+          </div>
+        </div>
+        <div className="dash-stat-num">{num}</div>
+        {delta && (
+          <span className={`dash-stat-delta ${deltaType}`}>
+            <AdIcon name="trend" size={11} /> {delta}
+          </span>
+        )}
+      </div>
+    );
+  }
+
+  function ViewsChart() {
+    /* Generate fake but smooth-ish 30-day series */
+    const data = [320, 410, 380, 450, 520, 480, 510, 600, 560, 620, 700, 680,
+                  720, 690, 760, 810, 770, 830, 880, 900, 870, 940, 980, 950,
+                  1010, 1080, 1040, 1120, 1180, 1240];
+    const W = 720, H = 200, P = 24;
+    const max = Math.max(...data);
+    const xs = (i) => P + (W - 2 * P) * i / (data.length - 1);
+    const ys = (v) => H - P - (H - 2 * P) * v / max;
+    const path = data.map((v, i) => `${i ? 'L' : 'M'}${xs(i).toFixed(1)} ${ys(v).toFixed(1)}`).join(' ');
+    const area = `${path} L${xs(data.length - 1).toFixed(1)} ${H - P} L${xs(0).toFixed(1)} ${H - P}Z`;
+    return (
+      <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#0F3D7A" stopOpacity=".18" />
+            <stop offset="100%" stopColor="#0F3D7A" stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        {[0, 1, 2, 3].map(i => (
+          <line key={i} x1={P} x2={W - P} y1={P + i * (H - 2 * P) / 3} y2={P + i * (H - 2 * P) / 3}
+                stroke="#F0F1F3" strokeWidth="1" />
+        ))}
+        <path d={area} fill="url(#g1)" />
+        <path d={path} stroke="#0F3D7A" strokeWidth="2" fill="none"
+              strokeLinecap="round" strokeLinejoin="round" />
+        {data.map((v, i) => i % 5 === 0 && (
+          <circle key={i} cx={xs(i)} cy={ys(v)} r="3" fill="#fff" stroke="#0F3D7A" strokeWidth="2" />
+        ))}
+      </svg>
+    );
+  }
+
+  function Dashboard() {
+    return (
+      <AdPage active="dashboard"
+        title={<>Chào Anh Nam <span style={{ fontSize: 22 }}>👋</span></>}
+        sub="Hôm nay là Thứ Năm, 07/05/2026 — đây là tổng quan tuần này">
+
+        <div className="dash-stats">
+          <StatCard icon="rock" iconBg="#E8F0FB" iconColor="#0F3D7A"
+                    label="Sản phẩm" num="127" delta="+3 tuần này" />
+          <StatCard icon="news" iconBg="#FFF1E5" iconColor="#F08023"
+                    label="Tin tức" num="43" delta="+2 tuần này" />
+          <StatCard icon="eye" iconBg="#DCFCE7" iconColor="#15803D"
+                    label="Lượt xem (30 ngày)" num="12,450" delta="+18% MoM" />
+          <StatCard icon="mail" iconBg="#FEE2E2" iconColor="#DC2626"
+                    label="Liên hệ chưa đọc" num="5" delta="cần phản hồi" deltaType="flat" />
+        </div>
+
+        <div className="dash-2col">
+          <div className="ad-card">
+            <div className="ad-card-head">
+              <div>
+                <h3>Lượt xem website</h3>
+                <p>30 ngày gần nhất · so với kỳ trước +18%</p>
+              </div>
+              <select className="ad-select" style={{ width: 130, height: 30 }}>
+                <option>30 ngày</option>
+                <option>7 ngày</option>
+                <option>90 ngày</option>
+              </select>
+            </div>
+            <div className="dash-chart"><ViewsChart /></div>
+          </div>
+
+          <div className="ad-card">
+            <div className="ad-card-head">
+              <h3>Tin tức mới đăng</h3>
+              <a href="news.html" className="ad-btn ghost sm">Xem tất cả <AdIcon name="chevron" size={13} /></a>
+            </div>
+            <div>
+              {[
+                { t: 'Long Anh ký hợp đồng xuất khẩu sang Ấn Độ', date: '06/05/2026', img: '../assets/kho-hang-xuat-khau.webp' },
+                { t: 'Khánh thành dây chuyền nghiền bột siêu mịn #4', date: '02/05/2026', img: '../assets/nha-may-bot-sieu-min-3.webp' },
+                { t: 'Đạt chứng nhận ISO 9001:2015 cho 5 nhà máy', date: '28/04/2026', img: '../assets/nha-may-bot-sieu-min.webp' },
+                { t: 'Báo giá tháng 5: Đá Granite Đỏ Nghệ An', date: '25/04/2026', img: '../assets/da-slab-sieu-trang.webp' },
+              ].map((n, i) => (
+                <a href="#" key={i} className="dash-news-item">
+                  <img src={n.img} alt={n.t} />
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ overflow: 'hidden', textOverflow: 'ellipsis',
+                                  whiteSpace: 'nowrap', fontWeight: 500 }}>{n.t}</div>
+                    <div className="meta">{n.date}</div>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <h3 style={{ fontSize: 13, fontWeight: 600, color: 'var(--ad-text-mute)',
+                     letterSpacing: '.06em', textTransform: 'uppercase',
+                     margin: '4px 0 12px' }}>Hành động nhanh</h3>
+        <div className="dash-quick">
+          <a href="page-edit-home.html">
+            <div className="ico" style={{ background: 'var(--ad-primary-soft)', color: 'var(--ad-primary)' }}>
+              <AdIcon name="edit" size={16} /></div>
+            Sửa trang chủ
+          </a>
+          <a href="product-edit.html">
+            <div className="ico" style={{ background: 'var(--ad-accent-soft)', color: 'var(--ad-accent)' }}>
+              <AdIcon name="plus" size={16} /></div>
+            Thêm sản phẩm
+          </a>
+          <a href="news.html">
+            <div className="ico" style={{ background: '#DCFCE7', color: '#15803D' }}>
+              <AdIcon name="news" size={16} /></div>
+            Viết tin tức
+          </a>
+          <a href="media.html">
+            <div className="ico" style={{ background: '#DBEAFE', color: '#2563EB' }}>
+              <AdIcon name="upload" size={16} /></div>
+            Upload ảnh
+          </a>
+        </div>
+
+        <div className="ad-card">
+          <div className="ad-card-head">
+            <h3>Hoạt động gần đây</h3>
+            <a href="#" className="ad-btn ghost sm">Xem tất cả <AdIcon name="chevron" size={13} /></a>
+          </div>
+          <div>
+            {[
+              { t: '14:32', who: 'Anh Nam', av: 'AN', what: <>sửa nội dung sản phẩm <a>Đá Granite Đỏ Nghệ An</a></> },
+              { t: '13:10', who: 'Chị Lan', av: 'LH', what: <>xuất bản bài viết <a>Báo giá tháng 5</a></> },
+              { t: '11:45', who: 'Hệ thống', av: '⚙', sys: true, what: <>có 1 liên hệ mới từ <a>Nguyễn Văn A</a> · "Hỏi giá đá Granite"</> },
+              { t: '10:20', who: 'Chị Lan', av: 'LH', what: <>thay ảnh hero trang chủ — <a>Trang chủ</a></> },
+              { t: '09:05', who: 'Anh Nam', av: 'AN', what: <>thêm 12 ảnh mới vào thư viện · folder <a>Sản phẩm/Granite</a></> },
+              { t: '08:40', who: 'Hệ thống', av: '⚙', sys: true, what: <>tự động backup database · 04:00 sáng nay</> },
+            ].map((a, i) => (
+              <div key={i} className="dash-act">
+                <div className="dash-act-time">{a.t}</div>
+                <div className={`dash-act-av ${a.sys ? 'sys' : ''}`}>{a.av}</div>
+                <div className="dash-act-body">
+                  <b>{a.who}</b> {a.what}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+      </AdPage>
+    );
+  }
+
+  ReactDOM.createRoot(document.getElementById('root')).render(<Dashboard />);
+</script>
+</body>
+</html>
