@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tuyển dụng — KS Long Anh</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fraunces:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; min-height: 100%; background: #FAFBFD; }
+    body { font-family: 'Inter', system-ui, sans-serif; color: #0E1726; line-height: 1.55;
+           -webkit-font-smoothing: antialiased; }
+
+    /* ── CSS variables ── */
+    :root {
+      --navy: #0F3D7A; --navy-dk: #0A2B57; --sky: #5B9BD5;
+      --orange: #F08023; --orange-dk: #D26713;
+      --bg: #FAFBFD; --bg-alt: #F1F4F9; --card: #fff;
+      --text: #0E1726; --line: rgba(15,61,122,.10);
+    }
+    body.dark {
+      --bg: #0A1424; --bg-alt: #0E1A2E; --card: #0F1B30;
+      --text: #E6EBF3; --line: rgba(255,255,255,.08);
+    }
+    body { background: var(--bg); color: var(--text); }
+
+    /* ── Utility ── */
+    .wrap { max-width: 1200px; margin: 0 auto; padding: 0 32px; }
+    .eyebrow { font-size: 11px; font-weight: 600; letter-spacing: .16em;
+               text-transform: uppercase; color: var(--orange); }
+    h1, h2, h3, h4 { margin: 0; font-weight: 700; letter-spacing: -.02em; line-height: 1.05; }
+    p { margin: 0; }
+
+    /* ── Strip ── */
+    .strip { background: var(--navy-dk); color: #CFE0F2; font-size: 12px; }
+    .strip-in { display: flex; justify-content: space-between; align-items: center; height: 36px; }
+    .strip a { color: inherit; text-decoration: none; opacity: .85; }
+    .strip a:hover { opacity: 1; color: #fff; }
+    .strip-r { display: flex; gap: 18px; align-items: center; }
+
+    /* ── Header ── */
+    .hd { position: sticky; top: 0; z-index: 50; background: var(--bg);
+          border-bottom: 1px solid var(--line); backdrop-filter: saturate(140%) blur(8px); }
+    .hd-in { display: flex; align-items: center; justify-content: space-between;
+             height: 74px; gap: 24px; }
+    .brand { display: flex; align-items: center; gap: 14px; text-decoration: none; color: inherit; }
+    .brand-mark { width: 48px; height: 48px; }
+    .brand-mark img { width: 100%; height: 100%; object-fit: contain; }
+    .brand-name { display: flex; flex-direction: column; line-height: 1; }
+    .brand-name b { font-size: 15px; font-weight: 700; letter-spacing: .02em; color: var(--navy); }
+    body.dark .brand-name b { color: var(--sky); }
+    .brand-name span { font-size: 10.5px; color: var(--text); opacity: .55;
+                       letter-spacing: .06em; text-transform: uppercase; margin-top: 4px; }
+    nav.main { display: flex; gap: 30px; align-items: center; }
+    nav.main a { color: var(--text); text-decoration: none; font-size: 14px;
+                 font-weight: 500; opacity: .78; padding: 6px 0; position: relative; }
+    nav.main a:hover { opacity: 1; color: var(--orange); }
+    nav.main a.active { opacity: 1; color: var(--orange); }
+    nav.main a.active::after { content: ''; position: absolute; left: 0; right: 0; bottom: -22px;
+                               height: 2px; background: var(--orange); }
+    .hd-actions { display: flex; gap: 10px; align-items: center; }
+    .lang-sw { display: flex; gap: 2px; padding: 3px; border: 1px solid var(--line); border-radius: 8px; }
+    .lang-sw button { font: inherit; padding: 4px 10px; background: transparent; color: var(--text);
+                      border: 0; border-radius: 5px; cursor: pointer; font-size: 12px; font-weight: 600; opacity: .6; }
+    .lang-sw button.on { background: var(--navy); color: #fff; opacity: 1; }
+    .icon-btn { width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--line);
+                background: transparent; color: var(--text); cursor: pointer;
+                display: flex; align-items: center; justify-content: center; opacity: .7; }
+    .icon-btn:hover { opacity: 1; border-color: var(--orange); color: var(--orange); }
+
+    /* ── Buttons ── */
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 22px;
+           border-radius: 8px; font-size: 14px; font-weight: 600; text-decoration: none;
+           cursor: pointer; border: 0; font-family: inherit; transition: .18s; }
+    .btn-p { background: var(--orange); color: #fff; }
+    .btn-p:hover { background: var(--orange-dk); transform: translateY(-1px); }
+    .btn-g { background: transparent; color: var(--text); border: 1px solid var(--line); }
+    .btn-g:hover { border-color: var(--orange); color: var(--orange); }
+    .btn-w { background: #fff; color: var(--navy); }
+    .btn-w:hover { background: #f0f4fa; transform: translateY(-1px); }
+
+    /* ── Hero ── */
+    .career-hero { background: var(--navy-dk);
+                   background-image: linear-gradient(135deg, rgba(15,61,122,.7), rgba(10,43,87,.92)),
+                                     url('assets/nha-may-bot-sieu-min-3.webp');
+                   background-size: cover; background-position: center;
+                   padding: 100px 0 80px; color: #fff; position: relative; overflow: hidden; }
+    .career-hero::before { content: ''; position: absolute; inset: 0;
+                           background-image: linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px),
+                                             linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px);
+                           background-size: 48px 48px;
+                           mask-image: radial-gradient(ellipse at 60% 50%, black 40%, transparent 80%); }
+    .career-hero .wrap { position: relative; z-index: 1; }
+    .career-hero .breadcrumb { font-size: 12px; opacity: .55; margin-bottom: 28px;
+                               display: flex; align-items: center; gap: 8px; }
+    .career-hero .breadcrumb a { color: inherit; text-decoration: none; opacity: 1; }
+    .career-hero .breadcrumb a:hover { opacity: .8; }
+    .career-hero h1 { font-size: clamp(38px, 5vw, 64px); max-width: 780px; margin: 16px 0 24px; color: #fff; }
+    .career-hero h1 span { color: var(--orange); }
+    .career-hero p { font-size: 17px; line-height: 1.65; max-width: 580px; opacity: .82; margin-bottom: 40px; }
+    .hero-stats { display: flex; gap: 48px; }
+    .hero-stat b { display: block; font-size: 32px; font-weight: 700; color: #fff; }
+    .hero-stat span { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; opacity: .55; margin-top: 4px; display: block; }
+
+    /* ── Filters ── */
+    .filters { background: var(--bg-alt); border-bottom: 1px solid var(--line);
+               padding: 20px 0; position: sticky; top: 74px; z-index: 40; }
+    .filters-in { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .filter-btn { font: inherit; font-size: 13px; font-weight: 500; padding: 8px 16px;
+                  border-radius: 99px; border: 1px solid var(--line);
+                  background: transparent; color: var(--text); cursor: pointer;
+                  opacity: .7; transition: .2s; }
+    .filter-btn:hover { opacity: 1; border-color: var(--orange); color: var(--orange); }
+    .filter-btn.on { background: var(--navy); color: #fff; opacity: 1; border-color: var(--navy); }
+    body.dark .filter-btn.on { background: var(--sky); color: #0A1424; border-color: var(--sky); }
+    .search-box { margin-left: auto; display: flex; align-items: center; gap: 8px;
+                  background: var(--card); border: 1px solid var(--line); border-radius: 8px;
+                  padding: 0 14px; height: 38px; }
+    .search-box input { border: 0; background: transparent; font: inherit; font-size: 13px;
+                        color: var(--text); outline: none; width: 200px; }
+    .search-box input::placeholder { opacity: .45; }
+
+    /* ── Job listings ── */
+    .section { padding: 80px 0; }
+    .section.tight { padding: 56px 0; }
+    .shead { display: grid; grid-template-columns: 1fr 1.4fr; gap: 48px;
+             align-items: end; margin-bottom: 48px; }
+    .shead h2 { font-size: clamp(28px, 3vw, 42px); margin-top: 12px; }
+    .shead p { font-size: 15px; opacity: .7; line-height: 1.65; }
+
+    .jobs-grid { display: flex; flex-direction: column; gap: 0;
+                 border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+    .job-card { background: var(--card); padding: 28px 32px; border-bottom: 1px solid var(--line);
+                display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: center;
+                transition: .25s; cursor: pointer; text-decoration: none; color: inherit; }
+    .job-card:last-child { border-bottom: 0; }
+    .job-card:hover { background: var(--navy); }
+    .job-card:hover .job-dept, .job-card:hover .job-title,
+    .job-card:hover .job-meta, .job-card:hover .job-tags span { color: #fff !important; opacity: 1; }
+    .job-card:hover .job-tags span { background: rgba(255,255,255,.15); }
+    .job-card:hover .job-arrow { color: var(--orange); }
+    .job-dept { font-size: 10.5px; font-weight: 600; letter-spacing: .12em;
+                text-transform: uppercase; color: var(--orange); margin-bottom: 8px; }
+    .job-title { font-size: 19px; font-weight: 700; letter-spacing: -.01em;
+                 line-height: 1.2; margin-bottom: 12px; }
+    .job-meta { display: flex; gap: 20px; font-size: 12.5px; opacity: .6; }
+    .job-meta-item { display: flex; align-items: center; gap: 5px; }
+    .job-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+    .job-tags span { font-size: 11px; padding: 4px 10px; border-radius: 99px;
+                     background: var(--bg-alt); opacity: .8; font-weight: 500;
+                     letter-spacing: .03em; transition: .25s; }
+    .job-arrow { display: flex; align-items: center; gap: 6px; font-size: 13px;
+                 font-weight: 600; color: var(--orange); white-space: nowrap;
+                 transition: .25s; }
+
+    /* ── Values grid ── */
+    .values-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .value-card { background: var(--card); border: 1px solid var(--line); border-radius: 16px;
+                  padding: 32px 28px; transition: .35s; }
+    .value-card:hover { transform: translateY(-6px);
+                        box-shadow: 0 20px 48px -18px rgba(15,61,122,.22); }
+    .value-icon { width: 48px; height: 48px; border-radius: 12px; background: var(--bg-alt);
+                  color: var(--orange); display: flex; align-items: center; justify-content: center;
+                  margin-bottom: 20px; transition: .3s; }
+    .value-card:hover .value-icon { background: var(--navy); color: #fff; }
+    .value-card h3 { font-size: 18px; margin-bottom: 10px; }
+    .value-card p { font-size: 13.5px; line-height: 1.6; opacity: .68; }
+
+    /* ── Benefits ── */
+    .benefits-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0;
+                     border: 1px solid var(--line); border-radius: 16px; overflow: hidden;
+                     background: var(--line); }
+    .benefit { background: var(--card); padding: 32px 28px; transition: .25s; }
+    .benefit:hover { background: var(--bg-alt); }
+    .benefit-num { font-family: ui-monospace, Menlo, monospace; font-size: 11px;
+                   color: var(--orange); letter-spacing: .08em; margin-bottom: 14px; }
+    .benefit h4 { font-size: 17px; margin-bottom: 8px; }
+    .benefit p { font-size: 13px; opacity: .65; line-height: 1.55; }
+
+    /* ── Process ── */
+    .process-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+                     position: relative; }
+    .process-steps::before { content: ''; position: absolute; top: 28px; left: 10%;
+                              right: 10%; height: 1px; background: var(--line); z-index: 0; }
+    .process-step { text-align: center; padding: 0 16px; position: relative; z-index: 1; }
+    .step-num { width: 56px; height: 56px; border-radius: 50%;
+                background: var(--card); border: 2px solid var(--line);
+                display: flex; align-items: center; justify-content: center;
+                margin: 0 auto 20px; font-size: 18px; font-weight: 700;
+                color: var(--navy); transition: .3s; }
+    body.dark .step-num { color: var(--sky); }
+    .process-step:hover .step-num { background: var(--navy); color: #fff; border-color: var(--navy); }
+    body.dark .process-step:hover .step-num { background: var(--sky); color: #0A1424; border-color: var(--sky); }
+    .process-step h4 { font-size: 15px; margin-bottom: 8px; }
+    .process-step p { font-size: 13px; opacity: .65; line-height: 1.55; }
+
+    /* ── CTA banner ── */
+    .cta-banner { background: var(--navy); border-radius: 18px; padding: 64px 56px;
+                  display: grid; grid-template-columns: 1fr auto; gap: 48px; align-items: center; }
+    .cta-banner h2 { color: #fff; font-size: clamp(26px, 3vw, 38px); margin-bottom: 14px; }
+    .cta-banner p { color: rgba(255,255,255,.75); font-size: 15px; line-height: 1.65; }
+    .cta-banner .eyebrow { color: var(--orange); margin-bottom: 14px; }
+
+    /* ── Footer ── */
+    .ft { background: #06101F; color: #9CB0CC; padding: 54px 0 32px; font-size: 13px; }
+    .ft-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 42px;
+               padding-bottom: 32px; border-bottom: 1px solid rgba(255,255,255,.08); }
+    .ft h5 { color: #fff; font-size: 13px; font-weight: 600; margin: 0 0 14px; }
+    .ft a { color: inherit; text-decoration: none; opacity: .75; display: block; padding: 4px 0; }
+    .ft a:hover { color: #F08023; opacity: 1; }
+    .ft-bottom { display: flex; justify-content: space-between; align-items: center;
+                 padding-top: 24px; opacity: .6; font-size: 12px; }
+
+    @media (max-width: 980px) {
+      nav.main { display: none; }
+      .shead, .cta-banner { grid-template-columns: 1fr; gap: 24px; }
+      .values-grid { grid-template-columns: 1fr 1fr; }
+      .benefits-grid { grid-template-columns: 1fr; }
+      .process-steps { grid-template-columns: 1fr 1fr; gap: 32px; }
+      .process-steps::before { display: none; }
+      .ft-grid { grid-template-columns: 1fr 1fr; }
+      .hero-stats { flex-wrap: wrap; gap: 28px; }
+    }
+  </style>
+</head>
+<body id="page-body">
+  <!-- ── Strip ── -->
+  <div class="strip">
+    <div class="wrap strip-in">
+      <span id="strip-hotline">Hotline kinh doanh: <b style="color:#fff">(+84) 912 779 799</b></span>
+      <div class="strip-r">
+        <a href="mailto:info@longanhcorp.com">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+          info@longanhcorp.com
+        </a>
+        <span style="opacity:.4">·</span>
+        <a href="index.html">ISO 9001 : 2015</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Header ── -->
+  <header class="hd">
+    <div class="wrap hd-in">
+      <a class="brand" href="index.html">
+        <span class="brand-mark"><img src="assets/long-anh-logo.png" alt="Long Anh Logo" /></span>
+        <span class="brand-name">
+          <b id="brand-name-text">KS LONG ANH</b>
+          <span id="brand-tagline">Bột đá Canxi Cacbonat & Đá tự nhiên Việt Nam</span>
+        </span>
+      </a>
+      <nav class="main">
+        <a href="index.html" id="nav-home">Trang chủ</a>
+        <a href="index.html#about" id="nav-about">Giới thiệu</a>
+        <a href="index.html#products" id="nav-products">Sản phẩm</a>
+        <a href="career.html" class="active" id="nav-career">Tuyển dụng</a>
+        <a href="index.html#contact" id="nav-contact">Liên hệ</a>
+      </nav>
+      <div class="hd-actions">
+        <div class="lang-sw">
+          <button class="on" onclick="setLang('vi')" id="btn-vi">VI</button>
+          <button onclick="setLang('en')" id="btn-en">EN</button>
+        </div>
+        <button class="icon-btn" onclick="toggleDark()" id="dark-btn" title="Toggle dark mode">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 13a8 8 0 11-10-10 7 7 0 0010 10z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── Hero ── -->
+  <section class="career-hero">
+    <div class="wrap">
+      <div class="breadcrumb">
+        <a href="index.html" id="bc-home">Trang chủ</a>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+        <span id="bc-career">Tuyển dụng</span>
+      </div>
+      <div class="eyebrow" id="hero-eyebrow">Cơ hội nghề nghiệp</div>
+      <h1 id="hero-title">Gia nhập đội ngũ <span>Long Anh</span> —<br>nơi tài năng được phát triển.</h1>
+      <p id="hero-sub">Chúng tôi xây dựng một môi trường làm việc chuyên nghiệp, năng động và minh bạch, nơi mỗi cá nhân đều có cơ hội đóng góp và trưởng thành cùng doanh nghiệp.</p>
+      <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:60px">
+        <a class="btn btn-p" href="#jobs" id="cta-jobs">Xem vị trí tuyển dụng
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a class="btn btn-w" href="index.html#contact" id="cta-contact">Liên hệ trực tiếp</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><b>20+</b><span id="stat-exp">Năm kinh nghiệm</span></div>
+        <div class="hero-stat"><b>150+</b><span id="stat-staff">Cán bộ nhân viên</span></div>
+        <div class="hero-stat"><b>5</b><span id="stat-plants">Nhà máy & chi nhánh</span></div>
+        <div class="hero-stat"><b>12</b><span id="stat-markets">Thị trường xuất khẩu</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Filter bar ── -->
+  <div class="filters" id="filter-bar">
+    <div class="wrap filters-in">
+      <button class="filter-btn on" onclick="filterJobs('all', this)" id="filter-all">Tất cả</button>
+      <button class="filter-btn" onclick="filterJobs('san-xuat', this)" id="filter-sx">Sản xuất</button>
+      <button class="filter-btn" onclick="filterJobs('kinh-doanh', this)" id="filter-kd">Kinh doanh</button>
+      <button class="filter-btn" onclick="filterJobs('chat-luong', this)" id="filter-cl">Chất lượng</button>
+      <button class="filter-btn" onclick="filterJobs('hanh-chinh', this)" id="filter-hc">Hành chính</button>
+      <button class="filter-btn" onclick="filterJobs('ky-thuat', this)" id="filter-kt">Kỹ thuật</button>
+      <div class="search-box">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="opacity:.45;flex-shrink:0"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+        <input type="text" id="search-input" placeholder="Tìm kiếm vị trí..." oninput="searchJobs(this.value)"/>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Job listings ── -->
+  <section class="section" id="jobs">
+    <div class="wrap">
+      <div class="shead">
+        <div>
+          <div class="eyebrow" id="jobs-eyebrow">Vị trí đang tuyển</div>
+          <h2 id="jobs-title">Cơ hội việc làm hiện tại</h2>
+        </div>
+        <p id="jobs-sub">Tất cả các vị trí đều mở cửa cho ứng viên có năng lực và tinh thần học hỏi — kinh nghiệm ngành khoáng sản là lợi thế.</p>
+      </div>
+
+      <div class="jobs-grid" id="jobs-list">
+        <!-- Jobs rendered by JS -->
+      </div>
+
+      <p id="no-jobs" style="display:none;text-align:center;opacity:.5;padding:48px 0;font-size:15px">
+        Không tìm thấy vị trí phù hợp. Vui lòng thử từ khóa khác.
+      </p>
+    </div>
+  </section>
+
+  <!-- ── Company values ── -->
+  <section class="section tight" style="background:var(--bg-alt)">
+    <div class="wrap">
+      <div class="shead">
+        <div>
+          <div class="eyebrow" id="values-eyebrow">Văn hóa doanh nghiệp</div>
+          <h2 id="values-title">Điều làm nên Long Anh</h2>
+        </div>
+        <p id="values-sub">Chúng tôi không chỉ sản xuất khoáng sản — chúng tôi xây dựng con người và tổ chức có giá trị lâu bền.</p>
+      </div>
+      <div class="values-grid">
+        <div class="value-card">
+          <div class="value-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s-7 8-7 13a7 7 0 0014 0c0-5-7-13-7-13z"/></svg>
+          </div>
+          <h3 id="val1-title">Chính trực & Minh bạch</h3>
+          <p id="val1-body">Mọi quyết định đều dựa trên dữ liệu và sự thật. Chúng tôi đối thoại cởi mở và nhận trách nhiệm về kết quả.</p>
+        </div>
+        <div class="value-card">
+          <div class="value-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+          </div>
+          <h3 id="val2-title">Tinh thần đồng đội</h3>
+          <p id="val2-body">Thành công là kết quả của tập thể. Chúng tôi đặt lợi ích chung lên trên và hỗ trợ nhau phát triển mỗi ngày.</p>
+        </div>
+        <div class="value-card">
+          <div class="value-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v6M12 15v6M3 12h6M15 12h6M6 6l4 4M14 14l4 4M18 6l-4 4M10 14l-4 4"/></svg>
+          </div>
+          <h3 id="val3-title">Đổi mới liên tục</h3>
+          <p id="val3-body">Chúng tôi liên tục cải tiến quy trình, nâng cấp công nghệ và tìm kiếm các giải pháp sáng tạo để dẫn đầu ngành.</p>
+        </div>
+        <div class="value-card">
+          <div class="value-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"/></svg>
+          </div>
+          <h3 id="val4-title">Chất lượng là cốt lõi</h3>
+          <p id="val4-body">Từ nguyên liệu đầu vào đến sản phẩm đầu ra, tiêu chuẩn ISO 9001 không phải là đích đến — mà là nền tảng tối thiểu.</p>
+        </div>
+        <div class="value-card">
+          <div class="value-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20c0-9 7-16 16-16 0 9-7 16-16 16zM4 20l8-8"/></svg>
+          </div>
+          <h3 id="val5-title">Phát triển bền vững</h3>
+          <p id="val5-body">Chúng tôi khai thác và sản xuất có trách nhiệm với môi trường và cộng đồng địa phương — vì một tương lai lâu dài.</p>
+        </div>
+        <div class="value-card">
+          <div class="value-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l9-4 9 4-9 4-9-4zM3 7v10l9 4 9-4V7M12 11v10"/></svg>
+          </div>
+          <h3 id="val6-title">Hướng ra thị trường quốc tế</h3>
+          <p id="val6-body">Với 12 thị trường xuất khẩu, nhân viên Long Anh được tiếp xúc với tư duy và tiêu chuẩn toàn cầu ngay tại Nghệ An.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Benefits ── -->
+  <section class="section">
+    <div class="wrap">
+      <div class="shead">
+        <div>
+          <div class="eyebrow" id="benefits-eyebrow">Phúc lợi</div>
+          <h2 id="benefits-title">Chúng tôi chăm lo cho bạn</h2>
+        </div>
+        <p id="benefits-sub">Bên cạnh mức lương cạnh tranh, Long Anh cung cấp chế độ đãi ngộ toàn diện hỗ trợ sức khoẻ, sự phát triển và cuộc sống cân bằng.</p>
+      </div>
+      <div class="benefits-grid">
+        <div class="benefit">
+          <div class="benefit-num">01</div>
+          <h4 id="ben1-title">Lương & Thưởng cạnh tranh</h4>
+          <p id="ben1-body">Mức lương theo năng lực, xét tăng lương 2 lần/năm. Thưởng hiệu suất hàng quý và thưởng cuối năm theo kết quả kinh doanh.</p>
+        </div>
+        <div class="benefit">
+          <div class="benefit-num">02</div>
+          <h4 id="ben2-title">Bảo hiểm toàn diện</h4>
+          <p id="ben2-body">BHXH, BHYT, BHTN theo đúng quy định. Bảo hiểm sức khỏe bổ sung cho nhân viên và gia đình với hạn mức cao.</p>
+        </div>
+        <div class="benefit">
+          <div class="benefit-num">03</div>
+          <h4 id="ben3-title">Đào tạo & Phát triển</h4>
+          <p id="ben3-body">Chương trình đào tạo nội bộ định kỳ, hỗ trợ học phí các khóa chuyên môn, cử nhân viên tiêu biểu tham gia hội thảo quốc tế.</p>
+        </div>
+        <div class="benefit">
+          <div class="benefit-num">04</div>
+          <h4 id="ben4-title">Môi trường làm việc hiện đại</h4>
+          <p id="ben4-body">Văn phòng và nhà máy được trang bị đầy đủ thiết bị bảo hộ lao động tiêu chuẩn. Trang bị laptop và công cụ làm việc đầy đủ.</p>
+        </div>
+        <div class="benefit">
+          <div class="benefit-num">05</div>
+          <h4 id="ben5-title">Nghỉ phép & Lễ tết</h4>
+          <p id="ben5-body">12 ngày nghỉ phép có lương/năm. Nghỉ lễ theo quy định nhà nước cộng thêm các ngày nghỉ đặc biệt của công ty.</p>
+        </div>
+        <div class="benefit">
+          <div class="benefit-num">06</div>
+          <h4 id="ben6-title">Hoạt động tập thể</h4>
+          <p id="ben6-body">Team building hàng năm, du lịch công ty, các giải thể thao nội bộ và sự kiện văn hóa gắn kết đội ngũ.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Hiring process ── -->
+  <section class="section tight" style="background:var(--bg-alt)">
+    <div class="wrap">
+      <div style="text-align:center;max-width:600px;margin:0 auto 56px">
+        <div class="eyebrow" id="process-eyebrow">Quy trình tuyển dụng</div>
+        <h2 style="font-size:clamp(26px,3vw,38px);margin-top:12px" id="process-title">Đơn giản. Minh bạch. Nhanh chóng.</h2>
+      </div>
+      <div class="process-steps">
+        <div class="process-step">
+          <div class="step-num">01</div>
+          <h4 id="step1-title">Nộp hồ sơ</h4>
+          <p id="step1-body">Gửi CV qua form online hoặc email hr@longanhcorp.com. Phản hồi trong vòng 3 ngày làm việc.</p>
+        </div>
+        <div class="process-step">
+          <div class="step-num">02</div>
+          <h4 id="step2-title">Phỏng vấn sơ bộ</h4>
+          <p id="step2-body">Trao đổi qua điện thoại hoặc video call để hiểu về kinh nghiệm và mong muốn của ứng viên.</p>
+        </div>
+        <div class="process-step">
+          <div class="step-num">03</div>
+          <h4 id="step3-title">Phỏng vấn chuyên sâu</h4>
+          <p id="step3-body">Gặp trực tiếp với quản lý bộ phận. Có thể bao gồm bài kiểm tra kỹ năng thực tế tùy vị trí.</p>
+        </div>
+        <div class="process-step">
+          <div class="step-num">04</div>
+          <h4 id="step4-title">Nhận offer & Onboarding</h4>
+          <p id="step4-body">Thư đề nghị làm việc trong vòng 5 ngày sau phỏng vấn cuối. Chương trình hội nhập 30 ngày đầu tiên.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA Banner ── -->
+  <section class="section tight">
+    <div class="wrap">
+      <div class="cta-banner">
+        <div>
+          <div class="eyebrow" id="cta-eyebrow">Không tìm thấy vị trí phù hợp?</div>
+          <h2 id="cta-title">Gửi hồ sơ ứng tuyển tự do</h2>
+          <p id="cta-body">Nếu bạn tin rằng mình có thể đóng góp cho Long Anh, hãy gửi CV cho chúng tôi. Chúng tôi luôn tìm kiếm những tài năng xuất sắc bất kể vị trí đang tuyển.</p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:14px;align-items:flex-start">
+          <a class="btn btn-p" href="mailto:hr@longanhcorp.com" id="cta-btn-email">
+            Gửi CV qua Email
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a class="btn" style="background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.2)"
+             href="index.html#contact" id="cta-btn-contact">Liên hệ bộ phận HR</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Footer ── -->
+  <footer class="ft">
+    <div class="wrap">
+      <div class="ft-grid">
+        <div>
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+            <img src="assets/long-anh-logo.png" alt="Long Anh" style="width:42px;height:42px;object-fit:contain" />
+            <b style="color:#fff;font-size:14px;letter-spacing:.04em" id="ft-brand">KS LONG ANH</b>
+          </div>
+          <p style="line-height:1.6;opacity:.65" id="ft-desc">Nhà sản xuất bột đá Canxi Cacbonat và đá tự nhiên hàng đầu Bắc Trung Bộ.</p>
+        </div>
+        <div>
+          <h5 id="ft-products-title">Sản phẩm</h5>
+          <a href="index.html#products" id="ft-p1">Bột đá CaCO₃ không phủ</a>
+          <a href="index.html#products" id="ft-p2">Bột đá CaCO₃ phủ Stearic Acid</a>
+          <a href="index.html#products" id="ft-p3">Đá Slab</a>
+          <a href="index.html#products" id="ft-p4">Đá xẻ quy cách</a>
+          <a href="index.html#products" id="ft-p5">Đá trang trí</a>
+        </div>
+        <div>
+          <h5 id="ft-company-title">Công ty</h5>
+          <a href="index.html" id="ft-n1">Trang chủ</a>
+          <a href="index.html#about" id="ft-n2">Giới thiệu</a>
+          <a href="index.html#products" id="ft-n3">Sản phẩm</a>
+          <a href="career.html" id="ft-n4">Tuyển dụng</a>
+          <a href="index.html#contact" id="ft-n5">Liên hệ</a>
+        </div>
+        <div>
+          <h5 id="ft-contact-title">Liên hệ</h5>
+          <a href="tel:+84912779799">(+84) 912 779 799</a>
+          <a href="tel:+8423839825555">(+84-2383) 982 555</a>
+          <a href="mailto:info@longanhcorp.com">info@longanhcorp.com</a>
+          <a href="mailto:hr@longanhcorp.com">hr@longanhcorp.com</a>
+        </div>
+      </div>
+      <div class="ft-bottom">
+        <span id="ft-copy">© 2026 Công ty TNHH KS Long Anh · Mã số DN 2901xxxxx</span>
+        <span>Made in Nghệ An · Vietnam</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+  // ── i18n ──────────────────────────────────────────────────────────────────
+  const T = {
+    vi: {
+      stripHotline: 'Hotline kinh doanh:',
+      brandName: 'KS LONG ANH',
+      brandTagline: 'Bột đá Canxi Cacbonat & Đá tự nhiên Việt Nam',
+      navHome:'Trang chủ', navAbout:'Giới thiệu', navProducts:'Sản phẩm',
+      navCareer:'Tuyển dụng', navContact:'Liên hệ',
+      bcHome:'Trang chủ', bcCareer:'Tuyển dụng',
+      heroEyebrow:'Cơ hội nghề nghiệp',
+      heroTitle:'Gia nhập đội ngũ <span>Long Anh</span> —<br>nơi tài năng được phát triển.',
+      heroSub:'Chúng tôi xây dựng một môi trường làm việc chuyên nghiệp, năng động và minh bạch, nơi mỗi cá nhân đều có cơ hội đóng góp và trưởng thành cùng doanh nghiệp.',
+      ctaJobs:'Xem vị trí tuyển dụng', ctaContact:'Liên hệ trực tiếp',
+      statExp:'Năm kinh nghiệm', statStaff:'Cán bộ nhân viên',
+      statPlants:'Nhà máy & chi nhánh', statMarkets:'Thị trường xuất khẩu',
+      filterAll:'Tất cả', filterSX:'Sản xuất', filterKD:'Kinh doanh',
+      filterCL:'Chất lượng', filterHC:'Hành chính', filterKT:'Kỹ thuật',
+      searchPlaceholder:'Tìm kiếm vị trí...',
+      jobsEyebrow:'Vị trí đang tuyển', jobsTitle:'Cơ hội việc làm hiện tại',
+      jobsSub:'Tất cả các vị trí đều mở cửa cho ứng viên có năng lực và tinh thần học hỏi — kinh nghiệm ngành khoáng sản là lợi thế.',
+      noJobs:'Không tìm thấy vị trí phù hợp. Vui lòng thử từ khóa khác.',
+      valuesEyebrow:'Văn hóa doanh nghiệp', valuesTitle:'Điều làm nên Long Anh',
+      valuesSub:'Chúng tôi không chỉ sản xuất khoáng sản — chúng tôi xây dựng con người và tổ chức có giá trị lâu bền.',
+      val1Title:'Chính trực & Minh bạch', val1Body:'Mọi quyết định đều dựa trên dữ liệu và sự thật. Chúng tôi đối thoại cởi mở và nhận trách nhiệm về kết quả.',
+      val2Title:'Tinh thần đồng đội', val2Body:'Thành công là kết quả của tập thể. Chúng tôi đặt lợi ích chung lên trên và hỗ trợ nhau phát triển mỗi ngày.',
+      val3Title:'Đổi mới liên tục', val3Body:'Chúng tôi liên tục cải tiến quy trình, nâng cấp công nghệ và tìm kiếm các giải pháp sáng tạo để dẫn đầu ngành.',
+      val4Title:'Chất lượng là cốt lõi', val4Body:'Từ nguyên liệu đầu vào đến sản phẩm đầu ra, tiêu chuẩn ISO 9001 không phải là đích đến — mà là nền tảng tối thiểu.',
+      val5Title:'Phát triển bền vững', val5Body:'Chúng tôi khai thác và sản xuất có trách nhiệm với môi trường và cộng đồng địa phương — vì một tương lai lâu dài.',
+      val6Title:'Hướng ra thị trường quốc tế', val6Body:'Với 12 thị trường xuất khẩu, nhân viên Long Anh được tiếp xúc với tư duy và tiêu chuẩn toàn cầu ngay tại Nghệ An.',
+      benefitsEyebrow:'Phúc lợi', benefitsTitle:'Chúng tôi chăm lo cho bạn',
+      benefitsSub:'Bên cạnh mức lương cạnh tranh, Long Anh cung cấp chế độ đãi ngộ toàn diện hỗ trợ sức khoẻ, sự phát triển và cuộc sống cân bằng.',
+      ben1Title:'Lương & Thưởng cạnh tranh', ben1Body:'Mức lương theo năng lực, xét tăng lương 2 lần/năm. Thưởng hiệu suất hàng quý và thưởng cuối năm theo kết quả kinh doanh.',
+      ben2Title:'Bảo hiểm toàn diện', ben2Body:'BHXH, BHYT, BHTN theo đúng quy định. Bảo hiểm sức khỏe bổ sung cho nhân viên và gia đình với hạn mức cao.',
+      ben3Title:'Đào tạo & Phát triển', ben3Body:'Chương trình đào tạo nội bộ định kỳ, hỗ trợ học phí các khóa chuyên môn, cử nhân viên tiêu biểu tham gia hội thảo quốc tế.',
+      ben4Title:'Môi trường làm việc hiện đại', ben4Body:'Văn phòng và nhà máy được trang bị đầy đủ thiết bị bảo hộ lao động tiêu chuẩn. Trang bị laptop và công cụ làm việc đầy đủ.',
+      ben5Title:'Nghỉ phép & Lễ tết', ben5Body:'12 ngày nghỉ phép có lương/năm. Nghỉ lễ theo quy định nhà nước cộng thêm các ngày nghỉ đặc biệt của công ty.',
+      ben6Title:'Hoạt động tập thể', ben6Body:'Team building hàng năm, du lịch công ty, các giải thể thao nội bộ và sự kiện văn hóa gắn kết đội ngũ.',
+      processEyebrow:'Quy trình tuyển dụng', processTitle:'Đơn giản. Minh bạch. Nhanh chóng.',
+      step1Title:'Nộp hồ sơ', step1Body:'Gửi CV qua form online hoặc email hr@longanhcorp.com. Phản hồi trong vòng 3 ngày làm việc.',
+      step2Title:'Phỏng vấn sơ bộ', step2Body:'Trao đổi qua điện thoại hoặc video call để hiểu về kinh nghiệm và mong muốn của ứng viên.',
+      step3Title:'Phỏng vấn chuyên sâu', step3Body:'Gặp trực tiếp với quản lý bộ phận. Có thể bao gồm bài kiểm tra kỹ năng thực tế tùy vị trí.',
+      step4Title:'Nhận offer & Onboarding', step4Body:'Thư đề nghị làm việc trong vòng 5 ngày sau phỏng vấn cuối. Chương trình hội nhập 30 ngày đầu tiên.',
+      ctaEyebrow:'Không tìm thấy vị trí phù hợp?',
+      ctaTitle:'Gửi hồ sơ ứng tuyển tự do',
+      ctaBody:'Nếu bạn tin rằng mình có thể đóng góp cho Long Anh, hãy gửi CV cho chúng tôi. Chúng tôi luôn tìm kiếm những tài năng xuất sắc bất kể vị trí đang tuyển.',
+      ctaBtnEmail:'Gửi CV qua Email', ctaBtnContact:'Liên hệ bộ phận HR',
+      ftBrand:'KS LONG ANH',
+      ftDesc:'Nhà sản xuất bột đá Canxi Cacbonat và đá tự nhiên hàng đầu Bắc Trung Bộ.',
+      ftProductsTitle:'Sản phẩm', ftCompanyTitle:'Công ty', ftContactTitle:'Liên hệ',
+      ftP1:'Bột đá CaCO₃ không phủ', ftP2:'Bột đá CaCO₃ phủ Stearic Acid',
+      ftP3:'Đá Slab', ftP4:'Đá xẻ quy cách', ftP5:'Đá trang trí',
+      ftN1:'Trang chủ', ftN2:'Giới thiệu', ftN3:'Sản phẩm', ftN4:'Tuyển dụng', ftN5:'Liên hệ',
+      ftCopy:'© 2026 Công ty TNHH KS Long Anh · Mã số DN 2901xxxxx',
+      applyBtn:'Ứng tuyển ngay', fullTimeLabel:'Toàn thời gian',
+    },
+    en: {
+      stripHotline: 'Sales hotline:',
+      brandName: 'LONG ANH MINERAL',
+      brandTagline: 'Vietnamese Calcium Carbonate & Natural Stone',
+      navHome:'Home', navAbout:'About', navProducts:'Products',
+      navCareer:'Career', navContact:'Contact',
+      bcHome:'Home', bcCareer:'Career',
+      heroEyebrow:'Career Opportunities',
+      heroTitle:'Join the <span>Long Anh</span> team —<br>where talent grows.',
+      heroSub:'We build a professional, dynamic and transparent working environment where every individual has the opportunity to contribute and grow alongside the company.',
+      ctaJobs:'View open positions', ctaContact:'Contact us directly',
+      statExp:'Years of experience', statStaff:'Employees',
+      statPlants:'Plants & branches', statMarkets:'Export markets',
+      filterAll:'All', filterSX:'Manufacturing', filterKD:'Sales',
+      filterCL:'Quality', filterHC:'Admin', filterKT:'Engineering',
+      searchPlaceholder:'Search positions...',
+      jobsEyebrow:'Open positions', jobsTitle:'Current job opportunities',
+      jobsSub:'All positions are open to motivated candidates — experience in the minerals industry is an advantage.',
+      noJobs:'No positions found. Please try a different keyword.',
+      valuesEyebrow:'Company culture', valuesTitle:'What makes Long Anh',
+      valuesSub:'We do not just produce minerals — we build people and organizations with lasting value.',
+      val1Title:'Integrity & Transparency', val1Body:'Every decision is based on data and truth. We communicate openly and take responsibility for outcomes.',
+      val2Title:'Team spirit', val2Body:'Success is a collective result. We put common interests first and support each other\'s growth every day.',
+      val3Title:'Continuous innovation', val3Body:'We continuously improve processes, upgrade technology and seek creative solutions to stay ahead.',
+      val4Title:'Quality at the core', val4Body:'From raw material to finished product, ISO 9001 is not the destination — it is the minimum baseline.',
+      val5Title:'Sustainable development', val5Body:'We mine and produce responsibly toward the environment and local community — for the long term.',
+      val6Title:'Global market orientation', val6Body:'With 12 export markets, Long Anh employees engage with global thinking and standards right in Nghe An.',
+      benefitsEyebrow:'Benefits', benefitsTitle:'We take care of you',
+      benefitsSub:'Alongside competitive salary, Long Anh provides comprehensive benefits supporting health, development and work-life balance.',
+      ben1Title:'Competitive salary & bonus', ben1Body:'Performance-based pay, twice-yearly reviews. Quarterly performance bonus and year-end bonus tied to business results.',
+      ben2Title:'Comprehensive insurance', ben2Body:'Full social, health and unemployment insurance. Supplementary health insurance for employees and family with high coverage.',
+      ben3Title:'Training & Development', ben3Body:'Regular internal training programs, tuition support for professional courses, top employees sent to international conferences.',
+      ben4Title:'Modern working environment', ben4Body:'Offices and plants fully equipped with standard PPE. Laptop and full working tools provided.',
+      ben5Title:'Leave & Holidays', ben5Body:'12 paid annual leave days. Public holidays per regulations plus additional company-specific days off.',
+      ben6Title:'Team activities', ben6Body:'Annual team building, company trips, internal sports competitions and cultural events that build team bonds.',
+      processEyebrow:'Hiring process', processTitle:'Simple. Transparent. Fast.',
+      step1Title:'Submit application', step1Body:'Send CV via online form or email hr@longanhcorp.com. Response within 3 business days.',
+      step2Title:'Initial interview', step2Body:'Phone or video call to understand the candidate\'s experience and aspirations.',
+      step3Title:'In-depth interview', step3Body:'Meet in person with department manager. May include a practical skills test depending on the role.',
+      step4Title:'Offer & Onboarding', step4Body:'Job offer letter within 5 days of final interview. 30-day onboarding program for new joiners.',
+      ctaEyebrow:'Cannot find a suitable position?',
+      ctaTitle:'Submit a spontaneous application',
+      ctaBody:'If you believe you can contribute to Long Anh, send us your CV. We are always looking for outstanding talent regardless of open positions.',
+      ctaBtnEmail:'Send CV by Email', ctaBtnContact:'Contact HR team',
+      ftBrand:'LONG ANH MINERAL',
+      ftDesc:'A leading manufacturer of calcium carbonate powder and natural stone in North-Central Vietnam.',
+      ftProductsTitle:'Products', ftCompanyTitle:'Company', ftContactTitle:'Contact',
+      ftP1:'Uncoated CaCO₃ powder', ftP2:'Stearic-acid coated CaCO₃',
+      ftP3:'Slab stone', ftP4:'Cut-to-size tile', ftP5:'Decorative stone',
+      ftN1:'Home', ftN2:'About', ftN3:'Products', ftN4:'Career', ftN5:'Contact',
+      ftCopy:'© 2026 Long Anh Mineral Co., Ltd · Reg. No. 2901xxxxx',
+      applyBtn:'Apply now', fullTimeLabel:'Full-time',
+    }
+  };
+
+  // ── Job data ──────────────────────────────────────────────────────────────
+  const JOBS = {
+    vi: [
+      { id:1, dept:'Sản xuất', deptKey:'san-xuat',
+        title:'Kỹ sư Vận hành nhà máy',
+        loc:'Quỳ Hợp, Nghệ An', type:'Toàn thời gian', exp:'2–5 năm',
+        tags:['Cơ khí', 'Vận hành dây chuyền', 'ISO'] },
+      { id:2, dept:'Kinh doanh', deptKey:'kinh-doanh',
+        title:'Chuyên viên Kinh doanh Xuất khẩu',
+        loc:'TP. Vinh, Nghệ An', type:'Toàn thời gian', exp:'1–3 năm',
+        tags:['Tiếng Anh', 'B2B Export', 'CaCO₃'] },
+      { id:3, dept:'Chất lượng', deptKey:'chat-luong',
+        title:'Kỹ thuật viên Phòng QC',
+        loc:'Quỳ Hợp, Nghệ An', type:'Toàn thời gian', exp:'1–3 năm',
+        tags:['ISO 9001', 'Phân tích hóa', 'Kiểm tra hạt'] },
+      { id:4, dept:'Kỹ thuật', deptKey:'ky-thuat',
+        title:'Kỹ sư Bảo trì thiết bị',
+        loc:'Quỳ Hợp, Nghệ An', type:'Toàn thời gian', exp:'3–5 năm',
+        tags:['Điện – cơ', 'PLC', 'Bảo trì phòng ngừa'] },
+      { id:5, dept:'Hành chính', deptKey:'hanh-chinh',
+        title:'Chuyên viên Nhân sự & Tuyển dụng',
+        loc:'TP. Vinh, Nghệ An', type:'Toàn thời gian', exp:'1–3 năm',
+        tags:['HR', 'Tuyển dụng', 'Lương thưởng'] },
+      { id:6, dept:'Kinh doanh', deptKey:'kinh-doanh',
+        title:'Trưởng phòng Kinh doanh Nội địa',
+        loc:'TP. Vinh, Nghệ An', type:'Toàn thời gian', exp:'5+ năm',
+        tags:['Quản lý đội nhóm', 'Bột đá', 'KPI'] },
+      { id:7, dept:'Kỹ thuật', deptKey:'ky-thuat',
+        title:'Kỹ sư Quy trình & Cải tiến',
+        loc:'Quỳ Hợp, Nghệ An', type:'Toàn thời gian', exp:'2–4 năm',
+        tags:['Kaizen', 'Lean', 'Khoáng sản'] },
+      { id:8, dept:'Hành chính', deptKey:'hanh-chinh',
+        title:'Kế toán Tổng hợp',
+        loc:'TP. Vinh, Nghệ An', type:'Toàn thời gian', exp:'2–4 năm',
+        tags:['MISA', 'Thuế', 'BCTC'] },
+    ],
+    en: [
+      { id:1, dept:'Manufacturing', deptKey:'san-xuat',
+        title:'Plant Operations Engineer',
+        loc:'Quy Hop, Nghe An', type:'Full-time', exp:'2–5 years',
+        tags:['Mechanical', 'Line operations', 'ISO'] },
+      { id:2, dept:'Sales', deptKey:'kinh-doanh',
+        title:'Export Sales Specialist',
+        loc:'Vinh City, Nghe An', type:'Full-time', exp:'1–3 years',
+        tags:['English', 'B2B Export', 'CaCO₃'] },
+      { id:3, dept:'Quality', deptKey:'chat-luong',
+        title:'QC Laboratory Technician',
+        loc:'Quy Hop, Nghe An', type:'Full-time', exp:'1–3 years',
+        tags:['ISO 9001', 'Chemical analysis', 'Particle testing'] },
+      { id:4, dept:'Engineering', deptKey:'ky-thuat',
+        title:'Equipment Maintenance Engineer',
+        loc:'Quy Hop, Nghe An', type:'Full-time', exp:'3–5 years',
+        tags:['Electro-mechanical', 'PLC', 'Preventive maintenance'] },
+      { id:5, dept:'Admin', deptKey:'hanh-chinh',
+        title:'HR & Recruitment Specialist',
+        loc:'Vinh City, Nghe An', type:'Full-time', exp:'1–3 years',
+        tags:['HR', 'Recruitment', 'Payroll'] },
+      { id:6, dept:'Sales', deptKey:'kinh-doanh',
+        title:'Domestic Sales Manager',
+        loc:'Vinh City, Nghe An', type:'Full-time', exp:'5+ years',
+        tags:['Team management', 'Mineral powder', 'KPI'] },
+      { id:7, dept:'Engineering', deptKey:'ky-thuat',
+        title:'Process Improvement Engineer',
+        loc:'Quy Hop, Nghe An', type:'Full-time', exp:'2–4 years',
+        tags:['Kaizen', 'Lean', 'Minerals'] },
+      { id:8, dept:'Admin', deptKey:'hanh-chinh',
+        title:'General Accountant',
+        loc:'Vinh City, Nghe An', type:'Full-time', exp:'2–4 years',
+        tags:['Accounting software', 'Tax', 'Financial reports'] },
+    ]
+  };
+
+  // ── State ─────────────────────────────────────────────────────────────────
+  let lang = 'vi';
+  let dark = false;
+  let activeFilter = 'all';
+  let searchQuery = '';
+
+  // ── Helpers ───────────────────────────────────────────────────────────────
+  function $(id) { return document.getElementById(id); }
+  function txt(id, val) { const el = $(id); if (el) el.textContent = val; }
+  function html(id, val) { const el = $(id); if (el) el.innerHTML = val; }
+
+  function applyLang() {
+    const t = T[lang];
+    txt('brand-name-text', t.brandName);
+    txt('brand-tagline', t.brandTagline);
+    txt('nav-home', t.navHome); txt('nav-about', t.navAbout);
+    txt('nav-products', t.navProducts); txt('nav-career', t.navCareer);
+    txt('nav-contact', t.navContact);
+    txt('bc-home', t.bcHome); txt('bc-career', t.bcCareer);
+    txt('hero-eyebrow', t.heroEyebrow);
+    html('hero-title', t.heroTitle);
+    txt('hero-sub', t.heroSub);
+    txt('cta-jobs', t.ctaJobs); txt('cta-contact', t.ctaContact);
+    txt('stat-exp', t.statExp); txt('stat-staff', t.statStaff);
+    txt('stat-plants', t.statPlants); txt('stat-markets', t.statMarkets);
+    txt('filter-all', t.filterAll); txt('filter-sx', t.filterSX);
+    txt('filter-kd', t.filterKD); txt('filter-cl', t.filterCL);
+    txt('filter-hc', t.filterHC); txt('filter-kt', t.filterKT);
+    $('search-input').placeholder = t.searchPlaceholder;
+    txt('jobs-eyebrow', t.jobsEyebrow); txt('jobs-title', t.jobsTitle);
+    txt('jobs-sub', t.jobsSub);
+    txt('no-jobs', t.noJobs);
+    txt('values-eyebrow', t.valuesEyebrow); txt('values-title', t.valuesTitle);
+    txt('values-sub', t.valuesSub);
+    txt('val1-title', t.val1Title); txt('val1-body', t.val1Body);
+    txt('val2-title', t.val2Title); txt('val2-body', t.val2Body);
+    txt('val3-title', t.val3Title); txt('val3-body', t.val3Body);
+    txt('val4-title', t.val4Title); txt('val4-body', t.val4Body);
+    txt('val5-title', t.val5Title); txt('val5-body', t.val5Body);
+    txt('val6-title', t.val6Title); txt('val6-body', t.val6Body);
+    txt('benefits-eyebrow', t.benefitsEyebrow); txt('benefits-title', t.benefitsTitle);
+    txt('benefits-sub', t.benefitsSub);
+    txt('ben1-title', t.ben1Title); txt('ben1-body', t.ben1Body);
+    txt('ben2-title', t.ben2Title); txt('ben2-body', t.ben2Body);
+    txt('ben3-title', t.ben3Title); txt('ben3-body', t.ben3Body);
+    txt('ben4-title', t.ben4Title); txt('ben4-body', t.ben4Body);
+    txt('ben5-title', t.ben5Title); txt('ben5-body', t.ben5Body);
+    txt('ben6-title', t.ben6Title); txt('ben6-body', t.ben6Body);
+    txt('process-eyebrow', t.processEyebrow); txt('process-title', t.processTitle);
+    txt('step1-title', t.step1Title); txt('step1-body', t.step1Body);
+    txt('step2-title', t.step2Title); txt('step2-body', t.step2Body);
+    txt('step3-title', t.step3Title); txt('step3-body', t.step3Body);
+    txt('step4-title', t.step4Title); txt('step4-body', t.step4Body);
+    txt('cta-eyebrow', t.ctaEyebrow); txt('cta-title', t.ctaTitle);
+    txt('cta-body', t.ctaBody);
+    txt('cta-btn-email', t.ctaBtnEmail); txt('cta-btn-contact', t.ctaBtnContact);
+    txt('ft-brand', t.ftBrand); txt('ft-desc', t.ftDesc);
+    txt('ft-products-title', t.ftProductsTitle); txt('ft-company-title', t.ftCompanyTitle);
+    txt('ft-contact-title', t.ftContactTitle);
+    txt('ft-p1', t.ftP1); txt('ft-p2', t.ftP2); txt('ft-p3', t.ftP3);
+    txt('ft-p4', t.ftP4); txt('ft-p5', t.ftP5);
+    txt('ft-n1', t.ftN1); txt('ft-n2', t.ftN2); txt('ft-n3', t.ftN3);
+    txt('ft-n4', t.ftN4); txt('ft-n5', t.ftN5);
+    txt('ft-copy', t.ftCopy);
+    txt('strip-hotline', t.stripHotline + ' ');
+    const b = $('strip-hotline').querySelector('b') ||
+      (() => { const b2 = document.createElement('b'); b2.style.color='#fff';
+               $('strip-hotline').appendChild(b2); return b2; })();
+    b.textContent = '(+84) 912 779 799';
+    renderJobs();
+  }
+
+  function renderJobs() {
+    const jobs = JOBS[lang].filter(j => {
+      const matchesDept = activeFilter === 'all' || j.deptKey === activeFilter;
+      const q = searchQuery.toLowerCase();
+      const matchesSearch = !q ||
+        j.title.toLowerCase().includes(q) ||
+        j.dept.toLowerCase().includes(q) ||
+        j.tags.some(t => t.toLowerCase().includes(q));
+      return matchesDept && matchesSearch;
+    });
+
+    const list = $('jobs-list');
+    const t = T[lang];
+    if (jobs.length === 0) {
+      list.innerHTML = '';
+      $('no-jobs').style.display = 'block';
+      return;
+    }
+    $('no-jobs').style.display = 'none';
+    list.innerHTML = jobs.map(j => `
+      <a href="mailto:hr@longanhcorp.com?subject=${encodeURIComponent('Ứng tuyển: ' + j.title)}"
+         class="job-card"
+         onmouseenter="this.querySelectorAll('[data-txt]').forEach(el=>el.style.color='#fff')"
+         onmouseleave="this.querySelectorAll('[data-txt]').forEach(el=>el.style.color='')">
+        <div>
+          <div class="job-dept">${j.dept}</div>
+          <div class="job-title">${j.title}</div>
+          <div class="job-meta">
+            <span class="job-meta-item">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s-7-7.5-7-13a7 7 0 0114 0c0 5.5-7 13-7 13z"/><circle cx="12" cy="9" r="2.5"/></svg>
+              ${j.loc}
+            </span>
+            <span class="job-meta-item">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+              ${j.type}
+            </span>
+            <span class="job-meta-item">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+              ${j.exp}
+            </span>
+          </div>
+          <div class="job-tags">${j.tags.map(tag => `<span>${tag}</span>`).join('')}</div>
+        </div>
+        <div class="job-arrow">
+          ${t.applyBtn}
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </div>
+      </a>
+    `).join('');
+  }
+
+  function setLang(l) {
+    lang = l;
+    $('btn-vi').className = l === 'vi' ? 'on' : '';
+    $('btn-en').className = l === 'en' ? 'on' : '';
+    applyLang();
+  }
+
+  function toggleDark() {
+    dark = !dark;
+    document.body.classList.toggle('dark', dark);
+    const btn = $('dark-btn');
+    btn.innerHTML = dark
+      ? `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"/></svg>`
+      : `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 13a8 8 0 11-10-10 7 7 0 0010 10z"/></svg>`;
+  }
+
+  function filterJobs(key, btn) {
+    activeFilter = key;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('on'));
+    btn.classList.add('on');
+    renderJobs();
+  }
+
+  function searchJobs(q) {
+    searchQuery = q;
+    renderJobs();
+  }
+
+  // ── Init ──────────────────────────────────────────────────────────────────
+  applyLang();
+  </script>
+</body>
+</html>
