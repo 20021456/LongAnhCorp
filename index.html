@@ -1058,7 +1058,7 @@
     const C = COPY[t.lang];
     const [active, setActive] = React.useState('home');
     const navHrefs = standalone ?
-      ['#home', '#about', '#products', 'career.html', '#contact'] :
+      ['index.html', 'about.html', 'products.html', 'career.html', '#contact'] :
       ['#home', '#about', '#products', '#career', '#contact'];
 
     const cssVars = {
@@ -1393,7 +1393,7 @@
               <div>
                 <h5>{t.lang === 'vi' ? 'Công ty' : 'Company'}</h5>
                 {C.nav.map((n, i) => {
-                  const hrefs = ['#home','#about','#products','career.html','#contact'];
+                  const hrefs = ['index.html','about.html','products.html','career.html','#contact'];
                   return <a key={i} href={hrefs[i]}>{n}</a>;
                 })}
               </div>
