@@ -306,7 +306,7 @@ function AdIcon({ name, size = 18 }) {
 /* ---- Sidebar ---- */
 function AdSidebar({ active = 'dashboard' }) {
   const items = [
-    { type: 'item', id: 'dashboard', label: 'Dashboard', icon: 'home', href: 'dashboard.html' },
+    { type: 'item', id: 'dashboard', label: 'Dashboard', icon: 'home', href: 'index.html' },
     { type: 'sec', label: 'Nội dung' },
     { type: 'item', id: 'pages', label: 'Trang', icon: 'file', href: 'pages.html' },
     { type: 'item', id: 'news', label: 'Tin tức', icon: 'news', href: 'news.html' },
