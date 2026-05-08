@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Giới thiệu — KS Long Anh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fraunces:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0;padding:0;min-height:100%;background:#FAFBFD;}
+  body{font-family:'Inter',system-ui,sans-serif;}
+  *{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+// ─── shared data ────────────────────────────────────────────────────────────
+const COPY = {
+  vi: {
+    nav: ['Trang chủ', 'Giới thiệu', 'Sản phẩm', 'Tuyển dụng', 'Liên hệ'],
+    tagline: 'Bột đá Canxi Cacbonat & Đá tự nhiên Việt Nam',
+    aboutEy: 'Về chúng tôi',
+    aboutP1: 'Khởi nguồn từ vùng đá vôi trắng Quỳ Hợp – Nghệ An, Long Anh sở hữu mỏ nguyên liệu chất lượng cao với độ trắng vượt 96% và hàm lượng CaCO₃ trên 98,5%.',
+    aboutP2: 'Hệ thống nhà máy được trang bị dây chuyền nghiền khô và phủ acid stearic theo công nghệ Châu Âu, cùng đội ngũ kỹ sư giàu kinh nghiệm — đảm bảo mỗi lô sản phẩm đáp ứng tiêu chuẩn ISO 9001 và yêu cầu khắt khe nhất từ thị trường Hàn Quốc, Nhật Bản, Ấn Độ, Trung Đông.',
+    products: [
+      { name: 'Bột đá CaCO₃ không phủ' },
+      { name: 'Bột đá CaCO₃ phủ Stearic Acid' },
+      { name: 'Đá Slab' },
+      { name: 'Đá xẻ quy cách' },
+      { name: 'Đá trang trí' },
+    ],
+    phone: ['(+84) 912 779 799', '(+84-2383) 982 555'],
+    email: 'info@longanhcorp.com',
+    footnote: '© 2026 Công ty TNHH KS Long Anh · Mã số DN 2901xxxxx',
+  },
+  en: {
+    nav: ['Home', 'About', 'Products', 'Career', 'Contact'],
+    tagline: 'Vietnamese Calcium Carbonate & Natural Stone',
+    aboutEy: 'About us',
+    aboutP1: 'Originating from the white limestone region of Quy Hop, Nghe An, Long Anh owns high-grade quarries with whiteness exceeding 96% and CaCO₃ content above 98.5%.',
+    aboutP2: 'Our plants run dry-grinding and stearic-acid coating lines built to European specs. Each batch is QC-controlled to ISO 9001 — meeting the toughest requirements from Korea, Japan, India and the Middle East.',
+    products: [
+      { name: 'Uncoated CaCO₃ powder' },
+      { name: 'Stearic-acid coated CaCO₃' },
+      { name: 'Slab stone' },
+      { name: 'Cut-to-size tile' },
+      { name: 'Decorative stone' },
+    ],
+    phone: ['(+84) 912 779 799', '(+84-2383) 982 555'],
+    email: 'info@longanhcorp.com',
+    footnote: '© 2026 Long Anh Mineral Co., Ltd · Reg. No. 2901xxxxx',
+  },
+};
+
+const Icon = ({ name, size = 18 }) => {
+  const p = {
+    arrow: <path d="M5 12h14M13 6l6 6-6 6"/>,
+    drop: <path d="M12 3s-7 8-7 13a7 7 0 0014 0c0-5-7-13-7-13z"/>,
+    spark: <path d="M12 3v6M12 15v6M3 12h6M15 12h6M6 6l4 4M14 14l4 4M18 6l-4 4M10 14l-4 4"/>,
+    ship: <path d="M3 17l9-3 9 3M5 13V7l7-3 7 3v6M9 13V8M15 13V8M3 21h18"/>,
+    mail: <><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></>,
+    sun: <><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"/></>,
+    moon: <path d="M21 13a8 8 0 11-10-10 7 7 0 0010 10z"/>,
+  };
+  return (<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">{p[name]}</svg>);
+};
+
+const Logo = ({ size = 30 }) => (
+  <span style={{display:'inline-flex',alignItems:'center'}}>
+    <span style={{width:size,height:size,display:'inline-flex'}}>
+      <img src="assets/long-anh-logo.png" alt="Long Anh" style={{width:'100%',height:'100%',objectFit:'contain'}}/>
+    </span>
+  </span>
+);
+
+// ─── Chrome (header / footer / page header) ─────────────────────────────────
+const CHROME_CSS = `
+  .vac *{box-sizing:border-box;}
+  .vac{font-family:var(--va-font,'Inter'),system-ui,sans-serif;color:var(--va-text);background:var(--va-bg);
+    --va-bg:#FAFBFD;--va-bg-alt:#F1F4F9;--va-text:#0E1726;
+    --va-line:rgba(15,61,122,.10);--va-card:#fff;}
+  .vac.dark{--va-bg:#0A1424;--va-bg-alt:#0E1A2E;--va-text:#E6EBF3;
+    --va-line:rgba(255,255,255,.08);--va-card:#0F1B30;}
+  .vac-wrap{max-width:1200px;margin:0 auto;padding:0 32px;}
+  .vac-strip{background:#0A2B57;color:#CFE0F2;font-size:12px;}
+  .vac.dark .vac-strip{background:#06101F;}
+  .vac-strip-in{display:flex;justify-content:space-between;align-items:center;height:36px;}
+  .vac-strip a{color:inherit;text-decoration:none;opacity:.85;}
+  .vac-strip a:hover{opacity:1;color:#fff;}
+  .vac-strip-r{display:flex;gap:18px;align-items:center;}
+  .vac-hd{position:sticky;top:0;z-index:50;background:var(--va-bg);
+    border-bottom:1px solid var(--va-line);backdrop-filter:saturate(140%) blur(8px);}
+  .vac-hd-in{display:flex;align-items:center;justify-content:space-between;height:74px;gap:24px;}
+  .vac-brand{display:flex;align-items:center;gap:14px;text-decoration:none;color:inherit;}
+  .vac-brand-mark{width:48px;height:48px;}
+  .vac-brand-name{display:flex;flex-direction:column;line-height:1;}
+  .vac-brand-name b{font-size:15px;font-weight:700;letter-spacing:.02em;color:#0F3D7A;}
+  .vac.dark .vac-brand-name b{color:#5B9BD5;}
+  .vac-brand-name span{font-size:10.5px;color:var(--va-text);opacity:.55;letter-spacing:.06em;text-transform:uppercase;margin-top:4px;}
+  .vac-nav{display:flex;gap:30px;align-items:center;}
+  .vac-nav a{color:var(--va-text);text-decoration:none;font-size:14px;font-weight:500;
+    opacity:.78;padding:6px 0;position:relative;}
+  .vac-nav a:hover{opacity:1;color:var(--brand-accent,#F08023);}
+  .vac-nav a.is-active{opacity:1;color:var(--brand-accent,#F08023);}
+  .vac-nav a.is-active::after{content:'';position:absolute;left:0;right:0;bottom:-22px;height:2px;background:var(--brand-accent,#F08023);}
+  .vac-cta-row{display:flex;gap:10px;align-items:center;}
+  .vac-lang{display:flex;gap:2px;padding:3px;border:1px solid var(--va-line);border-radius:8px;}
+  .vac-lang button{font:inherit;padding:4px 10px;background:transparent;color:var(--va-text);
+    border:0;border-radius:5px;cursor:pointer;font-size:12px;font-weight:600;opacity:.6;}
+  .vac-lang button.on{background:#0F3D7A;color:#fff;opacity:1;}
+  .vac.dark .vac-lang button.on{background:#5B9BD5;color:#0A1424;}
+  .vac-iconbtn{width:34px;height:34px;border-radius:8px;border:1px solid var(--va-line);
+    background:transparent;color:var(--va-text);cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:.7;}
+  .vac-iconbtn:hover{opacity:1;border-color:var(--brand-accent,#F08023);color:var(--brand-accent,#F08023);}
+  .vac-ft{background:#06101F;color:#9CB0CC;padding:54px 0 32px;font-size:13px;
+    font-family:var(--va-font,'Inter'),system-ui,sans-serif;}
+  .vac-ft-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:42px;
+    padding-bottom:32px;border-bottom:1px solid rgba(255,255,255,.08);}
+  .vac-ft h5{color:#fff;font-size:13px;font-weight:600;margin:0 0 14px;}
+  .vac-ft a{color:inherit;text-decoration:none;opacity:.75;display:block;padding:4px 0;}
+  .vac-ft a:hover{color:#F08023;opacity:1;}
+  .vac-ft-bottom{display:flex;justify-content:space-between;align-items:center;
+    padding-top:24px;opacity:.6;font-size:12px;}
+  .vac-pageheader{padding:80px 0 60px;border-bottom:1px solid var(--va-line);background:var(--va-bg-alt);}
+  .vac-bcrumb{display:flex;gap:10px;font-size:12px;opacity:.6;margin-bottom:18px;
+    font-family:ui-monospace,Menlo,monospace;letter-spacing:.06em;text-transform:uppercase;}
+  .vac-bcrumb a{color:inherit;text-decoration:none;}
+  .vac-bcrumb a:hover{color:#F08023;}
+  .vac-pageheader h1{font-size:clamp(36px,4.5vw,60px);margin:0 0 18px;font-weight:700;
+    letter-spacing:-.02em;line-height:1.05;font-family:var(--va-font,'Inter');color:var(--va-text);}
+  .vac-pageheader p{font-size:17px;line-height:1.6;opacity:.72;max-width:640px;margin:0;}
+  .vac-eyebrow{font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+    color:#F08023;margin-bottom:14px;}
+  @media (max-width:980px){.vac-nav{display:none}.vac-ft-grid{grid-template-columns:1fr 1fr}}
+`;
+
+const NAV_HREFS = ['index.html','about.html','products.html','career.html','index.html#contact'];
+const NAV_SLUGS = ['home','about','products','career','contact'];
+
+function VAHeader({ tweaks, current = 'home' }) {
+  const t = tweaks; const C = COPY[t.lang];
+  return (
+    <>
+      <div className="vac-strip">
+        <div className="vac-wrap vac-strip-in">
+          <span>{t.lang==='vi'?'Hotline kinh doanh:':'Sales hotline:'} <b style={{color:'#fff'}}>{C.phone[0]}</b></span>
+          <div className="vac-strip-r">
+            <a href={'mailto:'+C.email}><Icon name="mail" size={13}/> {C.email}</a>
+            <span style={{opacity:.4}}>·</span>
+            <a href="#">ISO 9001 : 2015</a>
+          </div>
+        </div>
+      </div>
+      <header className="vac-hd">
+        <div className="vac-wrap vac-hd-in">
+          <a className="vac-brand" href="index.html">
+            <span className="vac-brand-mark"><Logo size={48}/></span>
+            <span className="vac-brand-name">
+              <b>{t.lang==='vi'?'KS LONG ANH':'LONG ANH MINERAL'}</b>
+              <span>{C.tagline}</span>
+            </span>
+          </a>
+          <nav className="vac-nav">
+            {C.nav.map((n,i)=>(
+              <a key={i} href={NAV_HREFS[i]} className={current===NAV_SLUGS[i]?'is-active':''}>{n}</a>
+            ))}
+          </nav>
+          <div className="vac-cta-row">
+            <div className="vac-lang">
+              <button className={t.lang==='vi'?'on':''} onClick={()=>tweaks.set('lang','vi')}>VI</button>
+              <button className={t.lang==='en'?'on':''} onClick={()=>tweaks.set('lang','en')}>EN</button>
+            </div>
+            <button className="vac-iconbtn" onClick={()=>tweaks.set('dark',!t.dark)}>
+              <Icon name={t.dark?'sun':'moon'} size={15}/>
+            </button>
+          </div>
+        </div>
+      </header>
+    </>
+  );
+}
+
+function VAFooter({ tweaks }) {
+  const t = tweaks; const C = COPY[t.lang];
+  return (
+    <footer className="vac-ft">
+      <div className="vac-wrap">
+        <div className="vac-ft-grid">
+          <div>
+            <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:14}}>
+              <Logo size={42}/>
+              <b style={{color:'#fff',fontSize:14,letterSpacing:'.04em'}}>
+                {t.lang==='vi'?'KS LONG ANH':'LONG ANH MINERAL'}
+              </b>
+            </div>
+            <p style={{lineHeight:1.6,opacity:.65,margin:0}}>
+              {t.lang==='vi'
+                ?'Nhà sản xuất bột đá Canxi Cacbonat và đá tự nhiên hàng đầu Bắc Trung Bộ.'
+                :'A leading manufacturer of calcium carbonate powder and natural stone in North-Central Vietnam.'}
+            </p>
+          </div>
+          <div>
+            <h5>{t.lang==='vi'?'Sản phẩm':'Products'}</h5>
+            {C.products.map((p,i)=><a key={i} href="products.html">{p.name}</a>)}
+          </div>
+          <div>
+            <h5>{t.lang==='vi'?'Công ty':'Company'}</h5>
+            {C.nav.map((n,i)=><a key={i} href={NAV_HREFS[i]}>{n}</a>)}
+          </div>
+          <div>
+            <h5>{t.lang==='vi'?'Liên hệ':'Contact'}</h5>
+            <a>{C.phone[0]}</a><a>{C.phone[1]}</a><a>{C.email}</a>
+          </div>
+        </div>
+        <div className="vac-ft-bottom">
+          <span>{C.footnote}</span>
+          <span>Made in Nghệ An · Vietnam</span>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+function VAPageHeader({ eyebrow, title, sub, breadcrumb }) {
+  return (
+    <section className="vac-pageheader">
+      <div className="vac-wrap">
+        {breadcrumb && (
+          <div className="vac-bcrumb">
+            {breadcrumb.map((b,i)=> i<breadcrumb.length-1
+              ? <React.Fragment key={i}><a href={b.href}>{b.label}</a><span>›</span></React.Fragment>
+              : <span key={i} style={{opacity:.9}}>{b.label}</span>)}
+          </div>
+        )}
+        {eyebrow && <div className="vac-eyebrow">{eyebrow}</div>}
+        <h1>{title}</h1>
+        {sub && <p>{sub}</p>}
+      </div>
+    </section>
+  );
+}
+
+// ─── About page ─────────────────────────────────────────────────────────────
+const AB_CSS = `
+  .ab{font-family:var(--va-font,'Inter'),system-ui,sans-serif;color:var(--va-text);background:var(--va-bg);}
+  .ab h2,.ab h3,.ab h4{margin:0;font-weight:700;letter-spacing:-.02em;line-height:1.1;}
+  .ab p{margin:0;}
+  .ab-section{padding:96px 0;}
+  .ab-wrap{max-width:1200px;margin:0 auto;padding:0 32px;}
+  .ab-eyebrow{font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--brand-accent,#F08023);margin-bottom:14px;}
+  .ab-intro{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;}
+  .ab-intro-img{aspect-ratio:5/6;border-radius:12px;overflow:hidden;background:#E9EEF5;position:relative;}
+  .ab-intro-img img{width:100%;height:100%;object-fit:cover;}
+  .ab-intro-img::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 60%,rgba(15,61,122,.55));}
+  .ab-intro-bg{position:absolute;inset:0;z-index:-1;overflow:hidden;}
+  .ab-intro-bg img{width:100%;height:100%;object-fit:cover;opacity:.06;filter:saturate(.6);}
+  .ab-intro-wrap{position:relative;}
+  .ab-intro h2{font-size:clamp(34px,4vw,52px);margin-bottom:22px;}
+  .ab-intro p{font-size:16px;line-height:1.75;opacity:.78;margin-bottom:18px;}
+  .ab-intro p:first-letter{font-size:48px;font-weight:300;float:left;line-height:.85;padding:6px 12px 0 0;color:var(--brand-accent,#F08023);}
+  .ab-sig{margin-top:30px;padding-top:24px;border-top:1px solid var(--va-line);display:flex;align-items:center;gap:16px;}
+  .ab-sig-img{width:54px;height:54px;border-radius:50%;background:#E9EEF5;}
+  .ab-sig b{display:block;font-size:14px;}
+  .ab-sig span{font-size:12px;opacity:.6;}
+  .ab-time{padding:96px 0;background:var(--va-bg-alt);}
+  .ab-time-head{text-align:center;margin-bottom:60px;}
+  .ab-time-head h2{font-size:clamp(30px,3.6vw,46px);}
+  .ab-time-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:0;position:relative;}
+  .ab-time-grid::before{content:'';position:absolute;left:5%;right:5%;top:24px;height:2px;background:var(--va-line);}
+  .ab-tnode{text-align:center;position:relative;padding:0 12px;}
+  .ab-tdot{width:14px;height:14px;border-radius:50%;background:var(--brand-accent,#F08023);
+    margin:0 auto 18px;border:4px solid var(--va-bg-alt);position:relative;z-index:1;
+    box-shadow:0 0 0 2px var(--brand-accent,#F08023);}
+  .ab-tnode b{display:block;font-family:ui-monospace,Menlo,monospace;font-size:14px;color:var(--brand-primary,#0F3D7A);margin-bottom:8px;}
+  .ab-tnode h4{font-size:15px;margin-bottom:6px;}
+  .ab-tnode p{font-size:12.5px;opacity:.65;line-height:1.5;}
+  .ab-vals{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+  .ab-val{background:var(--va-card);border:1px solid var(--va-line);border-radius:14px;
+    padding:32px 28px;transition:.35s cubic-bezier(.2,.7,.3,1);cursor:default;}
+  .ab-val:hover{transform:translateY(-6px);box-shadow:0 22px 50px -25px rgba(15,61,122,.25);border-color:transparent;}
+  .ab-val-i{width:48px;height:48px;border-radius:12px;background:rgba(240,128,35,.1);
+    color:var(--brand-accent,#F08023);display:flex;align-items:center;justify-content:center;margin-bottom:22px;}
+  .ab-val h3{font-size:20px;margin-bottom:12px;}
+  .ab-val p{font-size:14px;opacity:.72;line-height:1.65;}
+  .ab-caps{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;}
+  .ab-caps-img{aspect-ratio:4/3;border-radius:12px;overflow:hidden;background:#0F3D7A;position:relative;}
+  .ab-caps-img img{width:100%;height:100%;object-fit:cover;display:block;}
+  .ab-caps-img::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(15,61,122,.35),transparent 50%,rgba(240,128,35,.25));}
+  .ab-caps h2{font-size:clamp(28px,3.4vw,42px);margin-bottom:22px;}
+  .ab-caps>div>p{font-size:15px;opacity:.75;line-height:1.7;margin-bottom:32px;}
+  .ab-caps-list{display:flex;flex-direction:column;gap:0;}
+  .ab-cap-row{display:grid;grid-template-columns:60px 1fr auto;gap:18px;align-items:center;
+    padding:16px 0;border-top:1px solid var(--va-line);}
+  .ab-cap-row:last-child{border-bottom:1px solid var(--va-line);}
+  .ab-cap-n{font-family:ui-monospace,Menlo,monospace;font-size:11px;opacity:.5;letter-spacing:.06em;}
+  .ab-cap-row h4{font-size:15px;font-weight:600;}
+  .ab-cap-row span{font-family:ui-monospace,Menlo,monospace;font-size:13px;color:var(--brand-accent,#F08023);font-weight:600;}
+  .ab-certs{padding:96px 0;background:var(--va-bg-alt);}
+  .ab-certs-head{display:grid;grid-template-columns:1fr 1.4fr;gap:60px;margin-bottom:48px;align-items:end;}
+  .ab-certs-head h2{font-size:clamp(30px,3.6vw,46px);}
+  .ab-certs-head p{font-size:15px;opacity:.7;line-height:1.65;max-width:480px;}
+  .ab-clogo{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;
+    background:var(--va-line);border:1px solid var(--va-line);border-radius:14px;overflow:hidden;}
+  .ab-clogo>div{background:var(--va-card);padding:32px 18px;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;text-align:center;
+    font-family:ui-monospace,Menlo,monospace;letter-spacing:.06em;transition:.25s;}
+  .ab-clogo>div:hover{background:var(--va-bg-alt);}
+  .ab-clogo b{font-size:18px;color:var(--brand-primary,#0F3D7A);margin-bottom:6px;}
+  .ab-clogo span{font-size:10px;opacity:.6;}
+  .ab-cta{background:#0F3D7A;color:#fff;border-radius:18px;padding:64px 56px;
+    display:grid;grid-template-columns:1.2fr 1fr;gap:48px;align-items:center;margin:64px 0;}
+  .ab-cta h2{font-size:clamp(28px,3.2vw,40px);color:#fff;margin-bottom:14px;}
+  .ab-cta p{opacity:.78;line-height:1.65;font-size:15px;}
+  .ab-cta-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:flex-end;}
+  .ab-btn{display:inline-flex;align-items:center;gap:8px;padding:14px 26px;border-radius:8px;
+    font-size:14px;font-weight:600;text-decoration:none;cursor:pointer;border:0;font-family:inherit;transition:.18s;}
+  .ab-btn-p{background:var(--brand-accent,#F08023);color:#fff;}
+  .ab-btn-p:hover{background:#D26713;transform:translateY(-1px);}
+  .ab-btn-g{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.3);}
+  .ab-btn-g:hover{border-color:#fff;}
+  @media (max-width:980px){
+    .ab-intro,.ab-caps,.ab-cta,.ab-certs-head{grid-template-columns:1fr;gap:32px;}
+    .ab-time-grid,.ab-clogo{grid-template-columns:1fr 1fr;}
+    .ab-time-grid::before{display:none;}
+    .ab-vals{grid-template-columns:1fr;}
+  }
+`;
+
+const TIMELINE = {
+  vi: [
+    ['2008','Khởi nguồn','Thành lập tại Quỳ Hợp, Nghệ An — bắt đầu từ một mỏ đá vôi trắng.'],
+    ['2013','Nhà máy đầu','Lắp đặt dây chuyền nghiền khô đầu tiên, công suất 80,000 tấn/năm.'],
+    ['2017','Phủ Stearic','Đưa vào vận hành dây chuyền phủ Stearic Acid theo công nghệ EU.'],
+    ['2020','ISO 9001','Đạt chứng nhận ISO 9001:2015. Mở rộng xuất khẩu sang Hàn Quốc, Nhật Bản.'],
+    ['2024','Mở rộng','Khánh thành xưởng đá Slab 1.6×2.4m. Tổng công suất đạt 350,000 tấn/năm.'],
+  ],
+  en: [
+    ['2008','Founded','Founded in Quy Hop, Nghe An — starting from a single white limestone quarry.'],
+    ['2013','First plant','Installed our first dry-grinding line at 80,000 tons/year capacity.'],
+    ['2017','Coating line','Commissioned a stearic-acid coating line built to European specs.'],
+    ['2020','ISO 9001','Certified ISO 9001:2015. Began exports to Korea and Japan.'],
+    ['2024','Expansion','Opened our 1.6×2.4m Slab workshop. Total capacity reached 350,000 t/y.'],
+  ],
+};
+const VALUES = {
+  vi:[
+    ['drop','Chất lượng nguyên sinh','Mỏ riêng tại Quỳ Hợp với độ trắng > 96% và CaCO₃ > 98.5% — kiểm soát từ gốc.'],
+    ['spark','Công nghệ chính xác','Dây chuyền nghiền và phủ Stearic Acid theo công nghệ Châu Âu, kiểm tra từng lô.'],
+    ['ship','Cam kết giao hàng','Cảng Cửa Lò & Hải Phòng — đóng gói linh hoạt, lịch giao đúng hẹn.'],
+  ],
+  en:[
+    ['drop','Pure raw material','Owned quarry in Quy Hop · whiteness >96%, CaCO₃ >98.5% — controlled at the source.'],
+    ['spark','Precision technology','EU-spec grinding and stearic-acid coating lines · per-batch QC.'],
+    ['ship','On-time delivery','Cua Lo & Hai Phong ports · flexible packaging, schedules we keep.'],
+  ],
+};
+const CAPS = {
+  vi:[
+    ['Mỏ đá vận hành','05 mỏ'],
+    ['Công suất hàng năm','350,000 tấn'],
+    ['Dây chuyền nghiền khô','06 dây chuyền'],
+    ['Dây chuyền phủ Stearic','02 dây chuyền'],
+    ['Đóng gói','25kg · Jumbo 1T · Bulk'],
+    ['Cảng xuất hàng','Cửa Lò · Hải Phòng'],
+  ],
+  en:[
+    ['Quarries operated','05 sites'],
+    ['Annual capacity','350,000 tons'],
+    ['Dry-grinding lines','06 lines'],
+    ['Stearic coating lines','02 lines'],
+    ['Packaging','25kg · 1T jumbo · Bulk'],
+    ['Export ports','Cua Lo · Hai Phong'],
+  ],
+};
+const CERTS = ['ISO 9001','REACH','SGS','RoHS','MSDS'];
+
+function App() {
+  const [t, setT] = React.useState({ lang:'vi', dark:false, primary:'#0F3D7A', accent:'#F08023', font:'Inter' });
+  const setTweak = (k, v) => setT(s => ({ ...s, [k]: v }));
+  const tweaks = { ...t, set: setTweak };
+  const C = COPY[t.lang];
+  const cssVars = { '--brand-primary':t.primary, '--brand-accent':t.accent, '--va-font':t.font, '--va-display':t.font };
+
+  return (
+    <div className={'vac ab '+(t.dark?'dark':'')} style={cssVars}>
+      <style>{CHROME_CSS}</style>
+      <style>{AB_CSS}</style>
+      <VAHeader tweaks={tweaks} current="about"/>
+      <VAPageHeader
+        eyebrow={C.aboutEy}
+        title={t.lang==='vi'?'Khoáng đá nguyên sinh từ Nghệ An':'Pure mineral stone from Nghe An'}
+        sub={t.lang==='vi'
+          ?'Hơn 20 năm khai thác và chế biến — chúng tôi xây dựng từng mối quan hệ qua từng container giao đúng hẹn.'
+          :'20+ years of mining and milling — we build each partnership through containers delivered on time.'}
+        breadcrumb={[
+          { label: t.lang==='vi'?'Trang chủ':'Home', href:'index.html' },
+          { label: C.nav[1] },
+        ]}/>
+
+      {/* INTRO */}
+      <section className="ab-section ab-intro-wrap">
+        <div className="ab-intro-bg">
+          <img src="assets/nha-may-bot-sieu-min-1.webp" alt=""/>
+        </div>
+        <div className="ab-wrap">
+          <div className="ab-intro">
+            <div className="ab-intro-img">
+              <img src="assets/da-nguyen-lieu-cao-cap.webp" alt="Long Anh quarry"/>
+            </div>
+            <div>
+              <div className="ab-eyebrow">{t.lang==='vi'?'Câu chuyện':'Our story'}</div>
+              <h2>{t.lang==='vi'
+                ?<>Khai thác bền vững.<br/>Chế biến chính xác.</>
+                :<>Sustainably mined.<br/>Precisely milled.</>}</h2>
+              <p>{C.aboutP1}</p>
+              <p>{C.aboutP2}</p>
+              <p>{t.lang==='vi'
+                ?'Chúng tôi xem mỗi tấn bột đá là một cam kết — về chất lượng, thời hạn và mối quan hệ lâu dài với đối tác.'
+                :'Every ton of stone is a promise — to quality, to deadlines, and to a long-term partnership.'}</p>
+              <div className="ab-sig">
+                <div className="ab-sig-img"></div>
+                <div>
+                  <b>Nguyễn Long Anh</b>
+                  <span>{t.lang==='vi'?'Chủ tịch · Sáng lập':'Founder · Chairman'}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* TIMELINE */}
+      <section className="ab-time">
+        <div className="ab-wrap">
+          <div className="ab-time-head">
+            <div className="ab-eyebrow">{t.lang==='vi'?'Hành trình':'Journey'}</div>
+            <h2>{t.lang==='vi'?'20 năm — một mạch đá':'20 years — one continuous vein'}</h2>
+          </div>
+          <div className="ab-time-grid">
+            {TIMELINE[t.lang].map(([y,h,p],i)=>(
+              <div key={i} className="ab-tnode">
+                <div className="ab-tdot"></div>
+                <b>{y}</b><h4>{h}</h4><p>{p}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* VALUES */}
+      <section className="ab-section">
+        <div className="ab-wrap">
+          <div style={{textAlign:'center',marginBottom:48,maxWidth:680,marginInline:'auto'}}>
+            <div className="ab-eyebrow">{t.lang==='vi'?'Giá trị cốt lõi':'Core values'}</div>
+            <h2 style={{fontSize:'clamp(30px,3.6vw,44px)'}}>
+              {t.lang==='vi'?'Ba điều chúng tôi không bao giờ thỏa hiệp':'Three things we never compromise'}
+            </h2>
+          </div>
+          <div className="ab-vals">
+            {VALUES[t.lang].map(([icon,h,p],i)=>(
+              <div key={i} className="ab-val">
+                <div className="ab-val-i"><Icon name={icon} size={24}/></div>
+                <h3>{h}</h3><p>{p}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CAPABILITIES */}
+      <section className="ab-section" style={{background:'var(--va-bg-alt)'}}>
+        <div className="ab-wrap">
+          <div className="ab-caps">
+            <div className="ab-caps-img">
+              <img src="assets/nha-may-bot-sieu-min-3.webp" alt="Long Anh plant"/>
+            </div>
+            <div>
+              <div className="ab-eyebrow">{t.lang==='vi'?'Năng lực sản xuất':'Production capability'}</div>
+              <h2>{t.lang==='vi'?'Hệ thống nhà máy. Đo bằng con số.':'Plant infrastructure. Measured in numbers.'}</h2>
+              <p>{t.lang==='vi'
+                ?'Hệ thống nhà máy của Long Anh được thiết kế để sản xuất ổn định, công suất lớn và linh hoạt theo từng đơn hàng B2B.'
+                :"Long Anh's plants are built for stable output, high capacity, and B2B-flexible production."}</p>
+              <div className="ab-caps-list">
+                {CAPS[t.lang].map(([h,v],i)=>(
+                  <div key={i} className="ab-cap-row">
+                    <div className="ab-cap-n">— 0{i+1}</div>
+                    <h4>{h}</h4>
+                    <span>{v}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CERTS */}
+      <section className="ab-certs">
+        <div className="ab-wrap">
+          <div className="ab-certs-head">
+            <div>
+              <div className="ab-eyebrow">{t.lang==='vi'?'Chứng nhận':'Certifications'}</div>
+              <h2>{t.lang==='vi'?'Đạt chuẩn quốc tế':'Built to international standards'}</h2>
+            </div>
+            <p>{t.lang==='vi'
+              ?'Tất cả lô sản phẩm đều được kiểm tra COA, MSDS và đáp ứng yêu cầu khắt khe nhất từ thị trường Hàn Quốc, Nhật Bản, Ấn Độ và Trung Đông.'
+              :'Every batch ships with COA and MSDS, meeting the toughest requirements from Korea, Japan, India and the Middle East.'}</p>
+          </div>
+          <div className="ab-clogo">
+            {CERTS.map((c,i)=>(
+              <div key={i}><b>{c}</b><span>{t.lang==='vi'?'Chứng nhận':'Certified'}</span></div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <div className="ab-wrap">
+        <div className="ab-cta">
+          <div>
+            <div style={{fontSize:11,fontWeight:600,letterSpacing:'.16em',
+              textTransform:'uppercase',color:'#F08023',marginBottom:14}}>
+              {t.lang==='vi'?'Đối tác cùng Long Anh':'Partner with Long Anh'}
+            </div>
+            <h2>{t.lang==='vi'?'Hãy bắt đầu từ một câu hỏi.':'Start with a single question.'}</h2>
+            <p>{t.lang==='vi'
+              ?'Đội ngũ kinh doanh phản hồi trong 24h làm việc — kèm spec, COA và báo giá FOB.'
+              :'Sales replies within 24 business hours — with spec, COA and FOB pricing.'}</p>
+          </div>
+          <div className="ab-cta-btns">
+            <a className="ab-btn ab-btn-p" href="products.html">
+              {t.lang==='vi'?'Xem sản phẩm':'Browse products'} →
+            </a>
+            <a className="ab-btn ab-btn-g" href="index.html#contact">
+              {t.lang==='vi'?'Liên hệ ngay':'Contact us'}
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <VAFooter tweaks={tweaks}/>
+    </div>
+  );
+}
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
