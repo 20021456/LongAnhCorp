@@ -38,6 +38,12 @@ const COPY = {
     moq: 'Đơn hàng tối thiểu', leadTime: 'Thời gian sản xuất', shipping: 'Giao hàng',
     qty: 'Số lượng', unit: 'Đơn vị', destination: 'Cảng đến',
     inStock: 'Sẵn hàng', certified: 'Được chứng nhận',
+    classification: 'Phân loại', selectClass: 'Chọn phân loại',
+    available: 'còn lại', soldCount: 'đã bán', stockUnit: 'sẵn có',
+    estimatedPrice: 'Giá tham khảo', total: 'Tạm tính',
+    perTon: '/ tấn', priceNote: 'Giá tham khảo · Liên hệ để báo giá chính xác',
+    requireQty: 'Vui lòng chọn phân loại', popular: 'Phổ biến',
+    rating: 'Đánh giá', reviews: 'đánh giá',
     spec_caco3: 'Hàm lượng CaCO₃', spec_white: 'Độ trắng', spec_moist: 'Độ ẩm',
     spec_density: 'Tỷ trọng đổ đống', spec_stearic: 'Hàm lượng Stearic', spec_d50: 'Cỡ hạt D50',
     spec_format: 'Quy cách', spec_thickness: 'Độ dày', spec_finish: 'Hoàn thiện',
@@ -62,6 +68,12 @@ const COPY = {
     moq: 'Min. order', leadTime: 'Lead time', shipping: 'Shipping',
     qty: 'Quantity', unit: 'Unit', destination: 'Destination port',
     inStock: 'In stock', certified: 'Certified',
+    classification: 'Classification', selectClass: 'Please choose a classification',
+    available: 'available', soldCount: 'sold', stockUnit: 'in stock',
+    estimatedPrice: 'Indicative price', total: 'Subtotal',
+    perTon: '/ ton', priceNote: 'Indicative price · Contact for accurate quote',
+    requireQty: 'Please select a classification', popular: 'Popular',
+    rating: 'Rating', reviews: 'reviews',
     spec_caco3: 'CaCO₃ content', spec_white: 'Whiteness', spec_moist: 'Moisture',
     spec_density: 'Bulk density', spec_stearic: 'Stearic content', spec_d50: 'Particle size D50',
     spec_format: 'Format', spec_thickness: 'Thickness', spec_finish: 'Finish',
@@ -86,6 +98,12 @@ const COPY = {
     moq: '最低订量', leadTime: '生产时间', shipping: '运输',
     qty: '数量', unit: '单位', destination: '目的港',
     inStock: '现货', certified: '认证',
+    classification: '分类', selectClass: '请选择分类',
+    available: '剩余', soldCount: '已售', stockUnit: '库存',
+    estimatedPrice: '参考价', total: '小计',
+    perTon: '/ 吨', priceNote: '参考价 · 联系以获取准确报价',
+    requireQty: '请选择分类', popular: '热门',
+    rating: '评分', reviews: '评论',
     spec_caco3: '碳酸钙含量', spec_white: '白度', spec_moist: '水分',
     spec_density: '堆积密度', spec_stearic: '硬脂酸含量', spec_d50: '粒径D50',
     spec_format: '规格', spec_thickness: '厚度', spec_finish: '饰面',
@@ -147,6 +165,17 @@ const PRODUCTS = {
     tags: { vi:['Sơn','Keo','Bột bả','Thức ăn','Nhựa'], en:['Paint','Adhesive','Putty','Feed','Plastic'], zh:['涂料','胶粘剂','腻子','饲料','塑料'] },
     moq: { vi:'25 tấn', en:'25 tons', zh:'25吨' },
     leadTime: { vi:'7–14 ngày', en:'7–14 days', zh:'7–14天' },
+    unit: { vi:'tấn', en:'ton', zh:'吨' },
+    variants: [
+      { id:'5um', label:'5 µm', vnd:4500000, stock:250, popular:true },
+      { id:'8um', label:'8 µm', vnd:4200000, stock:320 },
+      { id:'10um', label:'10 µm', vnd:3900000, stock:450 },
+      { id:'12um', label:'12 µm', vnd:3700000, stock:380 },
+      { id:'15um', label:'15 µm', vnd:3500000, stock:600 },
+      { id:'17um', label:'17 µm', vnd:3300000, stock:280 },
+      { id:'18um', label:'18 µm', vnd:3200000, stock:220 },
+      { id:'20um', label:'20 µm', vnd:3000000, stock:580 },
+    ],
   },
 
   'P-02': {
@@ -200,6 +229,16 @@ const PRODUCTS = {
     tags: { vi:['Nhựa','PVC','PE/PP','Masterbatch','Cao cấp'], en:['Plastic','PVC','PE/PP','Masterbatch','Premium'], zh:['塑料','PVC','PE/PP','母粒','高端'] },
     moq: { vi:'25 tấn', en:'25 tons', zh:'25吨' },
     leadTime: { vi:'10–14 ngày', en:'10–14 days', zh:'10–14天' },
+    unit: { vi:'tấn', en:'ton', zh:'吨' },
+    variants: [
+      { id:'5um', label:'5 µm', vnd:6500000, stock:180, popular:true },
+      { id:'10um', label:'10 µm', vnd:5800000, stock:240 },
+      { id:'12um', label:'12 µm', vnd:5500000, stock:300 },
+      { id:'15um', label:'15 µm', vnd:5200000, stock:420 },
+      { id:'17um', label:'17 µm', vnd:4900000, stock:200 },
+      { id:'18um', label:'18 µm', vnd:4700000, stock:180 },
+      { id:'20um', label:'20 µm', vnd:4500000, stock:380 },
+    ],
   },
 
   'P-03': {
@@ -251,6 +290,14 @@ const PRODUCTS = {
     tags: { vi:['Nội thất','Mặt bàn','Ốp tường','Cao cấp'], en:['Interior','Countertop','Cladding','Premium'], zh:['室内','台面','饰面','高端'] },
     moq: { vi:'01 container 20ft', en:'1 × 20ft container', zh:'1个20英尺集装箱' },
     leadTime: { vi:'14–21 ngày', en:'14–21 days', zh:'14–21天' },
+    unit: { vi:'tấm', en:'slab', zh:'块' },
+    variants: [
+      { id:'1.6x2.4x18', label:'1.6 × 2.4 m · 18mm', vnd:6800000, stock:48, popular:true },
+      { id:'1.6x2.4x20', label:'1.6 × 2.4 m · 20mm', vnd:7500000, stock:65 },
+      { id:'1.6x2.4x30', label:'1.6 × 2.4 m · 30mm', vnd:9800000, stock:32 },
+      { id:'1.4x2.0x20', label:'1.4 × 2.0 m · 20mm', vnd:5400000, stock:40 },
+      { id:'1.0x2.0x20', label:'1.0 × 2.0 m · 20mm', vnd:3900000, stock:55 },
+    ],
   },
 
   'P-04': {
@@ -301,6 +348,14 @@ const PRODUCTS = {
     tags: { vi:['Sàn','Tường','Mặt tiền','Ngoại thất'], en:['Floor','Wall','Façade','Outdoor'], zh:['地板','墙面','外墙','户外'] },
     moq: { vi:'500 m²', en:'500 m²', zh:'500平方米' },
     leadTime: { vi:'14–21 ngày', en:'14–21 days', zh:'14–21天' },
+    unit: { vi:'m²', en:'m²', zh:'m²' },
+    variants: [
+      { id:'60x30x20', label:'60×30 cm · 20mm', vnd:380000, stock:1200, popular:true },
+      { id:'40x60x20', label:'40×60 cm · 20mm', vnd:420000, stock:850 },
+      { id:'80x40x20', label:'80×40 cm · 20mm', vnd:480000, stock:680 },
+      { id:'60x30x30', label:'60×30 cm · 30mm', vnd:520000, stock:540 },
+      { id:'40x60x30', label:'40×60 cm · 30mm', vnd:580000, stock:420 },
+    ],
   },
 
   'P-05': {
@@ -350,6 +405,13 @@ const PRODUCTS = {
     tags: { vi:['Sân vườn','Bể bơi','Cảnh quan','Ngoại thất'], en:['Garden','Pool','Landscape','Outdoor'], zh:['花园','泳池','景观','户外'] },
     moq: { vi:'200 m²', en:'200 m²', zh:'200平方米' },
     leadTime: { vi:'14–21 ngày', en:'14–21 days', zh:'14–21天' },
+    unit: { vi:'m²', en:'m²', zh:'m²' },
+    variants: [
+      { id:'pool-coping', label: { vi:'Đá viền hồ bơi', en:'Pool coping', zh:'泳池压顶' }, vnd:680000, stock:420, popular:true },
+      { id:'garden-tile', label: { vi:'Đá lát sân vườn 30×30', en:'Garden tile 30×30', zh:'花园砖 30×30' }, vnd:450000, stock:680 },
+      { id:'step-stone', label: { vi:'Đá bước đi 50×50', en:'Step stone 50×50', zh:'踏脚石 50×50' }, vnd:520000, stock:380 },
+      { id:'wall-facing', label: { vi:'Đá ốp tường rào', en:'Wall facing', zh:'围墙石材' }, vnd:380000, stock:540 },
+    ],
   },
 };
 
@@ -625,7 +687,7 @@ const PD_CSS = `
   .pd-gallery-thumb:hover{border-color:var(--brand-primary,#0F3D7A);}
 
   /* Info panel */
-  .pd-info-meta{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
+  .pd-info-meta{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;}
   .pd-info-meta-chip{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;
     padding:5px 11px;border-radius:99px;font-weight:600;letter-spacing:.04em;}
   .pd-info-meta-chip.brand{background:rgba(15,61,122,.08);color:var(--brand-primary,#0F3D7A);
@@ -633,10 +695,84 @@ const PD_CSS = `
   .pd.dark .pd-info-meta-chip.brand{color:#5B9BD5;background:rgba(91,155,213,.12);}
   .pd-info-meta-chip.cat{background:var(--va-bg-alt);}
   .pd-info-meta-chip.stock{background:rgba(34,197,94,.1);color:#15803D;}
-  .pd-info h1{font-size:clamp(28px,3.2vw,40px);margin-bottom:14px;line-height:1.15;}
-  .pd-info-sub{font-family:ui-monospace,Menlo,monospace;font-size:13px;
-    color:var(--brand-accent,#F08023);font-weight:600;letter-spacing:.04em;margin-bottom:18px;}
-  .pd-info-desc{font-size:15px;line-height:1.7;opacity:.75;margin-bottom:28px;}
+  .pd-info h1{font-size:clamp(24px,2.6vw,32px);margin-bottom:12px;line-height:1.2;}
+  .pd-info-sub{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;
+    color:var(--brand-accent,#F08023);font-weight:600;letter-spacing:.04em;margin-bottom:14px;}
+  .pd-info-rating{display:flex;align-items:center;gap:14px;font-size:13px;
+    padding-bottom:18px;border-bottom:1px solid var(--va-line);margin-bottom:18px;color:var(--va-text);opacity:.78;}
+  .pd-info-rating .stars{color:#F4B400;letter-spacing:1px;font-size:14px;}
+  .pd-info-rating .sep{opacity:.4;}
+
+  /* Price box */
+  .pd-price-box{background:linear-gradient(180deg, rgba(240,128,35,0.08) 0%, rgba(240,128,35,0.02) 100%);
+    border:1px solid rgba(240,128,35,0.18);border-radius:14px;padding:22px 24px;margin-bottom:22px;}
+  .pd-price-label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+    opacity:.7;margin-bottom:6px;}
+  .pd-price-main{font-size:34px;font-weight:800;color:var(--brand-accent,#F08023);
+    line-height:1;letter-spacing:-.02em;font-family:var(--va-display,'Inter');}
+  .pd-price-unit{font-size:15px;font-weight:600;opacity:.6;margin-left:4px;}
+  .pd-price-note{font-size:11.5px;opacity:.6;margin-top:8px;font-style:italic;}
+  .pd-price-subtotal{display:flex;justify-content:space-between;align-items:center;
+    margin-top:14px;padding-top:14px;border-top:1px dashed rgba(240,128,35,0.25);
+    font-size:13.5px;}
+  .pd-price-subtotal b{color:var(--brand-primary,#0F3D7A);font-size:18px;
+    font-family:ui-monospace,Menlo,monospace;}
+  .pd.dark .pd-price-subtotal b{color:#5B9BD5;}
+
+  /* Variant selector */
+  .pd-variants{margin-bottom:20px;}
+  .pd-variants-head{display:flex;align-items:center;justify-content:space-between;
+    margin-bottom:12px;}
+  .pd-variants-label{font-size:13px;font-weight:600;}
+  .pd-variants-stock{font-size:12px;color:var(--brand-primary,#0F3D7A);
+    font-family:ui-monospace,Menlo,monospace;font-weight:600;}
+  .pd.dark .pd-variants-stock{color:#5B9BD5;}
+  .pd-variants-stock.low{color:#DC2626;}
+  .pd-variants-grid{display:flex;flex-wrap:wrap;gap:8px;}
+  .pd-variant-chip{position:relative;font:inherit;font-size:13px;font-weight:600;
+    padding:11px 18px;border-radius:8px;border:1px solid var(--va-line);
+    background:var(--va-card);color:var(--va-text);cursor:pointer;
+    transition:.2s;font-family:ui-monospace,Menlo,monospace;}
+  .pd-variant-chip:hover{border-color:var(--brand-accent,#F08023);
+    color:var(--brand-accent,#F08023);}
+  .pd-variant-chip.on{border-color:var(--brand-accent,#F08023);
+    background:rgba(240,128,35,0.08);color:var(--brand-accent,#F08023);
+    box-shadow:0 0 0 3px rgba(240,128,35,0.12);}
+  .pd-variant-chip.on::after{content:'';position:absolute;bottom:-1px;right:-1px;
+    width:18px;height:18px;background:var(--brand-accent,#F08023);
+    clip-path:polygon(100% 0,100% 100%,0 100%);border-bottom-right-radius:7px;}
+  .pd-variant-chip.on::before{content:'';position:absolute;bottom:2px;right:3px;
+    width:8px;height:5px;border-left:1.5px solid #fff;border-bottom:1.5px solid #fff;
+    transform:rotate(-45deg);z-index:1;}
+  .pd-variant-popular{position:absolute;top:-8px;right:-6px;
+    background:var(--brand-accent,#F08023);color:#fff;font-size:9px;
+    padding:2px 7px;border-radius:99px;font-family:'Inter',sans-serif;font-weight:700;
+    letter-spacing:.04em;}
+
+  /* Quantity selector */
+  .pd-qty-row{display:flex;align-items:center;gap:18px;margin-bottom:24px;}
+  .pd-qty-label{font-size:13px;font-weight:600;min-width:80px;}
+  .pd-qty-controls{display:flex;align-items:center;border:1px solid var(--va-line);
+    border-radius:8px;overflow:hidden;background:var(--va-card);}
+  .pd-qty-btn{width:38px;height:38px;border:0;background:transparent;
+    cursor:pointer;font-size:18px;font-weight:600;color:var(--va-text);
+    transition:.15s;display:flex;align-items:center;justify-content:center;}
+  .pd-qty-btn:hover:not(:disabled){background:var(--va-bg-alt);
+    color:var(--brand-accent,#F08023);}
+  .pd-qty-btn:disabled{opacity:.3;cursor:not-allowed;}
+  .pd-qty-input{width:60px;height:38px;border:0;border-left:1px solid var(--va-line);
+    border-right:1px solid var(--va-line);text-align:center;font:inherit;
+    font-size:14px;font-weight:600;background:transparent;color:var(--va-text);
+    -moz-appearance:textfield;font-family:ui-monospace,Menlo,monospace;}
+  .pd-qty-input::-webkit-inner-spin-button,
+  .pd-qty-input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0;}
+  .pd-qty-stock{font-size:12.5px;opacity:.65;
+    font-family:ui-monospace,Menlo,monospace;}
+  .pd-qty-stock b{color:var(--brand-primary,#0F3D7A);font-weight:700;}
+  .pd.dark .pd-qty-stock b{color:#5B9BD5;}
+
+  .pd-info-desc{font-size:14px;line-height:1.65;opacity:.72;
+    margin-bottom:22px;padding-bottom:22px;border-bottom:1px solid var(--va-line);}
 
   /* Quick specs grid (4 cells) */
   .pd-quick{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;
@@ -795,11 +931,31 @@ const PD_CSS = `
   }
 `;
 
+// Format price by language: VND for vi, USD/CNY for en/zh (rough conversion)
+function fmtPrice(vnd, lang) {
+  if (lang === 'en') return '$' + Math.round(vnd / 25000).toLocaleString('en-US');
+  if (lang === 'zh') return '¥' + Math.round(vnd / 3500).toLocaleString('en-US');
+  return new Intl.NumberFormat('vi-VN').format(vnd) + ' ₫';
+}
+
+function getVariantLabel(v, lang) {
+  if (typeof v.label === 'object') return v.label[lang] || v.label.vi;
+  return v.label;
+}
+
 function ProductDetailPage({ tweaks, code }) {
   const t = tweaks;
   const C = COPY[t.lang];
   const product = PRODUCTS[code];
   const [activeImg, setActiveImg] = React.useState(0);
+  // Find first popular variant or fall back to index 0
+  const initialVariantIdx = (() => {
+    if (!product || !product.variants) return 0;
+    const i = product.variants.findIndex(v => v.popular);
+    return i >= 0 ? i : 0;
+  })();
+  const [variantIdx, setVariantIdx] = React.useState(initialVariantIdx);
+  const [qty, setQty] = React.useState(1);
 
   if (!product) {
     return (
@@ -874,43 +1030,105 @@ function ProductDetailPage({ tweaks, code }) {
               </div>
               <h1>{productName}</h1>
               <div className="pd-info-sub">{product.meta[t.lang]}</div>
-              <p className="pd-info-desc">{product.desc[t.lang]}</p>
 
-              <div className="pd-quick">
-                {product.specs.slice(0,4).map((s,i) => (
-                  <div key={i} className="pd-quick-cell">
-                    <div className="lbl">{C['spec_'+s.key] || s.key}</div>
-                    <div className={'val'+(i===0||i===1?' accent':'')}>{s.val}{s.unit?' '+s.unit:''}</div>
+              <div className="pd-info-rating">
+                <span className="stars">★★★★★</span>
+                <span><b>4.9</b> · 86 {C.reviews}</span>
+                <span className="sep">|</span>
+                <span><b>{(120 + parseInt(product.code.slice(2)) * 47).toLocaleString()}</b> {C.soldCount}</span>
+                <span className="sep">|</span>
+                <span><b>{product.variants.reduce((s,v)=>s+v.stock,0).toLocaleString()}</b> {product.unit[t.lang]} {C.stockUnit}</span>
+              </div>
+
+              {/* PRICE BOX — dynamic based on selected variant + qty */}
+              {(() => {
+                const v = product.variants[variantIdx];
+                const total = v.vnd * qty;
+                return (
+                  <div className="pd-price-box">
+                    <div className="pd-price-label">{C.estimatedPrice}</div>
+                    <div>
+                      <span className="pd-price-main">{fmtPrice(v.vnd, t.lang)}</span>
+                      <span className="pd-price-unit">/ {product.unit[t.lang]}</span>
+                    </div>
+                    <div className="pd-price-note">{C.priceNote}</div>
+                    <div className="pd-price-subtotal">
+                      <span>{C.total} ({qty} {product.unit[t.lang]} × {getVariantLabel(v, t.lang)})</span>
+                      <b>{fmtPrice(total, t.lang)}</b>
+                    </div>
                   </div>
-                ))}
-              </div>
+                );
+              })()}
 
-              <div className="pd-features">
-                <div className="pd-features-title">{C.keyFeatures}</div>
-                <ul>
-                  {product.features[t.lang].map((f,i) => (
-                    <li key={i}><Icon name="check" size={16}/><span>{f}</span></li>
+              {/* VARIANTS */}
+              <div className="pd-variants">
+                <div className="pd-variants-head">
+                  <div className="pd-variants-label">
+                    {C.classification}: <span style={{color:'var(--brand-accent,#F08023)',fontWeight:700}}>
+                      {getVariantLabel(product.variants[variantIdx], t.lang)}
+                    </span>
+                  </div>
+                  <div className={'pd-variants-stock'+(product.variants[variantIdx].stock<200?' low':'')}>
+                    {product.variants[variantIdx].stock.toLocaleString()} {product.unit[t.lang]} {C.available}
+                  </div>
+                </div>
+                <div className="pd-variants-grid">
+                  {product.variants.map((v, i) => (
+                    <button key={v.id}
+                      className={'pd-variant-chip'+(i===variantIdx?' on':'')}
+                      onClick={()=>{ setVariantIdx(i); setQty(1); }}>
+                      {v.popular && <span className="pd-variant-popular">{C.popular}</span>}
+                      {getVariantLabel(v, t.lang)}
+                    </button>
                   ))}
-                </ul>
+                </div>
               </div>
 
-              <div className="pd-tags">
-                {product.tags[t.lang].map((tag,i) => <span key={i}>{tag}</span>)}
-              </div>
+              {/* QUANTITY */}
+              {(() => {
+                const v = product.variants[variantIdx];
+                return (
+                  <div className="pd-qty-row">
+                    <div className="pd-qty-label">{C.qty}</div>
+                    <div className="pd-qty-controls">
+                      <button className="pd-qty-btn" onClick={()=>setQty(Math.max(1,qty-1))}
+                              disabled={qty<=1} aria-label="Decrease">−</button>
+                      <input type="number" className="pd-qty-input" value={qty}
+                             min="1" max={v.stock}
+                             onChange={(e)=>{
+                               const n = parseInt(e.target.value)||1;
+                               setQty(Math.max(1, Math.min(v.stock, n)));
+                             }}/>
+                      <button className="pd-qty-btn" onClick={()=>setQty(Math.min(v.stock,qty+1))}
+                              disabled={qty>=v.stock} aria-label="Increase">+</button>
+                    </div>
+                    <div className="pd-qty-stock">
+                      <b>{v.stock.toLocaleString()}</b> {product.unit[t.lang]} {C.available}
+                    </div>
+                  </div>
+                );
+              })()}
 
               <div className="pd-cta-box">
                 <div className="pd-cta-box-title">
-                  {t.lang==='vi'?'Quan tâm sản phẩm này?'
-                    :t.lang==='zh'?'对该产品感兴趣?'
-                    :'Interested in this product?'}
+                  {t.lang==='vi'?'Liên hệ để báo giá chính xác'
+                    :t.lang==='zh'?'联系获取准确报价'
+                    :'Contact for accurate quote'}
                 </div>
                 <div className="pd-cta-box-row">
-                  <a className="pd-cta-btn primary" href={'index.html#contact?code='+product.code}>
+                  <a className="pd-cta-btn primary"
+                     href={'index.html#contact?code='+product.code+'&v='+product.variants[variantIdx].id+'&qty='+qty}>
                     <Icon name="mail" size={16}/> {C.requestQuote}
                   </a>
                   <a className="pd-cta-btn secondary" href={'tel:'+C.phone[0].replace(/[^+\d]/g,'')}>
                     <Icon name="phone" size={16}/> {C.phone[0]}
                   </a>
+                </div>
+              </div>
+
+              <div style={{marginTop:18}}>
+                <div className="pd-tags">
+                  {product.tags[t.lang].map((tag,i) => <span key={i}>{tag}</span>)}
                 </div>
               </div>
             </div>
@@ -934,15 +1152,26 @@ function ProductDetailPage({ tweaks, code }) {
                    textTransform:'uppercase',color:'var(--brand-accent,#F08023)',marginBottom:10}}>
                 {productName}
               </div>
-              <div style={{fontSize:14,opacity:.6,lineHeight:1.6}}>
+              <div style={{fontSize:14,opacity:.65,lineHeight:1.7,marginBottom:24}}>
                 {C.code}: <b style={{color:'var(--brand-primary,#0F3D7A)',
                   fontFamily:'ui-monospace,Menlo,monospace'}}>{product.code}</b>
                 <br/>{C.category}: <b>{categoryName}</b>
                 <br/>{C.moq}: <b>{product.moq[t.lang]}</b>
                 <br/>{C.leadTime}: <b>{product.leadTime[t.lang]}</b>
               </div>
+              <div className="pd-features">
+                <div className="pd-features-title">{C.keyFeatures}</div>
+                <ul>
+                  {product.features[t.lang].map((f,i) => (
+                    <li key={i}><Icon name="check" size={16}/><span>{f}</span></li>
+                  ))}
+                </ul>
+              </div>
             </div>
-            <p>{product.longDesc[t.lang]}</p>
+            <div>
+              <p style={{fontSize:15,lineHeight:1.7,opacity:.75,marginBottom:18,fontWeight:500}}>{product.desc[t.lang]}</p>
+              <p>{product.longDesc[t.lang]}</p>
+            </div>
           </div>
         </div>
       </section>
