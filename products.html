@@ -432,7 +432,7 @@ const PR_CSS = `
   .pr-cat-head p{font-size:15px;opacity:.72;line-height:1.7;}
 
   /* Product cards */
-  .pr-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:28px;}
+  .pr-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:28px;}
   .pr-card{background:var(--va-card);border:1px solid var(--va-line);border-radius:20px;
     overflow:hidden;cursor:pointer;display:flex;flex-direction:column;
     transition:transform .5s cubic-bezier(.2,.7,.3,1), box-shadow .5s, border-color .3s;
@@ -639,6 +639,7 @@ function App() {
   const cats = C.catTitles;
   const filtered = activeCat===null ? C.products : C.products.filter(p => p.cat === activeCat);
   const byCat = [0,1].map(ci => ({
+    ci,
     title: cats[ci],
     products: filtered.filter(p => p.cat === ci),
   })).filter(g => g.products.length > 0);
@@ -728,15 +729,15 @@ function App() {
       <section className="pr-section">
         <div className="pr-wrap">
           {byCat.map((group, gi) => (
-            <div key={gi} className="pr-cat-block" id={'cat-' + (gi===0?'powder':'stone')}>
+            <div key={group.ci} className="pr-cat-block" id={'cat-' + (group.ci===0?'powder':'stone')}>
               <div className="pr-cat-head">
                 <div>
-                  <div className="pr-cat-head-meta">— 0{gi+1} · {group.products.length} {t.lang==='zh'?'款产品':t.lang==='en'?'products':'sản phẩm'}</div>
-                  <h2>{gi===0
+                  <div className="pr-cat-head-meta">— 0{group.ci+1} · {group.products.length} {t.lang==='zh'?'款产品':t.lang==='en'?'products':'sản phẩm'}</div>
+                  <h2>{group.ci===0
                     ? (t.lang==='zh'?'从原始石灰岩 — 到工业用细粉':t.lang==='en'?'From raw limestone — to fine powder for industry':'Từ đá vôi nguyên sinh — đến bột mịn cho công nghiệp')
                     : (t.lang==='zh'?'天然石材 — 用于建筑和生活空间':t.lang==='en'?'Natural stone — for architecture and living spaces':'Đá tự nhiên — cho công trình và không gian sống')}</h2>
                 </div>
-                <p>{gi===0
+                <p>{group.ci===0
                   ? (t.lang==='zh'
                     ?'我们的碳酸钙粉是从义安省归合矿场的原始白石灰岩研磨加工而成 — 白度超过96%,碳酸钙含量超过98.5%。粒径范围5至20微米,用作多个行业的添加剂。'
                     :t.lang==='en'
