@@ -374,90 +374,199 @@ function VAPageHeader({ eyebrow, title, sub, breadcrumb }) {
 // ─── Products page ──────────────────────────────────────────────────────────
 const PR_CSS = `
   .pr{font-family:var(--va-font,'Inter'),system-ui,sans-serif;color:var(--va-text);background:var(--va-bg);}
-  .pr h2,.pr h3,.pr h4{margin:0;font-weight:700;letter-spacing:-.02em;line-height:1.1;}
+  .pr h2,.pr h3,.pr h4{margin:0;font-weight:700;letter-spacing:-.025em;line-height:1.1;}
   .pr p{margin:0;}
-  .pr-section{padding:96px 0;}
+  .pr-section{padding:80px 0;}
+  .pr-section.tight{padding:48px 0;}
   .pr-wrap{max-width:100%;margin:0;padding:0 clamp(24px, 4vw, 80px);}
-  .pr-eyebrow{font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--brand-accent,#F08023);margin-bottom:14px;}
-  .pr-cats{display:flex;gap:10px;margin-bottom:48px;flex-wrap:wrap;
-    padding-bottom:24px;border-bottom:1px solid var(--va-line);}
-  .pr-cat{font:inherit;font-size:13px;font-weight:600;padding:10px 18px;
-    border-radius:99px;border:1px solid var(--va-line);background:transparent;
-    color:var(--va-text);cursor:pointer;opacity:.65;display:inline-flex;
-    align-items:center;gap:10px;transition:.25s;}
-  .pr-cat:hover{opacity:1;border-color:var(--brand-accent,#F08023);color:var(--brand-accent,#F08023);}
-  .pr-cat.on{background:var(--brand-primary,#0F3D7A);color:#fff;opacity:1;border-color:var(--brand-primary,#0F3D7A);}
-  .pr-cat-n{font-family:ui-monospace,Menlo,monospace;font-size:10.5px;opacity:.6;
-    padding:2px 7px;border-radius:99px;background:rgba(0,0,0,.08);}
-  .pr-cat.on .pr-cat-n{background:rgba(255,255,255,.2);opacity:.9;}
-  .pr-cat-block{margin-bottom:80px;}
-  .pr-cat-head{display:grid;grid-template-columns:1fr 1.4fr;gap:60px;align-items:end;
-    margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--va-line);}
-  .pr-cat-head h2{font-size:clamp(28px,3.4vw,42px);}
-  .pr-cat-head p{font-size:15px;opacity:.7;line-height:1.6;max-width:520px;}
+  .pr-eyebrow{font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--brand-accent,#F08023);margin-bottom:14px;}
+
+  /* Stats strip */
+  .pr-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;
+    background:var(--va-bg-alt);border-block:1px solid var(--va-line);}
+  .pr-stat{padding:32px clamp(20px,2.5vw,40px);border-left:1px solid var(--va-line);transition:.3s;}
+  .pr-stat:first-child{border-left:0;}
+  .pr-stat:hover{background:var(--va-card);}
+  .pr-stat b{display:block;font-size:34px;font-weight:700;letter-spacing:-.025em;
+    color:var(--brand-primary,#0F3D7A);line-height:1;font-family:var(--va-display,'Inter');}
+  .pr.dark .pr-stat b{color:#5B9BD5;}
+  .pr-stat span{display:block;margin-top:10px;font-size:12px;opacity:.65;
+    text-transform:uppercase;letter-spacing:.06em;font-weight:500;}
+
+  /* Visual category tiles */
+  .pr-cat-tiles{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+  .pr-cat-tile{position:relative;border-radius:18px;overflow:hidden;cursor:pointer;
+    aspect-ratio:16/9;background:#0F3D7A;display:block;text-decoration:none;color:#fff;
+    transition:transform .4s cubic-bezier(.2,.7,.3,1), box-shadow .4s;
+    border:1px solid var(--va-line);}
+  .pr-cat-tile:hover{transform:translateY(-6px);
+    box-shadow:0 28px 56px -22px rgba(15,61,122,.4);}
+  .pr-cat-tile-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+    transition:transform .8s cubic-bezier(.2,.7,.3,1);}
+  .pr-cat-tile:hover .pr-cat-tile-img{transform:scale(1.06);}
+  .pr-cat-tile-overlay{position:absolute;inset:0;
+    background:linear-gradient(180deg,rgba(15,30,50,.30) 0%,rgba(8,16,30,.92) 100%);}
+  .pr-cat-tile-body{position:absolute;left:0;right:0;bottom:0;padding:32px 36px;}
+  .pr-cat-tile-num{font-family:ui-monospace,Menlo,monospace;font-size:11px;
+    letter-spacing:.16em;color:var(--brand-accent,#F08023);margin-bottom:10px;
+    display:flex;align-items:center;gap:10px;}
+  .pr-cat-tile-num::before{content:'';width:24px;height:1px;background:var(--brand-accent,#F08023);}
+  .pr-cat-tile h3{font-size:clamp(22px,2.4vw,30px);margin-bottom:8px;color:#fff;}
+  .pr-cat-tile p{font-size:13px;line-height:1.55;opacity:.85;max-width:420px;}
+  .pr-cat-tile-arrow{position:absolute;top:24px;right:24px;width:40px;height:40px;
+    border-radius:50%;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);
+    display:flex;align-items:center;justify-content:center;
+    backdrop-filter:blur(8px);transition:.3s;}
+  .pr-cat-tile:hover .pr-cat-tile-arrow{background:var(--brand-accent,#F08023);
+    border-color:transparent;transform:rotate(-45deg);}
+
+  /* Category section */
+  .pr-cat-block{margin-bottom:96px;scroll-margin-top:100px;}
+  .pr-cat-head{display:grid;grid-template-columns:1fr 1.5fr;gap:60px;align-items:end;margin-bottom:48px;}
+  .pr-cat-head h2{font-size:clamp(28px,3.2vw,42px);}
+  .pr-cat-head .pr-cat-head-meta{display:flex;align-items:center;gap:14px;margin-bottom:18px;
+    font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--brand-accent,#F08023);}
+  .pr-cat-head .pr-cat-head-meta::before{content:'';width:32px;height:1px;background:var(--brand-accent,#F08023);}
+  .pr-cat-head p{font-size:15px;opacity:.72;line-height:1.7;}
+
+  /* Product cards */
   .pr-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:28px;}
-  .pr-card{background:var(--va-card);border:1px solid var(--va-line);border-radius:18px;
+  .pr-card{background:var(--va-card);border:1px solid var(--va-line);border-radius:20px;
     overflow:hidden;cursor:pointer;display:flex;flex-direction:column;
-    transition:.45s cubic-bezier(.2,.7,.3,1);position:relative;}
-  .pr-card::after{content:'';position:absolute;left:0;right:0;bottom:0;height:3px;
-    background:var(--brand-accent,#F08023);transform:scaleX(0);transform-origin:left;
-    transition:transform .4s cubic-bezier(.2,.7,.3,1);}
+    transition:transform .5s cubic-bezier(.2,.7,.3,1), box-shadow .5s, border-color .3s;
+    position:relative;}
+  .pr-card::before{content:'';position:absolute;top:0;left:0;right:0;height:0;
+    background:linear-gradient(90deg,var(--brand-accent,#F08023),#FFB070);
+    transition:height .35s cubic-bezier(.2,.7,.3,1);z-index:5;}
   .pr-card:hover{transform:translateY(-12px);
-    box-shadow:0 30px 60px -25px rgba(15,61,122,.3);border-color:transparent;}
-  .pr-card:hover::after{transform:scaleX(1);}
-  .pr-card:hover .pr-card-img img{transform:scale(1.05);}
-  .pr-card-img{height:280px;overflow:hidden;position:relative;background:#E9EEF5;}
-  .pr-card-img img{width:100%;height:100%;object-fit:cover;transition:.6s cubic-bezier(.2,.7,.3,1);}
-  .pr-card-badge{position:absolute;top:14px;left:14px;background:rgba(15,61,122,.85);
-    color:#fff;font-size:10.5px;padding:5px 10px;border-radius:99px;
-    font-family:ui-monospace,Menlo,monospace;letter-spacing:.06em;backdrop-filter:blur(4px);}
+    box-shadow:0 36px 64px -28px rgba(15,61,122,.32);border-color:transparent;}
+  .pr-card:hover::before{height:4px;}
+  .pr-card-img{height:300px;overflow:hidden;position:relative;background:#E9EEF5;}
+  .pr-card-img img{width:100%;height:100%;object-fit:cover;
+    transition:transform .8s cubic-bezier(.2,.7,.3,1);}
+  .pr-card:hover .pr-card-img img{transform:scale(1.08);}
+  .pr-card-img::after{content:'';position:absolute;inset:0;
+    background:linear-gradient(180deg,transparent 50%,rgba(15,30,50,.4) 100%);
+    opacity:0;transition:.4s;pointer-events:none;}
+  .pr-card:hover .pr-card-img::after{opacity:1;}
+  .pr-card-badge{position:absolute;top:16px;left:16px;background:rgba(15,61,122,.92);
+    color:#fff;font-size:10.5px;padding:6px 12px;border-radius:99px;
+    font-family:ui-monospace,Menlo,monospace;letter-spacing:.08em;
+    backdrop-filter:blur(6px);font-weight:600;z-index:2;}
+  .pr-card-cat{position:absolute;top:16px;right:16px;background:rgba(255,255,255,.92);
+    color:var(--brand-primary,#0F3D7A);font-size:10.5px;padding:6px 12px;border-radius:99px;
+    letter-spacing:.04em;backdrop-filter:blur(6px);font-weight:600;z-index:2;}
   .pr-card-body{padding:28px;flex:1;display:flex;flex-direction:column;}
-  .pr-card-meta{font-family:ui-monospace,Menlo,monospace;font-size:11.5px;
-    color:var(--brand-accent,#F08023);letter-spacing:.04em;margin-bottom:10px;font-weight:600;}
-  .pr-card h3{font-size:22px;line-height:1.25;margin-bottom:14px;}
-  .pr-card p{font-size:14px;line-height:1.6;opacity:.74;flex:1;}
-  .pr-card-spec{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--va-line);
-    margin:20px -28px -28px;border-top:1px solid var(--va-line);}
-  .pr-card-spec>div{background:var(--va-card);padding:16px 20px;}
-  .pr-card-spec .lbl{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;opacity:.55;margin-bottom:4px;}
-  .pr-card-spec .val{font-size:13px;font-weight:600;font-family:ui-monospace,Menlo,monospace;}
-  .pr-card-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px;}
-  .pr-card-tags span{font-size:10.5px;padding:4px 10px;border-radius:99px;
-    background:var(--va-bg-alt);opacity:.78;letter-spacing:.04em;font-weight:500;}
-  .pr-sizes{display:grid;grid-template-columns:repeat(8,1fr);gap:8px;
-    margin-top:32px;padding-top:32px;border-top:1px solid var(--va-line);}
-  .pr-size{background:var(--va-card);border:1px solid var(--va-line);border-radius:8px;
-    padding:14px 10px;text-align:center;font-family:ui-monospace,Menlo,monospace;
-    font-size:13px;font-weight:600;color:var(--brand-primary,#0F3D7A);transition:.2s;cursor:default;}
-  .pr-size:hover{background:var(--brand-primary,#0F3D7A);color:#fff;border-color:var(--brand-primary,#0F3D7A);transform:translateY(-2px);}
-  .pr.dark .pr-size{color:#5B9BD5;}
+  .pr-card-meta{font-family:ui-monospace,Menlo,monospace;font-size:11px;
+    color:var(--brand-accent,#F08023);letter-spacing:.06em;margin-bottom:12px;
+    font-weight:600;text-transform:uppercase;}
+  .pr-card h3{font-size:22px;line-height:1.25;margin-bottom:14px;font-weight:700;}
+  .pr-card p{font-size:13.5px;line-height:1.65;opacity:.72;flex:1;}
+  .pr-card-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:18px;}
+  .pr-card-tags span{font-size:10.5px;padding:5px 11px;border-radius:99px;
+    background:var(--va-bg-alt);opacity:.85;letter-spacing:.04em;font-weight:500;}
+  .pr-card-foot{display:grid;grid-template-columns:1fr 1fr auto;gap:0;
+    background:var(--va-line);margin:22px -28px -28px;border-top:1px solid var(--va-line);}
+  .pr-card-foot-cell{background:var(--va-card);padding:16px 20px;}
+  .pr-card-foot-cell .lbl{font-size:10px;text-transform:uppercase;letter-spacing:.1em;
+    opacity:.55;margin-bottom:5px;font-weight:600;}
+  .pr-card-foot-cell .val{font-size:13px;font-weight:700;color:var(--va-text);
+    font-family:ui-monospace,Menlo,monospace;}
+  .pr-card-cta{background:var(--va-card);padding:0 24px;display:flex;align-items:center;
+    color:var(--brand-accent,#F08023);font-size:13px;font-weight:600;gap:6px;
+    transition:.3s;cursor:pointer;}
+  .pr-card:hover .pr-card-cta{background:var(--brand-accent,#F08023);color:#fff;}
+
+  /* Particle size visualizer */
+  .pr-sizes-section{padding:80px 0;background:linear-gradient(180deg,var(--va-bg) 0%,var(--va-bg-alt) 100%);
+    border-block:1px solid var(--va-line);}
+  .pr-sizes-row{display:grid;grid-template-columns:auto 1fr;gap:36px;align-items:center;
+    padding:32px 0;border-top:1px solid var(--va-line);}
+  .pr-sizes-row:first-of-type{border-top:0;}
+  .pr-sizes-label{min-width:180px;}
+  .pr-sizes-label-eyebrow{font-size:11px;font-weight:700;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--brand-accent,#F08023);margin-bottom:6px;}
+  .pr-sizes-label h4{font-size:18px;font-weight:700;margin-bottom:4px;}
+  .pr-sizes-label span{font-size:12px;opacity:.6;}
+  .pr-sizes-viz{display:flex;align-items:flex-end;gap:18px;flex-wrap:wrap;}
+  .pr-size-circle{display:flex;flex-direction:column;align-items:center;
+    cursor:default;transition:.3s;}
+  .pr-size-circle:hover{transform:translateY(-4px);}
+  .pr-size-circle-dot{border-radius:50%;background:var(--brand-primary,#0F3D7A);
+    border:2px solid transparent;box-shadow:0 8px 18px -8px rgba(15,61,122,.4);
+    transition:.35s;display:flex;align-items:center;justify-content:center;
+    color:#fff;font-family:ui-monospace,Menlo,monospace;font-size:10px;font-weight:700;}
+  .pr.dark .pr-size-circle-dot{background:#5B9BD5;color:#0A1424;}
+  .pr-size-circle:hover .pr-size-circle-dot{background:var(--brand-accent,#F08023);
+    box-shadow:0 14px 24px -8px rgba(240,128,35,.5);}
+  .pr-size-circle-label{font-family:ui-monospace,Menlo,monospace;font-size:11px;
+    margin-top:10px;color:var(--va-text);font-weight:600;letter-spacing:.04em;}
+
+  /* Spec sheet */
   .pr-spec-section{padding:96px 0;background:var(--va-bg-alt);}
   .pr-spec-head{text-align:center;margin-bottom:48px;max-width:680px;margin-inline:auto;}
-  .pr-spec-head h2{font-size:clamp(30px,3.6vw,44px);}
-  .pr-spec-table{background:var(--va-card);border:1px solid var(--va-line);border-radius:14px;overflow:hidden;}
-  .pr-spec-row{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:0;border-bottom:1px solid var(--va-line);}
-  .pr-spec-row:last-child{border-bottom:0;}
-  .pr-spec-row.h{background:var(--va-bg-alt);font-size:11px;font-weight:600;
-    letter-spacing:.08em;text-transform:uppercase;opacity:.7;}
-  .pr-spec-row>div{padding:18px 24px;border-right:1px solid var(--va-line);font-size:13.5px;}
-  .pr-spec-row>div:last-child{border-right:0;}
-  .pr-spec-row>div:first-child{font-weight:600;}
-  .pr-spec-row .num{font-family:ui-monospace,Menlo,monospace;color:var(--brand-accent,#F08023);}
-  .pr-quote{background:#0F3D7A;color:#fff;border-radius:18px;padding:64px 56px;
-    display:grid;grid-template-columns:1.2fr 1fr;gap:48px;align-items:center;margin:64px 0;}
-  .pr-quote h2{color:#fff;font-size:clamp(28px,3.2vw,40px);margin-bottom:14px;}
-  .pr-quote p{opacity:.78;line-height:1.65;font-size:15px;}
-  .pr-quote-r{display:flex;gap:12px;justify-content:flex-end;flex-wrap:wrap;}
-  .pr-btn{display:inline-flex;align-items:center;gap:8px;padding:14px 26px;border-radius:8px;
-    font-size:14px;font-weight:600;text-decoration:none;cursor:pointer;border:0;font-family:inherit;transition:.18s;}
-  .pr-btn-p{background:var(--brand-accent,#F08023);color:#fff;}
-  .pr-btn-p:hover{background:#D26713;transform:translateY(-1px);}
-  .pr-btn-g{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.3);}
-  .pr-btn-g:hover{border-color:#fff;}
+  .pr-spec-head h2{font-size:clamp(28px,3.4vw,40px);}
+  .pr-spec-card{background:var(--va-card);border:1px solid var(--va-line);
+    border-radius:18px;overflow:hidden;
+    box-shadow:0 30px 60px -30px rgba(15,61,122,.18);}
+  .pr-spec-table{display:grid;grid-template-columns:1.5fr 1fr 1fr 0.6fr;}
+  .pr-spec-cell{padding:18px 24px;border-bottom:1px solid var(--va-line);font-size:13.5px;}
+  .pr-spec-cell.h{background:linear-gradient(180deg,var(--brand-primary,#0F3D7A),#0A2B57);
+    color:#fff;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+    padding:18px 24px;border-bottom:0;}
+  .pr-spec-cell.h:not(:last-child){border-right:1px solid rgba(255,255,255,.08);}
+  .pr-spec-cell.label{font-weight:700;background:var(--va-bg);}
+  .pr-spec-cell.num{font-family:ui-monospace,Menlo,monospace;color:var(--brand-accent,#F08023);font-weight:700;}
+  .pr-spec-cell.unit{opacity:.55;font-family:ui-monospace,Menlo,monospace;font-size:12px;}
+  .pr-spec-table > .pr-spec-cell:nth-last-child(-n+4){border-bottom:0;}
+  .pr-spec-foot{display:flex;align-items:center;justify-content:center;gap:14px;
+    padding:20px;background:var(--va-bg);border-top:1px solid var(--va-line);
+    font-size:12px;opacity:.75;flex-wrap:wrap;}
+  .pr-spec-foot-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
+    background:var(--va-card);border:1px solid var(--va-line);border-radius:99px;
+    font-weight:600;color:var(--brand-primary,#0F3D7A);}
+  .pr.dark .pr-spec-foot-chip{color:#5B9BD5;}
+
+  /* Quote CTA */
+  .pr-quote-section{padding:80px 0;}
+  .pr-quote{position:relative;background:#0F3D7A;color:#fff;border-radius:22px;
+    padding:80px 56px;display:grid;grid-template-columns:1.2fr 1fr;gap:48px;
+    align-items:center;overflow:hidden;isolation:isolate;}
+  .pr-quote::before{content:'';position:absolute;inset:0;z-index:-1;
+    background-image:linear-gradient(135deg,rgba(15,61,122,.92) 0%,rgba(10,43,87,.96) 100%),
+                     url('assets/nha-may-bot-sieu-min-3.webp');
+    background-size:cover;background-position:center;}
+  .pr-quote::after{content:'';position:absolute;top:0;right:0;width:300px;height:300px;
+    background:radial-gradient(circle, rgba(240,128,35,0.18) 0%, transparent 65%);pointer-events:none;}
+  .pr-quote h2{color:#fff;font-size:clamp(28px,3.4vw,42px);margin-bottom:16px;line-height:1.15;}
+  .pr-quote p{opacity:.82;line-height:1.65;font-size:15px;}
+  .pr-quote .pr-eyebrow{color:var(--brand-accent,#F08023);margin-bottom:14px;}
+  .pr-quote-r{display:flex;flex-direction:column;gap:14px;align-items:flex-end;}
+  .pr-btn{display:inline-flex;align-items:center;gap:8px;padding:15px 28px;border-radius:10px;
+    font-size:14px;font-weight:600;text-decoration:none;cursor:pointer;border:0;
+    font-family:inherit;transition:.2s;white-space:nowrap;}
+  .pr-btn-p{background:var(--brand-accent,#F08023);color:#fff;
+    box-shadow:0 12px 28px -8px rgba(240,128,35,.5);}
+  .pr-btn-p:hover{background:#D26713;transform:translateY(-2px);
+    box-shadow:0 16px 32px -8px rgba(240,128,35,.6);}
+  .pr-btn-g{background:rgba(255,255,255,.08);color:#fff;
+    border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(6px);}
+  .pr-btn-g:hover{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.32);}
+
+  @media (max-width:1100px){
+    .pr-stats{grid-template-columns:1fr 1fr;}
+    .pr-stat:nth-child(3){border-left:0;border-top:1px solid var(--va-line);}
+    .pr-cat-tiles{grid-template-columns:1fr;}
+  }
   @media (max-width:980px){
-    .pr-grid{grid-template-columns:1fr;}.pr-cat-head{grid-template-columns:1fr;gap:18px;}
-    .pr-sizes{grid-template-columns:repeat(4,1fr);}
-    .pr-spec-row{grid-template-columns:1fr 1fr;}.pr-quote{grid-template-columns:1fr;}
+    .pr-grid{grid-template-columns:1fr;}
+    .pr-cat-head{grid-template-columns:1fr;gap:18px;}
+    .pr-spec-table{grid-template-columns:1fr;}
+    .pr-quote{grid-template-columns:1fr;padding:48px 32px;}
+    .pr-quote-r{align-items:stretch;}
+    .pr-sizes-row{grid-template-columns:1fr;gap:18px;}
   }
 `;
 
@@ -552,94 +661,175 @@ function App() {
           { label: C.nav[2] },
         ]}/>
 
-      <section className="pr-section">
+      {/* STATS STRIP */}
+      <section className="pr-stats">
+        <div className="pr-stat">
+          <b>05</b>
+          <span>{t.lang==='zh'?'核心产品系列':t.lang==='en'?'Core product lines':'Dòng sản phẩm chính'}</span>
+        </div>
+        <div className="pr-stat">
+          <b>96%+</b>
+          <span>{t.lang==='zh'?'白度':t.lang==='en'?'Whiteness':'Độ trắng CaCO₃'}</span>
+        </div>
+        <div className="pr-stat">
+          <b>5–20µm</b>
+          <span>{t.lang==='zh'?'粒径范围':t.lang==='en'?'Particle range':'Cỡ hạt'}</span>
+        </div>
+        <div className="pr-stat">
+          <b>12</b>
+          <span>{t.lang==='zh'?'出口市场':t.lang==='en'?'Export markets':'Thị trường xuất khẩu'}</span>
+        </div>
+      </section>
+
+      {/* CATEGORY TILES */}
+      <section className="pr-section tight">
         <div className="pr-wrap">
-          <div className="pr-cats">
-            <button className={'pr-cat '+(activeCat===null?'on':'')} onClick={()=>setActiveCat(null)}>
-              {t.lang==='zh'?'全部':t.lang==='en'?'All':'Tất cả'}<span className="pr-cat-n">{C.products.length}</span>
-            </button>
-            {cats.map((title,i)=>{
-              const cnt = C.products.filter(p=>p.cat===i).length;
+          <div className="pr-cat-tiles">
+            {[
+              { id:'powder', img:'assets/bot-caco3-sieu-min.webp', cat:0,
+                titleVi:'Bột đá CaCO₃', titleEn:'CaCO₃ powder', titleZh:'碳酸钙粉',
+                descVi:'Coated · Uncoated · 5–20 µm — phụ gia cho nhựa, sơn, giấy, thức ăn chăn nuôi.',
+                descEn:'Coated · Uncoated · 5–20 µm — additive for plastics, paint, paper, animal feed.',
+                descZh:'涂层 · 未涂层 · 5–20 µm — 用于塑料、涂料、纸张、动物饲料的添加剂。' },
+              { id:'stone', img:'assets/da-slab-sieu-trang.webp', cat:1,
+                titleVi:'Đá ốp lát tự nhiên', titleEn:'Natural cladding stone', titleZh:'天然石材饰面',
+                descVi:'Slab · Đá xẻ · Đá trang trí — cho công trình và không gian sống cao cấp.',
+                descEn:'Slab · Cut tile · Decorative — for premium architecture and living spaces.',
+                descZh:'大板 · 定制石材 · 装饰石材 — 用于高端建筑和生活空间。' },
+            ].map((tile, ti) => {
+              const cnt = C.products.filter(p => p.cat === tile.cat).length;
               return (
-                <button key={i} className={'pr-cat '+(activeCat===i?'on':'')} onClick={()=>setActiveCat(i)}>
-                  {title}<span className="pr-cat-n">{cnt}</span>
-                </button>
+                <a key={tile.id} href={'#cat-' + tile.id} className="pr-cat-tile"
+                   onClick={(e)=>{ e.preventDefault(); setActiveCat(tile.cat);
+                     window.location.hash = tile.id === 'powder' ? 'powder' : 'stone';
+                     setTimeout(()=>document.getElementById('cat-' + tile.id)?.scrollIntoView({behavior:'smooth',block:'start'}), 50); }}>
+                  <img src={tile.img} alt="" className="pr-cat-tile-img"/>
+                  <div className="pr-cat-tile-overlay"/>
+                  <div className="pr-cat-tile-arrow">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"
+                         strokeLinejoin="round" style={{color:'#fff'}}>
+                      <path d="M5 12h14M13 6l6 6-6 6"/>
+                    </svg>
+                  </div>
+                  <div className="pr-cat-tile-body">
+                    <div className="pr-cat-tile-num">— 0{ti+1} · {cnt} {t.lang==='zh'?'款':t.lang==='en'?'SKUs':'sản phẩm'}</div>
+                    <h3>{t.lang==='zh'?tile.titleZh:t.lang==='en'?tile.titleEn:tile.titleVi}</h3>
+                    <p>{t.lang==='zh'?tile.descZh:t.lang==='en'?tile.descEn:tile.descVi}</p>
+                  </div>
+                </a>
               );
             })}
           </div>
+        </div>
+      </section>
 
-          {byCat.map((group, gi)=>(
-            <div key={gi} className="pr-cat-block">
+      {/* PRODUCTS BY CATEGORY */}
+      <section className="pr-section">
+        <div className="pr-wrap">
+          {byCat.map((group, gi) => (
+            <div key={gi} className="pr-cat-block" id={'cat-' + (gi===0?'powder':'stone')}>
               <div className="pr-cat-head">
                 <div>
-                  <div className="pr-eyebrow">— 0{gi+1}</div>
+                  <div className="pr-cat-head-meta">— 0{gi+1} · {group.products.length} {t.lang==='zh'?'款产品':t.lang==='en'?'products':'sản phẩm'}</div>
                   <h2>{gi===0
                     ? (t.lang==='zh'?'从原始石灰岩 — 到工业用细粉':t.lang==='en'?'From raw limestone — to fine powder for industry':'Từ đá vôi nguyên sinh — đến bột mịn cho công nghiệp')
                     : (t.lang==='zh'?'天然石材 — 用于建筑和生活空间':t.lang==='en'?'Natural stone — for architecture and living spaces':'Đá tự nhiên — cho công trình và không gian sống')}</h2>
                 </div>
                 <p>{gi===0
                   ? (t.lang==='zh'
-                    ?'我们的碳酸钙粉是从义安省归合矿场的原始白石灰岩研磨加工而成 — 白度超过96%,碳酸钙含量超过98.5%。粒径范围5至20微米,用作水性涂料、腻子、胶粘剂、PVC管材、PE/PP膜、母粒、纸张、动物饲料等多个行业的添加剂。'
+                    ?'我们的碳酸钙粉是从义安省归合矿场的原始白石灰岩研磨加工而成 — 白度超过96%,碳酸钙含量超过98.5%。粒径范围5至20微米,用作多个行业的添加剂。'
                     :t.lang==='en'
-                    ?'Our CaCO₃ powder is milled from pristine white limestone at our Quy Hop quarry in Nghe An — whiteness above 96% and CaCO₃ content above 98.5%. Particle sizes range from 5 to 20 µm, used as an additive in water-based paint, putty, adhesives, PVC pipe, PE/PP film, masterbatch, paper, animal feed and many other industries.'
-                    :'Sản phẩm bột đá CaCO₃ của chúng tôi được nghiền và chế biến từ nguồn đá vôi trắng nguyên sinh tại Quỳ Hợp — Nghệ An, độ trắng > 96% và hàm lượng CaCO₃ > 98.5%. Cỡ hạt từ 5 đến 20 µm, được sử dụng làm phụ gia trong sản xuất sơn nước, bột bả, keo dán, ống nhựa PVC, màng PE/PP, masterbatch, giấy, thức ăn chăn nuôi và nhiều ngành công nghiệp khác.')
+                    ?'Our CaCO₃ powder is milled from pristine white limestone at our Quy Hop quarry in Nghe An — whiteness above 96% and CaCO₃ content above 98.5%. Particle sizes range from 5 to 20 µm, used as an additive across many industries.'
+                    :'Sản phẩm bột đá CaCO₃ được nghiền từ đá vôi trắng nguyên sinh tại Quỳ Hợp – Nghệ An, độ trắng > 96% và CaCO₃ > 98.5%. Cỡ hạt 5–20 µm, dùng làm phụ gia cho nhiều ngành công nghiệp.')
                   : (t.lang==='zh'
-                    ?'龙英天然石材在矿场直接开采加工 — 确保品质均匀和稳定供应。产品包括用于高端台面和展厅的大板,用于地面和墙面饰面的定制规格石材,以及用于花园、泳池、外墙的装饰石材 — 提供多种表面饰面选择。'
+                    ?'龙英天然石材在矿场直接开采加工 — 确保品质均匀和稳定供应。包括大板、定制石材和装饰石材,提供多种表面饰面选择。'
                     :t.lang==='en'
-                    ?'Long Anh natural stone is mined and processed in-house — ensuring consistent quality and reliable supply. Our range includes large-format Slab for premium countertops and showrooms, cut-to-size tile for floor and wall cladding, and decorative outdoor stone for gardens, pools and façades — with a variety of surface finishes available.'
-                    :'Đá tự nhiên Long Anh được khai thác và chế biến trực tiếp tại mỏ — đảm bảo chất lượng đồng đều và nguồn cung ổn định. Sản phẩm bao gồm đá Slab tấm lớn cho mặt bàn và showroom cao cấp, đá xẻ quy cách cho ốp lát sàn tường công trình, và đá trang trí ngoại thất cho sân vườn, bể bơi, mặt tiền — với nhiều lựa chọn hoàn thiện bề mặt khác nhau.')
-                }</p>
+                    ?'Long Anh natural stone is mined and processed in-house — ensuring consistent quality and reliable supply. Includes large-format Slab, cut-to-size tile and decorative outdoor stone with various finishes.'
+                    :'Đá tự nhiên Long Anh được khai thác và chế biến trực tiếp tại mỏ — đảm bảo chất lượng đồng đều, nguồn cung ổn định. Gồm đá Slab tấm lớn, đá xẻ quy cách và đá trang trí ngoại thất với nhiều hoàn thiện.')}</p>
               </div>
 
               <div className="pr-grid">
-                {group.products.map((p,i)=>(
+                {group.products.map((p, i) => (
                   <article key={i} className="pr-card">
                     <div className="pr-card-img">
                       <img src={p.img} alt={p.name}/>
                       <div className="pr-card-badge">{p.code}</div>
+                      <div className="pr-card-cat">{cats[p.cat]}</div>
                     </div>
                     <div className="pr-card-body">
                       <div className="pr-card-meta">{p.meta}</div>
                       <h3>{p.name}</h3>
                       <p>{p.desc}</p>
                       <div className="pr-card-tags">
-                        {p.tags.map((tag,j)=><span key={j}>{tag}</span>)}
+                        {p.tags.map((tag, j) => <span key={j}>{tag}</span>)}
                       </div>
-                      <div className="pr-card-spec">
-                        <div>
+                      <div className="pr-card-foot">
+                        <div className="pr-card-foot-cell">
                           <div className="lbl">{t.lang==='zh'?'白度':t.lang==='en'?'Whiteness':'Độ trắng'}</div>
                           <div className="val">{p.cat===0?'≥ 96%':'90–95%'}</div>
                         </div>
-                        <div>
+                        <div className="pr-card-foot-cell">
                           <div className="lbl">{t.lang==='zh'?'包装':t.lang==='en'?'Packaging':'Đóng gói'}</div>
                           <div className="val">{p.cat===0?'25kg / 1T':'Crate / pallet'}</div>
+                        </div>
+                        <div className="pr-card-cta">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                               stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"
+                               strokeLinejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                         </div>
                       </div>
                     </div>
                   </article>
                 ))}
               </div>
-
-              {gi===0 && activeCat!==1 && (
-                <>
-                  <div style={{marginTop:48,marginBottom:14,fontSize:13,fontWeight:600,letterSpacing:'.04em',opacity:.7}}>
-                    {t.lang==='zh'?'· 可用粒径 — 未涂层':t.lang==='en'?'· Available sizes — Uncoated':'· Cỡ hạt khả dụng — Bột không phủ'}
-                  </div>
-                  <div className="pr-sizes">
-                    {SIZES.uncoated.map(s => <div key={s} className="pr-size">{s}</div>)}
-                  </div>
-                  <div style={{marginTop:24,marginBottom:14,fontSize:13,fontWeight:600,letterSpacing:'.04em',opacity:.7}}>
-                    {t.lang==='zh'?'· 可用粒径 — 硬脂酸涂层':t.lang==='en'?'· Available sizes — Stearic-coated':'· Cỡ hạt khả dụng — Bột phủ Stearic'}
-                  </div>
-                  <div className="pr-sizes">
-                    {SIZES.coated.map(s => <div key={s} className="pr-size">{s}</div>)}
-                  </div>
-                </>
-              )}
             </div>
           ))}
         </div>
       </section>
+
+      {/* PARTICLE SIZE VISUALIZER */}
+      {(activeCat===null || activeCat===0) && (
+        <section className="pr-sizes-section">
+          <div className="pr-wrap">
+            <div style={{textAlign:'center',marginBottom:48,maxWidth:680,marginInline:'auto'}}>
+              <div className="pr-eyebrow">{t.lang==='zh'?'粒径选择':t.lang==='en'?'Particle sizes':'Cỡ hạt khả dụng'}</div>
+              <h2 style={{fontSize:'clamp(26px,3vw,38px)'}}>{t.lang==='zh'?'从超细到标准 — 选择适合您应用的粒径':t.lang==='en'?'From ultra-fine to standard — pick the size for your application':'Từ siêu mịn đến tiêu chuẩn — chọn cỡ hạt phù hợp ứng dụng'}</h2>
+            </div>
+            {[
+              { name: t.lang==='zh'?'未涂层':t.lang==='en'?'Uncoated':'Bột không phủ',
+                sub: t.lang==='zh'?'8 种规格':t.lang==='en'?'8 sizes':'8 quy cách',
+                eyebrow: 'CaCO₃ ≥ 98.5%',
+                values: [5, 8, 10, 12, 15, 17, 18, 20] },
+              { name: t.lang==='zh'?'硬脂酸涂层':t.lang==='en'?'Stearic-coated':'Bột phủ Stearic',
+                sub: t.lang==='zh'?'7 种规格':t.lang==='en'?'7 sizes':'7 quy cách',
+                eyebrow: '+ Stearic 1.0–1.5%',
+                values: [5, 10, 12, 15, 17, 18, 20] },
+            ].map((row, ri) => (
+              <div key={ri} className="pr-sizes-row">
+                <div className="pr-sizes-label">
+                  <div className="pr-sizes-label-eyebrow">{row.eyebrow}</div>
+                  <h4>{row.name}</h4>
+                  <span>{row.sub}</span>
+                </div>
+                <div className="pr-sizes-viz">
+                  {row.values.map(v => {
+                    const size = 22 + (v - 5) * 3.6;
+                    return (
+                      <div key={v} className="pr-size-circle">
+                        <div className="pr-size-circle-dot" style={{width:size,height:size}}>
+                          {v < 13 ? v : ''}
+                        </div>
+                        <div className="pr-size-circle-label">{v} µm</div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* SPEC TABLE */}
       <section className="pr-spec-section">
@@ -648,50 +838,56 @@ function App() {
             <div className="pr-eyebrow">{t.lang==='zh'?'技术规格':t.lang==='en'?'Technical specifications':'Thông số kỹ thuật'}</div>
             <h2>{t.lang==='zh'?'质量指标 — 碳酸钙粉':t.lang==='en'?'Quality specifications — CaCO₃ powder':'Chỉ tiêu chất lượng — Bột đá CaCO₃'}</h2>
           </div>
-          <div className="pr-spec-table">
-            <div className="pr-spec-row h">
-              {SPECS[t.lang].head.map((h,i)=><div key={i}>{h}</div>)}
+          <div className="pr-spec-card">
+            <div className="pr-spec-table">
+              {SPECS[t.lang].head.map((h, i) => (
+                <div key={'h'+i} className="pr-spec-cell h">{h}</div>
+              ))}
+              {SPECS[t.lang].rows.map((row, ri) => [
+                <div key={'l'+ri} className="pr-spec-cell label">{row[0]}</div>,
+                <div key={'a'+ri} className="pr-spec-cell num">{row[1]}</div>,
+                <div key={'b'+ri} className="pr-spec-cell num">{row[2]}</div>,
+                <div key={'u'+ri} className="pr-spec-cell unit">{row[3]}</div>,
+              ])}
             </div>
-            {SPECS[t.lang].rows.map((row,i)=>(
-              <div key={i} className="pr-spec-row">
-                <div>{row[0]}</div>
-                <div className="num">{row[1]}</div>
-                <div className="num">{row[2]}</div>
-                <div style={{opacity:.6}}>{row[3]}</div>
-              </div>
-            ))}
-          </div>
-          <div style={{textAlign:'center',marginTop:24,fontSize:12,opacity:.55}}>
-            {t.lang==='zh'?'每批生产均提供COA和MSDS。ISO 9001:2015认证。':t.lang==='en'?'Each batch ships with COA and MSDS. ISO 9001 : 2015 certified.':'Mỗi lô sản xuất đều kèm COA và MSDS. Có sẵn ISO 9001 : 2015.'}
+            <div className="pr-spec-foot">
+              <span className="pr-spec-foot-chip">ISO 9001:2015</span>
+              <span className="pr-spec-foot-chip">REACH</span>
+              <span className="pr-spec-foot-chip">SGS</span>
+              <span>·</span>
+              <span>{t.lang==='zh'?'每批生产均提供COA和MSDS':t.lang==='en'?'Each batch ships with COA and MSDS':'Mỗi lô sản xuất kèm COA và MSDS'}</span>
+            </div>
           </div>
         </div>
       </section>
 
       {/* QUOTE CTA */}
-      <div className="pr-wrap">
-        <div className="pr-quote">
-          <div>
-            <div style={{fontSize:11,fontWeight:600,letterSpacing:'.16em',
-                 textTransform:'uppercase',color:'#F08023',marginBottom:14}}>
-              {t.lang==='zh'?'快速报价':t.lang==='en'?'Quick quote':'Báo giá nhanh'}
+      <section className="pr-quote-section">
+        <div className="pr-wrap">
+          <div className="pr-quote">
+            <div>
+              <div className="pr-eyebrow">{t.lang==='zh'?'快速报价':t.lang==='en'?'Quick quote':'Báo giá nhanh'}</div>
+              <h2>{t.lang==='zh'?'需要下次发货的FOB报价?':t.lang==='en'?'Need an FOB quote for your next shipment?':'Cần báo giá FOB cho lô hàng tiếp theo?'}</h2>
+              <p>{t.lang==='zh'
+                ?'请发送粒径、数量和目的港信息 — 我们将在24个工作小时内回复,附规格表、COA和FOB价格。'
+                :t.lang==='en'
+                ?'Send us your particle size, volume and destination port — we reply within 24 business hours, with spec sheet, COA and FOB pricing.'
+                :'Gửi yêu cầu kèm cỡ hạt, số lượng và cảng đến — chúng tôi phản hồi trong 24h làm việc, đính kèm spec, COA và báo giá FOB.'}</p>
             </div>
-            <h2>{t.lang==='zh'?'需要下次发货的FOB报价?':t.lang==='en'?'Need an FOB quote for your next shipment?':'Cần báo giá FOB cho lô hàng tiếp theo?'}</h2>
-            <p>{t.lang==='zh'
-              ?'请发送粒径、数量和目的港信息 — 我们将在24个工作小时内回复。'
-              :t.lang==='en'
-              ?'Send us your particle size, volume and destination port — we reply within 24 business hours.'
-              :'Gửi yêu cầu kèm cỡ hạt, số lượng và cảng đến — chúng tôi phản hồi trong 24h làm việc.'}</p>
-          </div>
-          <div className="pr-quote-r">
-            <a className="pr-btn pr-btn-p" href="index.html#contact">
-              {t.lang==='zh'?'请求报价':t.lang==='en'?'Request a quote':'Yêu cầu báo giá'} →
-            </a>
-            <a className="pr-btn pr-btn-g" href="about.html">
-              {t.lang==='zh'?'关于龙英':t.lang==='en'?'About Long Anh':'Về Long Anh'}
-            </a>
+            <div className="pr-quote-r">
+              <a className="pr-btn pr-btn-p" href="index.html#contact">
+                {t.lang==='zh'?'请求报价':t.lang==='en'?'Request a quote':'Yêu cầu báo giá'}
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+                     strokeLinejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </a>
+              <a className="pr-btn pr-btn-g" href="about.html">
+                {t.lang==='zh'?'关于龙英':t.lang==='en'?'About Long Anh':'Về Long Anh'}
+              </a>
+            </div>
           </div>
         </div>
-      </div>
+      </section>
 
       <VAFooter tweaks={tweaks}/>
     </div>
