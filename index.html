@@ -1112,6 +1112,41 @@
           font-weight:700; letter-spacing:-.01em; }
     .va-cert-card p { font-size:13px; opacity:.7; line-height:1.5; margin:0; }
 
+    .va-export-map { background:linear-gradient(160deg,#0A2B57 0%,#06192F 100%);
+          color:#fff; border-radius:18px; padding:48px;
+          display:grid; grid-template-columns:1fr 1.6fr; gap:40px; align-items:center;
+          position:relative; overflow:hidden; }
+    .va-export-map::before { content:''; position:absolute; top:0; right:0; width:200px; height:200px;
+          background:radial-gradient(circle, rgba(240,128,35,0.12) 0%, transparent 70%);
+          pointer-events:none; }
+    .va-export-info h2 { color:#fff; font-size:clamp(26px,2.6vw,36px); margin-bottom:16px; line-height:1.15; }
+    .va-export-info p { opacity:.78; line-height:1.65; font-size:14.5px; margin-bottom:28px; }
+    .va-export-info .va-eyebrow { color:var(--brand-accent,#F08023); margin-bottom:14px; }
+    .va-export-features { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .va-export-feature { display:flex; gap:12px; align-items:flex-start; padding:14px 14px;
+          background:rgba(255,255,255,0.06); border-radius:10px;
+          border:1px solid rgba(255,255,255,0.08); transition:.25s; }
+    .va-export-feature:hover { background:rgba(240,128,35,0.1);
+          border-color:rgba(240,128,35,0.4); transform:translateY(-2px); }
+    .va-ef-i { width:28px; height:28px; border-radius:7px; display:flex;
+          align-items:center; justify-content:center; flex-shrink:0;
+          background:rgba(240,128,35,0.18); color:var(--brand-accent,#F08023); }
+    .va-export-feature b { display:block; font-size:12.5px; font-weight:600;
+          color:#fff; margin-bottom:3px; line-height:1.3; }
+    .va-export-feature span { font-size:11.5px; opacity:.7; line-height:1.4;
+          display:block; }
+    .va-map-wrap { position:relative; }
+    .va-world-map { width:100%; height:auto; display:block; }
+    .va-route { animation: va-route-flow 1.6s linear infinite; }
+    @keyframes va-route-flow { to { stroke-dashoffset: -32; } }
+    .va-map-caption { margin-top:14px; padding:10px 16px;
+          background:rgba(255,255,255,0.06); border-left:3px solid var(--brand-accent,#F08023);
+          border-radius:6px; font-size:12px; opacity:.78; font-style:italic; }
+    @media (max-width:980px) {
+      .va-export-map { grid-template-columns:1fr; padding:32px; }
+      .va-export-features { grid-template-columns:1fr; }
+    }
+
     .va-cap { background:#0F3D7A; color:#fff; border-radius:18px; padding:64px 56px;
           display:grid; grid-template-columns:1fr 1.2fr; gap:48px; align-items:center; }
     .va-cap h2 { color:#fff; font-size:clamp(28px,3vw,40px); margin-bottom:18px; }
@@ -1435,21 +1470,170 @@
           </div>
         </section>
 
-        {/* CAPABILITY / EXPORT */}
+        {/* CAPABILITY / EXPORT — Animated Map */}
         <section className="va-section tight">
           <div className="va-wrap">
-            <div className="va-cap">
-              <div>
+            <div className="va-export-map">
+              <div className="va-export-info">
                 <div className="va-eyebrow">{C.capEy}</div>
                 <h2>{C.capH}</h2>
                 <p>{C.capP}</p>
-              </div>
-              <div className="va-markets">
-                {C.markets.map((m, i) =>
-                  <div key={i} className="va-market">
-                    <span className="va-market-dot"></span>{m}
+                <div className="va-export-features">
+                  <div className="va-export-feature">
+                    <div className="va-ef-i"><Icon name="spark" size={16} /></div>
+                    <div>
+                      <b>{t.lang === 'zh' ? '优质碳酸钙' : t.lang === 'en' ? 'Premium Quality' : 'Chất lượng cao cấp'}</b>
+                      <span>{t.lang === 'zh' ? '白度 96%+,CaCO₃ 98.5%+' : t.lang === 'en' ? 'Whiteness 96%+, CaCO₃ 98.5%+' : 'Độ trắng 96%+, CaCO₃ 98.5%+'}</span>
+                    </div>
                   </div>
-                )}
+                  <div className="va-export-feature">
+                    <div className="va-ef-i"><Icon name="globe" size={16} /></div>
+                    <div>
+                      <b>{t.lang === 'zh' ? '全球覆盖' : t.lang === 'en' ? 'Global Reach' : 'Tầm phủ toàn cầu'}</b>
+                      <span>{t.lang === 'zh' ? '12个国家 · 8+核心市场' : t.lang === 'en' ? '12 countries · 8+ key markets' : '12 quốc gia · 8+ thị trường'}</span>
+                    </div>
+                  </div>
+                  <div className="va-export-feature">
+                    <div className="va-ef-i"><Icon name="ship" size={16} /></div>
+                    <div>
+                      <b>{t.lang === 'zh' ? '可靠物流' : t.lang === 'en' ? 'Reliable Logistics' : 'Logistics tin cậy'}</b>
+                      <span>{t.lang === 'zh' ? 'FOB窗碧港和海防港' : t.lang === 'en' ? 'FOB Cua Lo & Hai Phong ports' : 'FOB cảng Cửa Lò & Hải Phòng'}</span>
+                    </div>
+                  </div>
+                  <div className="va-export-feature">
+                    <div className="va-ef-i"><Icon name="check" size={16} /></div>
+                    <div>
+                      <b>{t.lang === 'zh' ? '客户信任' : t.lang === 'en' ? 'Customer Trust' : 'Niềm tin khách hàng'}</b>
+                      <span>{t.lang === 'zh' ? '10年以上稳定合作' : t.lang === 'en' ? '10+ years long-term partners' : '10+ năm đối tác dài hạn'}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="va-map-wrap">
+                <svg viewBox="0 0 1000 500" className="va-world-map" preserveAspectRatio="xMidYMid meet">
+                  <defs>
+                    <pattern id="va-mapdots" width="14" height="14" patternUnits="userSpaceOnUse">
+                      <circle cx="7" cy="7" r="0.6" fill="rgba(255,255,255,0.07)" />
+                    </pattern>
+                    <radialGradient id="va-origin-glow" cx="50%" cy="50%" r="50%">
+                      <stop offset="0%" stopColor="#F08023" stopOpacity="0.5" />
+                      <stop offset="100%" stopColor="#F08023" stopOpacity="0" />
+                    </radialGradient>
+                  </defs>
+
+                  {/* dotted background pattern */}
+                  <rect width="1000" height="500" fill="url(#va-mapdots)" />
+
+                  {/* simplified continent outlines */}
+                  <g fill="rgba(91,155,213,0.16)" stroke="rgba(91,155,213,0.32)" strokeWidth="1" strokeLinejoin="round">
+                    {/* North America */}
+                    <path d="M 100,140 C 130,115 180,110 220,125 C 250,145 250,180 235,205 C 215,230 175,240 145,225 C 115,210 90,180 100,140 Z" />
+                    {/* South America */}
+                    <path d="M 195,260 C 215,253 240,260 248,285 C 252,322 235,358 215,378 C 192,382 175,365 172,335 C 172,303 185,275 195,260 Z" />
+                    {/* Europe */}
+                    <path d="M 460,140 C 490,134 520,140 540,150 C 545,166 532,180 510,184 C 488,184 470,180 460,166 C 455,152 460,140 460,140 Z" />
+                    {/* Africa */}
+                    <path d="M 490,200 C 520,195 555,200 575,215 C 590,235 600,266 595,302 C 585,338 565,360 540,375 C 514,380 495,368 484,348 C 478,318 480,288 484,260 C 484,235 488,215 490,200 Z" />
+                    {/* Asia main */}
+                    <path d="M 555,140 C 595,128 640,135 680,140 C 725,144 770,154 810,168 C 850,180 882,200 880,232 C 870,256 838,265 808,265 C 778,265 748,275 718,275 C 688,275 658,270 628,265 C 598,260 575,250 558,232 C 548,210 548,178 555,140 Z" />
+                    {/* India / South Asia */}
+                    <path d="M 660,210 C 685,210 710,225 720,245 C 715,260 695,265 680,260 C 665,250 650,235 655,220 C 655,215 658,210 660,210 Z" />
+                    {/* SE Asia / Indochina */}
+                    <path d="M 770,225 C 795,225 815,235 820,260 C 815,275 798,278 783,272 C 770,265 760,250 765,232 C 766,228 768,225 770,225 Z" />
+                    {/* Indonesia */}
+                    <path d="M 770,290 L 825,290 L 845,300 L 815,310 L 775,302 Z" />
+                    {/* Australia */}
+                    <path d="M 800,330 C 830,325 860,332 875,348 C 880,362 872,378 852,385 C 828,388 802,385 793,370 C 790,355 795,340 800,330 Z" />
+                    {/* Greenland (decorative) */}
+                    <path d="M 380,80 C 395,72 415,75 425,85 C 425,95 415,100 395,98 C 380,95 375,88 380,80 Z" />
+                  </g>
+
+                  {/* Animated routes from Vietnam to each market */}
+                  <g className="va-routes">
+                    {[
+                      { x: 854, y: 150 },  // Korea
+                      { x: 884, y: 156 },  // Japan
+                      { x: 716, y: 230 },  // India
+                      { x: 750, y: 215 },  // Bangladesh
+                      { x: 815, y: 295 },  // Indonesia
+                      { x: 645, y: 218 },  // UAE
+                      { x: 575, y: 218 },  // Egypt
+                      { x: 595, y: 168 },  // Türkiye
+                    ].map((d, i) => {
+                      const ox = 797, oy = 220;
+                      const mx = (ox + d.x) / 2;
+                      const my = Math.min(ox, d.y) - 80 + Math.abs(d.x - ox) * 0.05;
+                      return (
+                        <path key={i} d={`M ${ox} ${oy} Q ${mx} ${my} ${d.x} ${d.y}`}
+                          fill="none" stroke="#F08023" strokeWidth="1.4"
+                          strokeDasharray="2 6" strokeLinecap="round"
+                          className="va-route" style={{ animationDelay: `${i * 0.25}s` }} />
+                      );
+                    })}
+                  </g>
+
+                  {/* Destination markers + labels */}
+                  {(() => {
+                    const dests = [
+                      { x: 854, y: 150, key: 0 },  // Hàn Quốc
+                      { x: 884, y: 156, key: 1 },  // Nhật Bản
+                      { x: 716, y: 230, key: 2 },  // Ấn Độ
+                      { x: 750, y: 215, key: 3 },  // Bangladesh
+                      { x: 815, y: 295, key: 4 },  // Indonesia
+                      { x: 645, y: 218, key: 5 },  // UAE
+                      { x: 575, y: 218, key: 6 },  // Ai Cập
+                      { x: 595, y: 168, key: 7 },  // Thổ Nhĩ Kỳ
+                    ];
+                    return (
+                      <g className="va-dests">
+                        {dests.map((d, i) => (
+                          <g key={i} transform={`translate(${d.x},${d.y})`}>
+                            <circle r="8" fill="#5B9BD5" opacity="0.18">
+                              <animate attributeName="r" values="6;14;6" dur="2.5s"
+                                begin={`${0.3 + i * 0.2}s`} repeatCount="indefinite" />
+                              <animate attributeName="opacity" values="0.4;0;0.4" dur="2.5s"
+                                begin={`${0.3 + i * 0.2}s`} repeatCount="indefinite" />
+                            </circle>
+                            <circle r="3.5" fill="#5B9BD5" stroke="#fff" strokeWidth="1" />
+                            <text
+                              x={d.x > 750 ? 10 : -10}
+                              y="3"
+                              textAnchor={d.x > 750 ? 'start' : 'end'}
+                              fontSize="11"
+                              fontWeight="500"
+                              fill="rgba(255,255,255,0.9)"
+                              style={{ paintOrder: 'stroke', stroke: 'rgba(10,43,87,0.9)', strokeWidth: 3 }}
+                            >{C.markets[d.key]}</text>
+                          </g>
+                        ))}
+                      </g>
+                    );
+                  })()}
+
+                  {/* Origin: Vietnam factory */}
+                  <g transform="translate(797,220)">
+                    <circle r="32" fill="url(#va-origin-glow)" />
+                    <circle r="6" fill="#F08023" opacity="0.4">
+                      <animate attributeName="r" values="6;28;6" dur="2.4s" repeatCount="indefinite" />
+                      <animate attributeName="opacity" values="0.6;0;0.6" dur="2.4s" repeatCount="indefinite" />
+                    </circle>
+                    <circle r="6" fill="#F08023" opacity="0.4">
+                      <animate attributeName="r" values="6;28;6" dur="2.4s" begin="1.2s" repeatCount="indefinite" />
+                      <animate attributeName="opacity" values="0.6;0;0.6" dur="2.4s" begin="1.2s" repeatCount="indefinite" />
+                    </circle>
+                    <circle r="7" fill="#F08023" stroke="#fff" strokeWidth="1.5" />
+                    <text y="-14" textAnchor="middle" fontSize="11" fontWeight="700"
+                      fill="#F08023"
+                      style={{ paintOrder: 'stroke', stroke: 'rgba(10,43,87,0.95)', strokeWidth: 3, letterSpacing: '1.5px' }}
+                    >{t.lang === 'zh' ? '越南 · 龙英' : t.lang === 'en' ? 'VIETNAM · LONG ANH' : 'VIỆT NAM · LONG ANH'}</text>
+                  </g>
+                </svg>
+
+                <div className="va-map-caption">
+                  {t.lang === 'zh' ? '从我们的工厂到您的目的地 — 优质交付,信任建立。'
+                    : t.lang === 'en' ? 'From our factory to your destination — delivering quality, building trust.'
+                    : 'Từ nhà máy của chúng tôi đến cảng của bạn — giao hàng chất lượng, xây dựng niềm tin.'}
+                </div>
               </div>
             </div>
           </div>
