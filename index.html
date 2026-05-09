@@ -1117,40 +1117,52 @@
           font-weight:700; letter-spacing:-.01em; }
     .va-cert-card p { font-size:13px; opacity:.7; line-height:1.5; margin:0; }
 
-    .va-export-map { background:linear-gradient(160deg,#0A2B57 0%,#06192F 100%);
-          color:#fff; border-radius:18px; padding:48px;
-          display:grid; grid-template-columns:1fr 1.6fr; gap:40px; align-items:center;
-          position:relative; overflow:hidden; }
-    .va-export-map::before { content:''; position:absolute; top:0; right:0; width:200px; height:200px;
-          background:radial-gradient(circle, rgba(240,128,35,0.12) 0%, transparent 70%);
-          pointer-events:none; }
+    .va-export-map { position:relative; background:linear-gradient(160deg,#0A2B57 0%,#06192F 100%);
+          color:#fff; border-radius:18px; overflow:hidden;
+          min-height:560px; isolation:isolate; }
+    .va-export-map::before { content:''; position:absolute; top:0; right:0; width:240px; height:240px;
+          background:radial-gradient(circle, rgba(240,128,35,0.14) 0%, transparent 70%);
+          pointer-events:none; z-index:1; }
+    .va-world-bg { position:absolute; inset:0; width:100%; height:100%;
+          z-index:0; display:block; }
+    .va-export-overlay { position:relative; z-index:2; padding:48px;
+          min-height:560px; display:flex; align-items:center; }
+    .va-export-info { max-width:480px;
+          background:linear-gradient(135deg,rgba(6,25,47,0.94) 0%,rgba(10,43,87,0.78) 100%);
+          border:1px solid rgba(255,255,255,0.12); border-radius:16px; padding:36px 32px;
+          backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+          box-shadow:0 30px 60px -25px rgba(0,0,0,0.45); }
     .va-export-info h2 { color:#fff; font-size:clamp(26px,2.6vw,36px); margin-bottom:16px; line-height:1.15; }
-    .va-export-info p { opacity:.78; line-height:1.65; font-size:14.5px; margin-bottom:28px; }
+    .va-export-info p { opacity:.82; line-height:1.65; font-size:14.5px; margin-bottom:24px; }
     .va-export-info .va-eyebrow { color:var(--brand-accent,#F08023); margin-bottom:14px; }
-    .va-export-features { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-    .va-export-feature { display:flex; gap:12px; align-items:flex-start; padding:14px 14px;
-          background:rgba(255,255,255,0.06); border-radius:10px;
+    .va-export-features { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .va-export-feature { display:flex; gap:11px; align-items:flex-start; padding:12px 12px;
+          background:rgba(255,255,255,0.05); border-radius:9px;
           border:1px solid rgba(255,255,255,0.08); transition:.25s; }
     .va-export-feature:hover { background:rgba(240,128,35,0.1);
           border-color:rgba(240,128,35,0.4); transform:translateY(-2px); }
-    .va-ef-i { width:28px; height:28px; border-radius:7px; display:flex;
+    .va-ef-i { width:26px; height:26px; border-radius:6px; display:flex;
           align-items:center; justify-content:center; flex-shrink:0;
           background:rgba(240,128,35,0.18); color:var(--brand-accent,#F08023); }
-    .va-export-feature b { display:block; font-size:12.5px; font-weight:600;
-          color:#fff; margin-bottom:3px; line-height:1.3; }
-    .va-export-feature span { font-size:11.5px; opacity:.7; line-height:1.4;
+    .va-export-feature b { display:block; font-size:12px; font-weight:600;
+          color:#fff; margin-bottom:2px; line-height:1.3; }
+    .va-export-feature span { font-size:11px; opacity:.7; line-height:1.4;
           display:block; }
-    .va-map-wrap { position:relative; }
-    .va-world-map { width:100%; height:auto; display:block; }
+    .va-map-caption { position:absolute; z-index:3; left:48px; bottom:32px;
+          padding:10px 16px; background:rgba(6,25,47,0.85);
+          border-left:3px solid var(--brand-accent,#F08023);
+          border-radius:6px; font-size:12px; opacity:.92; font-style:italic;
+          backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); max-width:520px; }
     .va-map-land { transition: fill .4s ease; }
     .va-route { animation: va-route-flow 1.6s linear infinite; }
     @keyframes va-route-flow { to { stroke-dashoffset: -32; } }
-    .va-map-caption { margin-top:14px; padding:10px 16px;
-          background:rgba(255,255,255,0.06); border-left:3px solid var(--brand-accent,#F08023);
-          border-radius:6px; font-size:12px; opacity:.78; font-style:italic; }
     @media (max-width:980px) {
-      .va-export-map { grid-template-columns:1fr; padding:32px; }
+      .va-export-overlay { padding:32px; min-height:auto; }
       .va-export-features { grid-template-columns:1fr; }
+      .va-export-info { max-width:none; }
+      .va-export-map { min-height:auto; }
+      .va-world-bg { opacity:.4; }
+      .va-map-caption { position:static; margin:24px 32px 32px; }
     }
 
     .va-cap { background:#0F3D7A; color:#fff; border-radius:18px; padding:64px 56px;
@@ -1480,43 +1492,8 @@
         <section className="va-section tight">
           <div className="va-wrap">
             <div className="va-export-map">
-              <div className="va-export-info">
-                <div className="va-eyebrow">{C.capEy}</div>
-                <h2>{C.capH}</h2>
-                <p>{C.capP}</p>
-                <div className="va-export-features">
-                  <div className="va-export-feature">
-                    <div className="va-ef-i"><Icon name="spark" size={16} /></div>
-                    <div>
-                      <b>{t.lang === 'zh' ? '优质碳酸钙' : t.lang === 'en' ? 'Premium Quality' : 'Chất lượng cao cấp'}</b>
-                      <span>{t.lang === 'zh' ? '白度 96%+,CaCO₃ 98.5%+' : t.lang === 'en' ? 'Whiteness 96%+, CaCO₃ 98.5%+' : 'Độ trắng 96%+, CaCO₃ 98.5%+'}</span>
-                    </div>
-                  </div>
-                  <div className="va-export-feature">
-                    <div className="va-ef-i"><Icon name="globe" size={16} /></div>
-                    <div>
-                      <b>{t.lang === 'zh' ? '全球覆盖' : t.lang === 'en' ? 'Global Reach' : 'Tầm phủ toàn cầu'}</b>
-                      <span>{t.lang === 'zh' ? '12个国家 · 8+核心市场' : t.lang === 'en' ? '12 countries · 8+ key markets' : '12 quốc gia · 8+ thị trường'}</span>
-                    </div>
-                  </div>
-                  <div className="va-export-feature">
-                    <div className="va-ef-i"><Icon name="ship" size={16} /></div>
-                    <div>
-                      <b>{t.lang === 'zh' ? '可靠物流' : t.lang === 'en' ? 'Reliable Logistics' : 'Logistics tin cậy'}</b>
-                      <span>{t.lang === 'zh' ? 'FOB窗碧港和海防港' : t.lang === 'en' ? 'FOB Cua Lo & Hai Phong ports' : 'FOB cảng Cửa Lò & Hải Phòng'}</span>
-                    </div>
-                  </div>
-                  <div className="va-export-feature">
-                    <div className="va-ef-i"><Icon name="check" size={16} /></div>
-                    <div>
-                      <b>{t.lang === 'zh' ? '客户信任' : t.lang === 'en' ? 'Customer Trust' : 'Niềm tin khách hàng'}</b>
-                      <span>{t.lang === 'zh' ? '10年以上稳定合作' : t.lang === 'en' ? '10+ years long-term partners' : '10+ năm đối tác dài hạn'}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="va-map-wrap">
-                <svg viewBox="0 0 1000 500" className="va-world-map" preserveAspectRatio="xMidYMid meet">
+              {/* Background world map — fills entire container */}
+              <svg viewBox="0 0 1000 500" className="va-world-bg" preserveAspectRatio="xMidYMid slice">
                   <defs>
                     <pattern id="va-mapdots" width="14" height="14" patternUnits="userSpaceOnUse">
                       <circle cx="7" cy="7" r="0.6" fill="rgba(255,255,255,0.07)" />
@@ -1614,13 +1591,52 @@
                       style={{ paintOrder: 'stroke', stroke: 'rgba(10,43,87,0.95)', strokeWidth: 3, letterSpacing: '1.5px' }}
                     >{t.lang === 'zh' ? '越南 · 龙英' : t.lang === 'en' ? 'VIETNAM · LONG ANH' : 'VIỆT NAM · LONG ANH'}</text>
                   </g>
-                </svg>
+              </svg>
 
-                <div className="va-map-caption">
-                  {t.lang === 'zh' ? '从我们的工厂到您的目的地 — 优质交付,信任建立。'
-                    : t.lang === 'en' ? 'From our factory to your destination — delivering quality, building trust.'
-                    : 'Từ nhà máy của chúng tôi đến cảng của bạn — giao hàng chất lượng, xây dựng niềm tin.'}
+              {/* Overlay: text + features (glass card on left over the map) */}
+              <div className="va-export-overlay">
+                <div className="va-export-info">
+                  <div className="va-eyebrow">{C.capEy}</div>
+                  <h2>{C.capH}</h2>
+                  <p>{C.capP}</p>
+                  <div className="va-export-features">
+                    <div className="va-export-feature">
+                      <div className="va-ef-i"><Icon name="spark" size={16} /></div>
+                      <div>
+                        <b>{t.lang === 'zh' ? '优质碳酸钙' : t.lang === 'en' ? 'Premium Quality' : 'Chất lượng cao cấp'}</b>
+                        <span>{t.lang === 'zh' ? '白度 96%+,CaCO₃ 98.5%+' : t.lang === 'en' ? 'Whiteness 96%+, CaCO₃ 98.5%+' : 'Độ trắng 96%+, CaCO₃ 98.5%+'}</span>
+                      </div>
+                    </div>
+                    <div className="va-export-feature">
+                      <div className="va-ef-i"><Icon name="globe" size={16} /></div>
+                      <div>
+                        <b>{t.lang === 'zh' ? '全球覆盖' : t.lang === 'en' ? 'Global Reach' : 'Tầm phủ toàn cầu'}</b>
+                        <span>{t.lang === 'zh' ? '12个国家 · 8+核心市场' : t.lang === 'en' ? '12 countries · 8+ key markets' : '12 quốc gia · 8+ thị trường'}</span>
+                      </div>
+                    </div>
+                    <div className="va-export-feature">
+                      <div className="va-ef-i"><Icon name="ship" size={16} /></div>
+                      <div>
+                        <b>{t.lang === 'zh' ? '可靠物流' : t.lang === 'en' ? 'Reliable Logistics' : 'Logistics tin cậy'}</b>
+                        <span>{t.lang === 'zh' ? 'FOB窗碧港和海防港' : t.lang === 'en' ? 'FOB Cua Lo & Hai Phong ports' : 'FOB cảng Cửa Lò & Hải Phòng'}</span>
+                      </div>
+                    </div>
+                    <div className="va-export-feature">
+                      <div className="va-ef-i"><Icon name="check" size={16} /></div>
+                      <div>
+                        <b>{t.lang === 'zh' ? '客户信任' : t.lang === 'en' ? 'Customer Trust' : 'Niềm tin khách hàng'}</b>
+                        <span>{t.lang === 'zh' ? '10年以上稳定合作' : t.lang === 'en' ? '10+ years long-term partners' : '10+ năm đối tác dài hạn'}</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
+              </div>
+
+              {/* Caption banner at bottom */}
+              <div className="va-map-caption">
+                {t.lang === 'zh' ? '从我们的工厂到您的目的地 — 优质交付,信任建立。'
+                  : t.lang === 'en' ? 'From our factory to your destination — delivering quality, building trust.'
+                  : 'Từ nhà máy của chúng tôi đến cảng của bạn — giao hàng chất lượng, xây dựng niềm tin.'}
               </div>
             </div>
           </div>
