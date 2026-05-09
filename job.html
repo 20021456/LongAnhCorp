@@ -1,0 +1,1516 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chi tiết tuyển dụng — KS Long Anh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fraunces:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0;padding:0;min-height:100%;background:#FAFBFD;}
+  body{font-family:'Inter',system-ui,sans-serif;}
+  *{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+// ─── Translations ───────────────────────────────────────────────────────────
+const COPY = {
+  vi: {
+    nav: ['Trang chủ', 'Giới thiệu', 'Sản phẩm', 'Tuyển dụng', 'Liên hệ'],
+    tagline: 'Bột đá Canxi Cacbonat & Đá tự nhiên Việt Nam',
+    phone: ['(+84) 912 779 799', '(+84-2383) 982 555'],
+    email: 'info@longanhcorp.com',
+    hrEmail: 'hr@longanhcorp.com',
+    footnote: '© 2026 Công ty TNHH KS Long Anh · Mã số DN 2901xxxxx',
+    home: 'Trang chủ', career: 'Tuyển dụng',
+    notFound: 'Không tìm thấy vị trí', backToCareer: 'Quay lại trang tuyển dụng',
+    department: 'Phòng ban', location: 'Địa điểm', type: 'Loại hình', experience: 'Kinh nghiệm',
+    salary: 'Mức lương', deadline: 'Hạn nộp', headcount: 'Số lượng', level: 'Cấp bậc',
+    quickInfo: 'Thông tin nhanh', applyNow: 'Ứng tuyển ngay',
+    contactHr: 'Liên hệ HR', shareJob: 'Chia sẻ',
+    jobOverview: 'Mô tả công việc', responsibilities: 'Trách nhiệm chính',
+    requirements: 'Yêu cầu công việc', benefits: 'Quyền lợi & phúc lợi',
+    howToApply: 'Hướng dẫn ứng tuyển',
+    relatedJobs: 'Vị trí liên quan',
+    applyBy: 'Hạn nhận hồ sơ', viewAll: 'Xem tất cả vị trí',
+    sendCv: 'Gửi CV qua email', viewMap: 'Xem bản đồ',
+    applyText: 'Vui lòng gửi CV và thư giới thiệu (tiếng Việt hoặc tiếng Anh) đến email HR. Tiêu đề email: [Mã vị trí] - Họ tên - Vị trí ứng tuyển. Chúng tôi sẽ phản hồi trong vòng 3 ngày làm việc.',
+  },
+  en: {
+    nav: ['Home', 'About', 'Products', 'Career', 'Contact'],
+    tagline: 'Vietnamese Calcium Carbonate & Natural Stone',
+    phone: ['(+84) 912 779 799', '(+84-2383) 982 555'],
+    email: 'info@longanhcorp.com',
+    hrEmail: 'hr@longanhcorp.com',
+    footnote: '© 2026 Long Anh Mineral Co., Ltd · Reg. No. 2901xxxxx',
+    home: 'Home', career: 'Career',
+    notFound: 'Position not found', backToCareer: 'Back to careers',
+    department: 'Department', location: 'Location', type: 'Type', experience: 'Experience',
+    salary: 'Salary', deadline: 'Deadline', headcount: 'Headcount', level: 'Level',
+    quickInfo: 'Quick info', applyNow: 'Apply now',
+    contactHr: 'Contact HR', shareJob: 'Share',
+    jobOverview: 'Job overview', responsibilities: 'Key responsibilities',
+    requirements: 'Requirements', benefits: 'Benefits & perks',
+    howToApply: 'How to apply',
+    relatedJobs: 'Related positions',
+    applyBy: 'Apply by', viewAll: 'View all positions',
+    sendCv: 'Send CV via email', viewMap: 'View map',
+    applyText: 'Please send your CV and cover letter (Vietnamese or English) to our HR email. Email subject: [Job code] - Full name - Position. We will respond within 3 business days.',
+  },
+  zh: {
+    nav: ['首页', '关于我们', '产品', '招聘', '联系'],
+    tagline: '越南碳酸钙粉与天然石材',
+    phone: ['(+84) 912 779 799', '(+84-2383) 982 555'],
+    email: 'info@longanhcorp.com',
+    hrEmail: 'hr@longanhcorp.com',
+    footnote: '© 2026 龙英矿业有限公司 · 注册号 2901xxxxx',
+    home: '首页', career: '招聘',
+    notFound: '找不到职位', backToCareer: '返回招聘列表',
+    department: '部门', location: '地点', type: '类型', experience: '经验',
+    salary: '薪资', deadline: '截止日期', headcount: '招聘人数', level: '级别',
+    quickInfo: '快速信息', applyNow: '立即申请',
+    contactHr: '联系HR', shareJob: '分享',
+    jobOverview: '职位概述', responsibilities: '主要职责',
+    requirements: '岗位要求', benefits: '福利待遇',
+    howToApply: '申请方式',
+    relatedJobs: '相关职位',
+    applyBy: '截止日期', viewAll: '查看所有职位',
+    sendCv: '通过邮件发送简历', viewMap: '查看地图',
+    applyText: '请将简历和求职信(越南语或英语)发送到我们的HR邮箱。邮件主题:[职位编号] - 姓名 - 职位。我们将在3个工作日内回复。',
+  },
+};
+
+// ─── Job database ───────────────────────────────────────────────────────────
+const JOBS = {
+  '1': {
+    id:'1', dept:'san-xuat', deptLabel:{ vi:'Sản xuất', en:'Manufacturing', zh:'生产' },
+    title:{ vi:'Kỹ sư Vận hành nhà máy', en:'Plant Operations Engineer', zh:'工厂运营工程师' },
+    loc:{ vi:'Quỳ Hợp, Nghệ An', en:'Quy Hop, Nghe An', zh:'归合,义安省' },
+    type:{ vi:'Toàn thời gian', en:'Full-time', zh:'全职' },
+    exp:{ vi:'2–5 năm', en:'2–5 years', zh:'2–5年' },
+    level:{ vi:'Nhân viên / Chuyên viên', en:'Specialist', zh:'专员' },
+    salary:{ vi:'18 – 30 triệu VND', en:'18–30M VND (~$700–1,200)', zh:'18–30M VND' },
+    deadline:'30/06/2026',
+    headcount:'02',
+    tags:['Cơ khí','Vận hành dây chuyền','ISO'],
+    overview:{
+      vi:'Vận hành và giám sát dây chuyền nghiền & phủ Stearic Acid của nhà máy bột đá CaCO₃ tại Quỳ Hợp, đảm bảo công suất, chất lượng và an toàn. Phối hợp với phòng QC, bảo trì và sản xuất để duy trì sản lượng ổn định 350,000 tấn/năm.',
+      en:'Operate and supervise the CaCO₃ grinding and stearic-acid coating lines at our Quy Hop plant — ensuring capacity, quality and safety. Coordinate with QC, maintenance and production teams to sustain stable output of 350,000 tons/year.',
+      zh:'在归合工厂运营和监督碳酸钙研磨和硬脂酸涂层生产线 — 确保产能、质量和安全。与QC、维护和生产团队协调,以维持35万吨/年的稳定产量。',
+    },
+    responsibilities:{
+      vi:[
+        'Vận hành dây chuyền nghiền và phủ Stearic Acid theo quy trình SOP',
+        'Theo dõi và điều chỉnh thông số kỹ thuật (cỡ hạt, độ trắng, độ ẩm) đạt tiêu chuẩn',
+        'Lập báo cáo sản xuất hàng ca/ngày, ghi nhận các bất thường',
+        'Phối hợp với phòng QC kiểm tra chất lượng đầu ra theo từng lô',
+        'Đề xuất cải tiến quy trình, tăng hiệu suất và giảm tiêu hao',
+        'Giám sát an toàn lao động, vệ sinh môi trường tại khu vực phụ trách',
+      ],
+      en:[
+        'Operate grinding and stearic-coating lines per SOP',
+        'Monitor and adjust technical parameters (particle size, whiteness, moisture) to meet standards',
+        'Prepare per-shift and per-day production reports; log anomalies',
+        'Coordinate with QC team for per-batch output quality checks',
+        'Propose process improvements to raise efficiency and reduce waste',
+        'Supervise occupational safety and environmental hygiene in the assigned area',
+      ],
+      zh:[
+        '按SOP操作研磨和硬脂酸涂层生产线',
+        '监测和调整技术参数(粒径、白度、水分)达到标准',
+        '准备每班次和每日生产报告,记录异常',
+        '与QC团队协调进行批次产品质量检查',
+        '提出工艺改进建议,提高效率并减少浪费',
+        '监督所辖区域的职业安全和环境卫生',
+      ],
+    },
+    requirements:{
+      vi:[
+        'Tốt nghiệp Đại học chuyên ngành Cơ khí, Điện công nghiệp, Khoáng sản hoặc Hóa',
+        '2–5 năm kinh nghiệm vận hành nhà máy sản xuất, ưu tiên ngành khoáng sản/hóa chất',
+        'Hiểu biết về PLC, SCADA, hệ thống điều khiển dây chuyền',
+        'Đọc hiểu tài liệu kỹ thuật tiếng Anh',
+        'Khả năng làm việc theo ca, sẵn sàng làm việc tại Quỳ Hợp',
+        'Cẩn thận, có trách nhiệm, kỹ năng làm việc nhóm tốt',
+      ],
+      en:[
+        'BS in Mechanical, Industrial Electrical, Mining or Chemical Engineering',
+        '2–5 years of plant operations experience; mining/chemical industry preferred',
+        'Knowledge of PLC, SCADA, line control systems',
+        'Ability to read technical documentation in English',
+        'Comfortable with shift work; willing to work at Quy Hop',
+        'Detail-oriented, responsible, strong teamwork skills',
+      ],
+      zh:[
+        '机械、工业电气、采矿或化学工程专业本科学历',
+        '2–5年工厂运营经验,优先采矿/化工行业',
+        '熟悉PLC、SCADA、生产线控制系统',
+        '能阅读英文技术文档',
+        '能接受倒班,愿意在归合工作',
+        '细心、负责、团队合作能力强',
+      ],
+    },
+    benefits:{
+      vi:[
+        'Lương cứng 18–30 triệu + thưởng KPI hàng quý',
+        'Thưởng tháng 13, thưởng cuối năm theo kết quả kinh doanh',
+        'BHXH, BHYT, BHTN đầy đủ + bảo hiểm sức khỏe bổ sung',
+        'Xe đưa đón từ TP. Vinh đến nhà máy',
+        'Bữa trưa tại căng-tin nhà máy',
+        'Cơ hội đào tạo nội bộ và quốc tế',
+        'Du lịch công ty hàng năm + team building',
+        'Lộ trình thăng tiến rõ ràng (Trưởng ca → Trưởng phòng)',
+      ],
+      en:[
+        'Base salary 18–30M VND + quarterly KPI bonus',
+        '13th month and year-end bonus based on business results',
+        'Full social/health/unemployment insurance + supplementary health',
+        'Shuttle bus from Vinh City to plant',
+        'Lunch at plant canteen',
+        'Internal and international training opportunities',
+        'Annual company trip + team building',
+        'Clear promotion path (Shift lead → Department head)',
+      ],
+      zh:[
+        '基本工资18–30M VND + 季度KPI奖金',
+        '13薪和基于业绩的年终奖',
+        '完整的社保、医保、失业保险 + 补充健康保险',
+        '从荣市到工厂的班车',
+        '工厂食堂午餐',
+        '内部和国际培训机会',
+        '年度公司旅行+团建',
+        '清晰的晋升路径(班长 → 部门主管)',
+      ],
+    },
+  },
+
+  '2': {
+    id:'2', dept:'kinh-doanh', deptLabel:{ vi:'Kinh doanh', en:'Sales', zh:'销售' },
+    title:{ vi:'Chuyên viên Kinh doanh Xuất khẩu', en:'Export Sales Specialist', zh:'出口销售专员' },
+    loc:{ vi:'TP. Vinh, Nghệ An', en:'Vinh City, Nghe An', zh:'荣市,义安省' },
+    type:{ vi:'Toàn thời gian', en:'Full-time', zh:'全职' },
+    exp:{ vi:'1–3 năm', en:'1–3 years', zh:'1–3年' },
+    level:{ vi:'Nhân viên / Chuyên viên', en:'Specialist', zh:'专员' },
+    salary:{ vi:'15 – 25 triệu + hoa hồng', en:'15–25M VND + commission', zh:'15–25M VND + 佣金' },
+    deadline:'30/06/2026',
+    headcount:'03',
+    tags:['Tiếng Anh','B2B Export','CaCO₃'],
+    overview:{
+      vi:'Phụ trách phát triển và quản lý khách hàng B2B tại các thị trường xuất khẩu chính (Hàn Quốc, Nhật Bản, Ấn Độ, Trung Đông). Tư vấn sản phẩm bột đá CaCO₃ và đá tự nhiên, đàm phán hợp đồng FOB, theo dõi đơn hàng và chăm sóc khách hàng dài hạn.',
+      en:'Develop and manage B2B customer accounts across key export markets (Korea, Japan, India, Middle East). Consult on CaCO₃ powder and natural stone products, negotiate FOB contracts, track orders and nurture long-term customer relationships.',
+      zh:'负责主要出口市场(韩国、日本、印度、中东)的B2B客户开发和管理。咨询碳酸钙粉和天然石材产品,谈判FOB合同,跟踪订单,维护长期客户关系。',
+    },
+    responsibilities:{
+      vi:[
+        'Tìm kiếm và phát triển khách hàng mới qua trade show, LinkedIn, B2B platform',
+        'Tư vấn sản phẩm, gửi báo giá FOB và thương lượng điều khoản hợp đồng',
+        'Phối hợp logistics, chứng từ xuất khẩu, L/C với phòng XNK',
+        'Theo dõi đơn hàng, xử lý khiếu nại và đảm bảo khách hàng hài lòng',
+        'Đạt KPI doanh số hàng tháng/quý theo phân khúc thị trường được giao',
+        'Báo cáo thị trường và đối thủ cạnh tranh định kỳ',
+      ],
+      en:[
+        'Find and develop new customers via trade shows, LinkedIn, B2B platforms',
+        'Consult on products, send FOB quotes and negotiate contract terms',
+        'Coordinate logistics, export documentation, L/C with import-export team',
+        'Track orders, handle complaints and ensure customer satisfaction',
+        'Achieve monthly/quarterly sales KPIs for assigned market segments',
+        'Periodic reporting on market and competitor activity',
+      ],
+      zh:[
+        '通过展会、LinkedIn、B2B平台寻找和开发新客户',
+        '咨询产品、发送FOB报价、谈判合同条款',
+        '与进出口部门协调物流、出口单证、信用证',
+        '跟踪订单、处理投诉、确保客户满意',
+        '实现指定市场细分的月度/季度销售KPI',
+        '定期市场和竞争对手报告',
+      ],
+    },
+    requirements:{
+      vi:[
+        'Tốt nghiệp Đại học chuyên ngành Kinh doanh quốc tế, Ngoại thương hoặc tương đương',
+        '1–3 năm kinh nghiệm Sales B2B Export, ưu tiên ngành khoáng sản/hóa chất/vật liệu xây dựng',
+        'Tiếng Anh thương mại tốt (4 kỹ năng), tương đương IELTS 6.5+ hoặc TOEIC 800+',
+        'Hiểu Incoterms, L/C, các thủ tục xuất khẩu cơ bản',
+        'Kỹ năng đàm phán, thuyết phục, thuyết trình bằng tiếng Anh',
+        'Sẵn sàng đi công tác nước ngoài (1–2 tháng/năm)',
+      ],
+      en:[
+        'BS in International Business, Foreign Trade or equivalent',
+        '1–3 years of B2B export sales experience; mining/chemical/construction materials preferred',
+        'Strong business English (4 skills), IELTS 6.5+ or TOEIC 800+ equivalent',
+        'Understanding of Incoterms, L/C and basic export procedures',
+        'Negotiation, persuasion and English presentation skills',
+        'Willing to travel abroad (1–2 months/year)',
+      ],
+      zh:[
+        '国际商务、外贸或同等专业本科学历',
+        '1–3年B2B出口销售经验,优先采矿/化工/建材行业',
+        '商务英语流利(听说读写),雅思6.5+或托业800+水平',
+        '了解Incoterms、信用证和基本出口程序',
+        '英语谈判、说服和演讲技巧',
+        '愿意出国出差(1–2个月/年)',
+      ],
+    },
+    benefits:{
+      vi:[
+        'Lương cứng 15–25 triệu + hoa hồng theo doanh số (không giới hạn)',
+        'Thưởng tháng 13, thưởng cuối năm, thưởng vượt KPI',
+        'BHXH, BHYT, BHTN + bảo hiểm sức khỏe Bảo Việt',
+        'Hỗ trợ chi phí công tác, ăn ở khi đi nước ngoài',
+        'Đào tạo kỹ năng bán hàng quốc tế, business English',
+        'Du lịch công ty trong nước và quốc tế',
+        'Cơ hội thăng tiến lên Trưởng phòng Kinh doanh Khu vực',
+        'Laptop + điện thoại công ty cấp',
+      ],
+      en:[
+        'Base 15–25M VND + uncapped sales commission',
+        '13th month, year-end bonus, KPI overachievement bonus',
+        'Full insurance + Bao Viet supplementary health',
+        'Travel and accommodation expenses for overseas trips',
+        'International sales skills training, business English',
+        'Domestic and international company trips',
+        'Promotion path to Regional Sales Manager',
+        'Company laptop and phone',
+      ],
+      zh:[
+        '基本工资15–25M VND + 不封顶销售佣金',
+        '13薪、年终奖、KPI超额奖金',
+        '完整保险 + 保越补充健康保险',
+        '出国出差的差旅食宿补贴',
+        '国际销售技能培训、商务英语',
+        '国内和国际公司旅行',
+        '晋升至区域销售经理的机会',
+        '公司配发笔记本电脑和手机',
+      ],
+    },
+  },
+
+  '3': {
+    id:'3', dept:'chat-luong', deptLabel:{ vi:'Chất lượng', en:'Quality', zh:'质量' },
+    title:{ vi:'Kỹ thuật viên Phòng QC', en:'QC Laboratory Technician', zh:'QC实验室技术员' },
+    loc:{ vi:'Quỳ Hợp, Nghệ An', en:'Quy Hop, Nghe An', zh:'归合,义安省' },
+    type:{ vi:'Toàn thời gian', en:'Full-time', zh:'全职' },
+    exp:{ vi:'1–3 năm', en:'1–3 years', zh:'1–3年' },
+    level:{ vi:'Kỹ thuật viên', en:'Technician', zh:'技术员' },
+    salary:{ vi:'12 – 20 triệu VND', en:'12–20M VND', zh:'12–20M VND' },
+    deadline:'30/06/2026',
+    headcount:'02',
+    tags:['ISO 9001','Phân tích hóa','Kiểm tra hạt'],
+    overview:{
+      vi:'Thực hiện kiểm tra chất lượng đầu vào, đầu ra của bột đá CaCO₃ và đá tự nhiên theo quy trình ISO 9001:2015. Vận hành thiết bị phân tích laser, máy đo độ trắng, máy đo cỡ hạt; lập COA và MSDS cho từng lô sản phẩm.',
+      en:'Perform quality checks on inbound and outbound CaCO₃ powder and natural stone per ISO 9001:2015 procedures. Operate laser particle analyzers, whiteness meters, particle size testers; prepare COA and MSDS for each batch.',
+      zh:'按照ISO 9001:2015程序对碳酸钙粉和天然石材的进出料进行质量检查。操作激光粒度分析仪、白度计、粒径测试仪;为每批产品准备COA和MSDS。',
+    },
+    responsibilities:{
+      vi:[
+        'Lấy mẫu và phân tích bột đá CaCO₃ theo từng lô (độ trắng, CaCO₃, độ ẩm, cỡ hạt)',
+        'Vận hành thiết bị phân tích: laser, XRF, máy đo độ trắng, máy sàng',
+        'Lập COA và MSDS cho khách hàng theo yêu cầu',
+        'Theo dõi và lưu hồ sơ chất lượng theo quy trình ISO 9001',
+        'Phối hợp với phòng sản xuất xử lý các lô không đạt',
+        'Tham gia audit nội bộ và đánh giá ISO định kỳ',
+      ],
+      en:[
+        'Sample and analyze CaCO₃ powder per batch (whiteness, CaCO₃, moisture, particle size)',
+        'Operate analytical equipment: laser, XRF, whiteness meter, sieves',
+        'Prepare COA and MSDS for customers as needed',
+        'Track and store quality records per ISO 9001 procedures',
+        'Coordinate with production team to handle non-conforming batches',
+        'Participate in internal audits and ISO assessments',
+      ],
+      zh:[
+        '按批次取样和分析碳酸钙粉(白度、碳酸钙、水分、粒径)',
+        '操作分析设备:激光、XRF、白度计、筛分机',
+        '根据需要为客户准备COA和MSDS',
+        '按ISO 9001程序跟踪和存储质量记录',
+        '与生产团队协调处理不合格批次',
+        '参加内部审计和ISO评估',
+      ],
+    },
+    requirements:{
+      vi:[
+        'Tốt nghiệp Cao đẳng/Đại học ngành Hóa, Khoáng sản, Vật liệu hoặc liên quan',
+        '1–3 năm kinh nghiệm phòng thí nghiệm/QC, ưu tiên ngành khoáng sản',
+        'Sử dụng được thiết bị phân tích cơ bản: laser, máy sàng, máy đo độ trắng',
+        'Hiểu hệ thống ISO 9001:2015',
+        'Cẩn thận, kỷ luật, ghi chép chính xác',
+        'Tiếng Anh đọc hiểu tài liệu kỹ thuật cơ bản',
+      ],
+      en:[
+        'College/BS in Chemistry, Mining, Materials or related field',
+        '1–3 years of lab/QC experience; mining industry preferred',
+        'Comfortable with basic analytical equipment: laser, sieves, whiteness meter',
+        'Understanding of ISO 9001:2015 quality system',
+        'Detail-oriented, disciplined, accurate record-keeping',
+        'Basic English reading comprehension for technical docs',
+      ],
+      zh:[
+        '化学、采矿、材料或相关专业大专/本科学历',
+        '1–3年实验室/QC经验,优先采矿行业',
+        '能使用基本分析设备:激光、筛分机、白度计',
+        '了解ISO 9001:2015质量体系',
+        '细心、有纪律、记录准确',
+        '基本英语阅读技术文档能力',
+      ],
+    },
+    benefits:{
+      vi:[
+        'Lương cứng 12–20 triệu, xét tăng lương 2 lần/năm',
+        'Thưởng tháng 13, thưởng cuối năm',
+        'BHXH, BHYT, BHTN đầy đủ',
+        'Xe đưa đón từ TP. Vinh hoặc trợ cấp xăng xe',
+        'Đào tạo nội bộ về phương pháp phân tích, ISO',
+        'Cơ hội tham gia audit và đào tạo của khách hàng quốc tế',
+        'Du lịch công ty hàng năm',
+      ],
+      en:[
+        'Base 12–20M VND, salary review twice a year',
+        '13th month and year-end bonus',
+        'Full social/health/unemployment insurance',
+        'Shuttle bus from Vinh City or fuel allowance',
+        'Internal training on analytical methods and ISO',
+        'Opportunity to attend audits and trainings from international customers',
+        'Annual company trip',
+      ],
+      zh:[
+        '基本工资12–20M VND,每年调薪2次',
+        '13薪和年终奖',
+        '完整社保、医保、失业保险',
+        '从荣市的班车或油费补贴',
+        '分析方法和ISO的内部培训',
+        '参加国际客户审计和培训的机会',
+        '年度公司旅行',
+      ],
+    },
+  },
+
+  '4': {
+    id:'4', dept:'ky-thuat', deptLabel:{ vi:'Kỹ thuật', en:'Engineering', zh:'工程' },
+    title:{ vi:'Kỹ sư Bảo trì thiết bị', en:'Equipment Maintenance Engineer', zh:'设备维护工程师' },
+    loc:{ vi:'Quỳ Hợp, Nghệ An', en:'Quy Hop, Nghe An', zh:'归合,义安省' },
+    type:{ vi:'Toàn thời gian', en:'Full-time', zh:'全职' },
+    exp:{ vi:'3–5 năm', en:'3–5 years', zh:'3–5年' },
+    level:{ vi:'Chuyên viên / Trưởng nhóm', en:'Specialist / Team Lead', zh:'专员/组长' },
+    salary:{ vi:'20 – 35 triệu VND', en:'20–35M VND', zh:'20–35M VND' },
+    deadline:'15/07/2026',
+    headcount:'02',
+    tags:['Điện – cơ','PLC','Bảo trì phòng ngừa'],
+    overview:{
+      vi:'Lập kế hoạch và thực hiện bảo trì phòng ngừa, sửa chữa khắc phục các thiết bị nghiền, phủ, đóng gói tại nhà máy bột đá. Tối ưu downtime, đảm bảo dây chuyền vận hành ổn định 24/7.',
+      en:'Plan and execute preventive maintenance and corrective repairs on grinding, coating and packaging equipment at the powder plant. Optimize downtime to keep lines running stably 24/7.',
+      zh:'规划和执行粉末工厂研磨、涂层、包装设备的预防性维护和纠正性维修。优化停机时间,确保生产线24/7稳定运行。',
+    },
+    responsibilities:{
+      vi:[
+        'Lập kế hoạch bảo trì phòng ngừa hàng tuần/tháng/quý',
+        'Thực hiện sửa chữa khi thiết bị hỏng đột xuất',
+        'Quản lý phụ tùng thay thế và đặt hàng theo định mức',
+        'Giám sát và đào tạo đội ngũ kỹ thuật viên cấp dưới',
+        'Phối hợp với nhà cung cấp thiết bị về dịch vụ bảo hành, nâng cấp',
+        'Đề xuất cải tiến độ tin cậy thiết bị, giảm MTBF',
+      ],
+      en:[
+        'Plan weekly/monthly/quarterly preventive maintenance',
+        'Perform repairs on unexpected equipment failures',
+        'Manage spare parts inventory and reorder per consumption norms',
+        'Supervise and train junior technicians',
+        'Coordinate with equipment vendors on warranty service and upgrades',
+        'Propose improvements to equipment reliability, reduce MTBF',
+      ],
+      zh:[
+        '制定每周/每月/每季度的预防性维护计划',
+        '处理设备意外故障的维修',
+        '管理备件库存,按消耗定额重新订货',
+        '监督和培训初级技术员',
+        '与设备供应商协调保修服务和升级',
+        '提出设备可靠性改进建议,降低MTBF',
+      ],
+    },
+    requirements:{
+      vi:[
+        'Tốt nghiệp Đại học Cơ điện tử, Cơ khí hoặc Tự động hóa',
+        '3–5 năm kinh nghiệm bảo trì thiết bị công nghiệp',
+        'Thành thạo PLC (Siemens/Mitsubishi), biến tần, cảm biến công nghiệp',
+        'Đọc hiểu bản vẽ điện – cơ, sơ đồ P&ID',
+        'Tiếng Anh đọc hiểu manual kỹ thuật',
+        'Khả năng làm việc dưới áp lực, sẵn sàng on-call ngoài giờ',
+      ],
+      en:[
+        'BS in Mechatronics, Mechanical or Automation Engineering',
+        '3–5 years of industrial equipment maintenance experience',
+        'Proficient with PLC (Siemens/Mitsubishi), inverters, industrial sensors',
+        'Able to read electrical-mechanical drawings, P&ID diagrams',
+        'English reading of technical manuals',
+        'Ability to work under pressure, on-call after hours',
+      ],
+      zh:[
+        '机电、机械或自动化专业本科学历',
+        '3–5年工业设备维护经验',
+        '熟练使用PLC(西门子/三菱)、变频器、工业传感器',
+        '能阅读电气-机械图纸、P&ID图',
+        '英语阅读技术手册',
+        '能在压力下工作,可下班后on-call',
+      ],
+    },
+    benefits:{
+      vi:[
+        'Lương cứng 20–35 triệu + phụ cấp on-call',
+        'Thưởng dự án và thưởng theo MTBF/uptime',
+        'BHXH đầy đủ + bảo hiểm tai nạn 24/7',
+        'Đào tạo PLC nâng cao, certification từ Siemens',
+        'Trang bị đầy đủ PPE, dụng cụ chuyên dụng',
+        'Lộ trình lên Trưởng phòng Kỹ thuật',
+      ],
+      en:[
+        'Base 20–35M VND + on-call allowance',
+        'Project bonuses and MTBF/uptime-based bonuses',
+        'Full insurance + 24/7 accident coverage',
+        'Advanced PLC training, Siemens certification',
+        'Full PPE and specialized tools provided',
+        'Promotion path to Engineering Department Head',
+      ],
+      zh:[
+        '基本工资20–35M VND + on-call补贴',
+        '项目奖金和基于MTBF/uptime的奖金',
+        '完整保险 + 24/7意外险',
+        '高级PLC培训、西门子认证',
+        '提供完整的PPE和专用工具',
+        '晋升至工程部主管的路径',
+      ],
+    },
+  },
+
+  '5': {
+    id:'5', dept:'hanh-chinh', deptLabel:{ vi:'Hành chính', en:'Admin', zh:'行政' },
+    title:{ vi:'Chuyên viên Nhân sự & Tuyển dụng', en:'HR & Recruitment Specialist', zh:'人力资源与招聘专员' },
+    loc:{ vi:'TP. Vinh, Nghệ An', en:'Vinh City, Nghe An', zh:'荣市,义安省' },
+    type:{ vi:'Toàn thời gian', en:'Full-time', zh:'全职' },
+    exp:{ vi:'1–3 năm', en:'1–3 years', zh:'1–3年' },
+    level:{ vi:'Chuyên viên', en:'Specialist', zh:'专员' },
+    salary:{ vi:'12 – 18 triệu VND', en:'12–18M VND', zh:'12–18M VND' },
+    deadline:'30/06/2026',
+    headcount:'01',
+    tags:['HR','Tuyển dụng','Lương thưởng'],
+    overview:{
+      vi:'Phụ trách toàn bộ quy trình tuyển dụng nhân sự cho 5 nhà máy và văn phòng Long Anh, từ đăng tin, sàng lọc, phỏng vấn đến on-boarding. Đồng thời quản lý lương thưởng, BHXH và phát triển văn hóa công ty.',
+      en:'Own the full recruitment cycle for 5 plants and the head office — from job posting, screening, interviewing to onboarding. Also handle compensation, social insurance and company culture initiatives.',
+      zh:'负责5个工厂和总部的完整招聘流程 — 从发布职位、筛选、面试到入职。同时管理薪酬、社保和企业文化。',
+    },
+    responsibilities:{
+      vi:[
+        'Lập kế hoạch và triển khai tuyển dụng theo nhu cầu các phòng ban',
+        'Đăng tin trên các kênh: VietnamWorks, TopCV, LinkedIn, mạng xã hội',
+        'Sàng lọc CV, sắp xếp phỏng vấn vòng 1, hỗ trợ vòng 2 với manager',
+        'Lập hồ sơ nhân viên, làm hợp đồng lao động, on-boarding',
+        'Tính lương hàng tháng, quản lý BHXH/BHYT/BHTN',
+        'Tổ chức team building, sinh nhật, sự kiện văn hóa công ty',
+      ],
+      en:[
+        'Plan and execute recruitment based on department needs',
+        'Post jobs on VietnamWorks, TopCV, LinkedIn, social media',
+        'Screen CVs, schedule round 1 interviews, support round 2 with managers',
+        'Prepare employee files, employment contracts, onboarding',
+        'Run monthly payroll, manage social insurance',
+        'Organize team building, birthdays and culture events',
+      ],
+      zh:[
+        '根据部门需求规划和执行招聘',
+        '在VietnamWorks、TopCV、LinkedIn、社交媒体上发布职位',
+        '筛选简历、安排第一轮面试、协助经理第二轮',
+        '准备员工档案、劳动合同、入职',
+        '每月发放工资、管理社保',
+        '组织团建、生日和文化活动',
+      ],
+    },
+    requirements:{
+      vi:[
+        'Tốt nghiệp Đại học Quản trị nhân lực, Kinh tế, Luật hoặc tương đương',
+        '1–3 năm kinh nghiệm Tuyển dụng hoặc Tổng hợp HR',
+        'Hiểu Luật Lao động, các thủ tục BHXH, BHYT',
+        'Kỹ năng giao tiếp, phỏng vấn, đánh giá ứng viên tốt',
+        'Sử dụng tốt Excel, các phần mềm HR (Misa, Tanca, Base...)',
+        'Tiếng Anh giao tiếp cơ bản',
+      ],
+      en:[
+        'BS in HR Management, Economics, Law or equivalent',
+        '1–3 years of recruitment or HR generalist experience',
+        'Knowledge of Labor Law, social insurance procedures',
+        'Strong communication, interviewing and candidate assessment skills',
+        'Proficient in Excel, HR software (Misa, Tanca, Base...)',
+        'Basic conversational English',
+      ],
+      zh:[
+        '人力资源管理、经济、法律或同等专业本科学历',
+        '1–3年招聘或HR通才经验',
+        '了解劳动法、社保程序',
+        '良好的沟通、面试、候选人评估能力',
+        '熟练使用Excel、HR软件(Misa、Tanca、Base...)',
+        '基本英语沟通',
+      ],
+    },
+    benefits:{
+      vi:[
+        'Lương cứng 12–18 triệu, xét tăng lương 2 lần/năm',
+        'Thưởng tháng 13, thưởng tuyển dụng thành công',
+        'BHXH, BHYT, BHTN, bảo hiểm sức khỏe',
+        'Đào tạo nội bộ và external (PHR, SHRM)',
+        'Môi trường làm việc tại trung tâm TP. Vinh',
+        'Tham gia tổ chức các sự kiện công ty',
+      ],
+      en:[
+        'Base 12–18M VND, salary review twice a year',
+        '13th month bonus, successful hire bonus',
+        'Full insurance + supplementary health',
+        'Internal and external training (PHR, SHRM)',
+        'Work in central Vinh City',
+        'Involvement in company events organization',
+      ],
+      zh:[
+        '基本工资12–18M VND,每年调薪2次',
+        '13薪、招聘成功奖金',
+        '完整保险 + 补充健康保险',
+        '内部和外部培训(PHR, SHRM)',
+        '在荣市市中心工作',
+        '参与公司活动组织',
+      ],
+    },
+  },
+
+  '6': {
+    id:'6', dept:'kinh-doanh', deptLabel:{ vi:'Kinh doanh', en:'Sales', zh:'销售' },
+    title:{ vi:'Trưởng phòng Kinh doanh Nội địa', en:'Domestic Sales Manager', zh:'国内销售经理' },
+    loc:{ vi:'TP. Vinh, Nghệ An', en:'Vinh City, Nghe An', zh:'荣市,义安省' },
+    type:{ vi:'Toàn thời gian', en:'Full-time', zh:'全职' },
+    exp:{ vi:'5+ năm', en:'5+ years', zh:'5+年' },
+    level:{ vi:'Quản lý', en:'Manager', zh:'经理' },
+    salary:{ vi:'30 – 50 triệu + thưởng', en:'30–50M VND + bonus', zh:'30–50M VND + 奖金' },
+    deadline:'31/07/2026',
+    headcount:'01',
+    tags:['Quản lý đội nhóm','Bột đá','KPI'],
+    overview:{
+      vi:'Lãnh đạo đội Kinh doanh Nội địa (8 nhân sự), phụ trách doanh số bột đá CaCO₃ và đá tự nhiên tại thị trường Việt Nam. Xây dựng chiến lược, mở rộng kênh phân phối, đạt mục tiêu doanh thu hàng năm 200 tỷ VND.',
+      en:'Lead the Domestic Sales team (8 people), responsible for CaCO₃ powder and natural stone revenue in Vietnam. Build strategy, expand distribution channels, achieve annual revenue target of 200 billion VND.',
+      zh:'领导国内销售团队(8人),负责越南市场的碳酸钙粉和天然石材销售收入。制定战略、扩大分销渠道、实现年收入目标2000亿越南盾。',
+    },
+    responsibilities:{
+      vi:[
+        'Xây dựng và triển khai chiến lược kinh doanh nội địa hàng năm',
+        'Quản lý và phát triển đội ngũ 8 nhân viên kinh doanh',
+        'Mở rộng kênh phân phối: nhà phân phối, đại lý cấp 1, B2B trực tiếp',
+        'Đạt mục tiêu doanh thu, biên lợi nhuận, công nợ KPI hàng năm',
+        'Báo cáo trực tiếp Phó Tổng Giám đốc Kinh doanh',
+        'Phối hợp Marketing trong các chiến dịch B2B, hội chợ triển lãm',
+      ],
+      en:[
+        'Build and execute annual domestic sales strategy',
+        'Manage and develop a team of 8 sales staff',
+        'Expand distribution channels: distributors, tier-1 agents, direct B2B',
+        'Achieve annual revenue, margin and AR aging KPIs',
+        'Report directly to Deputy GM of Sales',
+        'Coordinate with Marketing on B2B campaigns and trade shows',
+      ],
+      zh:[
+        '制定和执行年度国内销售战略',
+        '管理和发展8人销售团队',
+        '扩大分销渠道:经销商、一级代理、直接B2B',
+        '实现年度收入、利润率和应收账款KPI',
+        '直接向销售副总报告',
+        '与市场部协调B2B活动和展会',
+      ],
+    },
+    requirements:{
+      vi:[
+        'Tốt nghiệp Đại học, ưu tiên thạc sĩ MBA',
+        '5+ năm kinh nghiệm Sales B2B, tối thiểu 2 năm ở vị trí Trưởng phòng',
+        'Kinh nghiệm trong ngành khoáng sản, vật liệu xây dựng, hóa chất',
+        'Có sẵn data khách hàng nhà phân phối/đại lý là một lợi thế lớn',
+        'Kỹ năng lãnh đạo, hoạch định chiến lược, đàm phán',
+        'Tiếng Anh thương mại tốt, sẵn sàng đi công tác trong nước',
+      ],
+      en:[
+        'BS minimum, MBA preferred',
+        '5+ years of B2B sales, at least 2 years as manager',
+        'Experience in mining, construction materials or chemicals industry',
+        'Existing distributor/agent customer database is a strong plus',
+        'Leadership, strategic planning and negotiation skills',
+        'Strong business English, willing to travel domestically',
+      ],
+      zh:[
+        '本科起步,MBA优先',
+        '5+年B2B销售经验,至少2年经理职位',
+        '采矿、建材或化工行业经验',
+        '现有经销商/代理客户数据库是强大优势',
+        '领导、战略规划和谈判技能',
+        '商务英语流利,愿意国内出差',
+      ],
+    },
+    benefits:{
+      vi:[
+        'Lương cứng 30–50 triệu + thưởng KPI hàng quý + lợi nhuận chia sẻ cuối năm',
+        'Xe ô tô công vụ + lái xe',
+        'BHXH đầy đủ + bảo hiểm sức khỏe Liberty cho gia đình',
+        'Cổ phiếu thưởng theo chương trình ESOP',
+        'Đào tạo lãnh đạo cấp cao, khóa MBA Mini do công ty tài trợ',
+        'Lộ trình lên Phó Tổng Giám đốc Kinh doanh',
+        'Du lịch quốc tế hàng năm cùng gia đình',
+      ],
+      en:[
+        'Base 30–50M VND + quarterly KPI bonus + year-end profit sharing',
+        'Company car + driver',
+        'Full insurance + Liberty health insurance for family',
+        'ESOP stock award program',
+        'Senior leadership training, company-sponsored Mini MBA',
+        'Promotion path to Deputy GM of Sales',
+        'Annual international company trip with family',
+      ],
+      zh:[
+        '基本工资30–50M VND + 季度KPI奖金 + 年终利润分享',
+        '公司用车 + 司机',
+        '完整保险 + Liberty家庭健康保险',
+        'ESOP股权奖励计划',
+        '高级领导培训、公司赞助的迷你MBA',
+        '晋升至销售副总的路径',
+        '与家人一起的年度国际公司旅行',
+      ],
+    },
+  },
+
+  '7': {
+    id:'7', dept:'ky-thuat', deptLabel:{ vi:'Kỹ thuật', en:'Engineering', zh:'工程' },
+    title:{ vi:'Kỹ sư Quy trình & Cải tiến', en:'Process Improvement Engineer', zh:'工艺改进工程师' },
+    loc:{ vi:'Quỳ Hợp, Nghệ An', en:'Quy Hop, Nghe An', zh:'归合,义安省' },
+    type:{ vi:'Toàn thời gian', en:'Full-time', zh:'全职' },
+    exp:{ vi:'2–4 năm', en:'2–4 years', zh:'2–4年' },
+    level:{ vi:'Chuyên viên', en:'Specialist', zh:'专员' },
+    salary:{ vi:'15 – 25 triệu VND', en:'15–25M VND', zh:'15–25M VND' },
+    deadline:'15/07/2026',
+    headcount:'01',
+    tags:['Kaizen','Lean','Khoáng sản'],
+    overview:{
+      vi:'Phân tích và cải tiến quy trình sản xuất bột đá, áp dụng Kaizen, Lean Manufacturing để giảm tiêu hao, tăng năng suất và chất lượng. Triển khai dự án 6 Sigma và quản lý dự án đầu tư công nghệ mới.',
+      en:'Analyze and improve powder production processes, apply Kaizen and Lean Manufacturing to reduce waste, increase productivity and quality. Run 6 Sigma projects and manage new technology investment projects.',
+      zh:'分析和改进粉末生产工艺,应用Kaizen和精益制造以减少浪费、提高生产率和质量。运行6 Sigma项目和管理新技术投资项目。',
+    },
+    responsibilities:{
+      vi:[
+        'Đo lường và phân tích các chỉ số OEE, MTBF, tỷ lệ tiêu hao',
+        'Đề xuất và triển khai các dự án Kaizen, Lean (5S, VSM, Pull System)',
+        'Quản lý dự án nâng cấp dây chuyền và áp dụng công nghệ mới',
+        'Đào tạo nhân viên về tư duy cải tiến liên tục',
+        'Báo cáo hiệu quả tiết kiệm chi phí hàng quý',
+      ],
+      en:[
+        'Measure and analyze OEE, MTBF, waste ratio metrics',
+        'Propose and implement Kaizen, Lean projects (5S, VSM, Pull System)',
+        'Manage line upgrade projects and new technology adoption',
+        'Train staff on continuous improvement mindset',
+        'Quarterly reports on cost-saving impact',
+      ],
+      zh:[
+        '测量和分析OEE、MTBF、浪费率指标',
+        '提出和实施Kaizen、精益项目(5S、VSM、Pull System)',
+        '管理生产线升级项目和新技术采用',
+        '培训员工持续改进思维',
+        '每季度成本节约影响报告',
+      ],
+    },
+    requirements:{
+      vi:[
+        'Tốt nghiệp Đại học Kỹ thuật Công nghiệp, Cơ khí, Hóa',
+        '2–4 năm kinh nghiệm cải tiến quy trình ngành sản xuất',
+        'Có chứng chỉ Lean Six Sigma Green Belt là lợi thế',
+        'Hiểu các công cụ thống kê: SPC, Pareto, Fishbone',
+        'Tiếng Anh đọc tài liệu kỹ thuật',
+        'Kỹ năng phân tích dữ liệu, Excel/Power BI tốt',
+      ],
+      en:[
+        'BS in Industrial Engineering, Mechanical or Chemical',
+        '2–4 years of process improvement experience in manufacturing',
+        'Lean Six Sigma Green Belt certification is a plus',
+        'Knowledge of statistical tools: SPC, Pareto, Fishbone',
+        'English for technical reading',
+        'Strong data analysis, Excel/Power BI',
+      ],
+      zh:[
+        '工业工程、机械或化学工程专业本科学历',
+        '2–4年制造业工艺改进经验',
+        '精益六西格玛绿带认证是加分项',
+        '了解统计工具:SPC、帕累托、鱼骨',
+        '英语技术阅读',
+        '强大的数据分析、Excel/Power BI能力',
+      ],
+    },
+    benefits:{
+      vi:[
+        'Lương cứng 15–25 triệu + thưởng dự án theo kết quả tiết kiệm',
+        'Đào tạo Lean Six Sigma Green/Black Belt do công ty tài trợ',
+        'BHXH đầy đủ + bảo hiểm sức khỏe',
+        'Tham gia hội thảo Lean trong nước và quốc tế',
+        'Cơ hội lên Trưởng phòng Cải tiến',
+      ],
+      en:[
+        'Base 15–25M VND + project savings-based bonus',
+        'Company-sponsored Lean Six Sigma Green/Black Belt',
+        'Full insurance + supplementary health',
+        'Domestic and international Lean conferences',
+        'Promotion path to Improvement Department Head',
+      ],
+      zh:[
+        '基本工资15–25M VND + 基于项目节约的奖金',
+        '公司赞助的精益六西格玛绿带/黑带',
+        '完整保险 + 补充健康保险',
+        '国内和国际精益会议',
+        '晋升至改进部主管的机会',
+      ],
+    },
+  },
+
+  '8': {
+    id:'8', dept:'hanh-chinh', deptLabel:{ vi:'Hành chính', en:'Admin', zh:'行政' },
+    title:{ vi:'Kế toán Tổng hợp', en:'General Accountant', zh:'总账会计' },
+    loc:{ vi:'TP. Vinh, Nghệ An', en:'Vinh City, Nghe An', zh:'荣市,义安省' },
+    type:{ vi:'Toàn thời gian', en:'Full-time', zh:'全职' },
+    exp:{ vi:'2–4 năm', en:'2–4 years', zh:'2–4年' },
+    level:{ vi:'Chuyên viên', en:'Specialist', zh:'专员' },
+    salary:{ vi:'13 – 22 triệu VND', en:'13–22M VND', zh:'13–22M VND' },
+    deadline:'30/06/2026',
+    headcount:'01',
+    tags:['MISA','Thuế','BCTC'],
+    overview:{
+      vi:'Đảm nhiệm công tác kế toán tổng hợp toàn công ty: hạch toán, lập báo cáo tài chính, kê khai thuế và làm việc với cơ quan thuế, kiểm toán độc lập.',
+      en:'Handle general accounting for the company: bookkeeping, preparing financial statements, tax filings, and liaising with tax authorities and independent auditors.',
+      zh:'负责公司的总账会计:记账、准备财务报表、税务申报、与税务机关和独立审计师联络。',
+    },
+    responsibilities:{
+      vi:[
+        'Hạch toán nghiệp vụ kinh tế phát sinh hàng ngày',
+        'Lập báo cáo tài chính tháng, quý, năm theo VAS',
+        'Kê khai thuế GTGT, TNDN, TNCN đúng hạn',
+        'Quản lý công nợ, luân chuyển chứng từ',
+        'Làm việc với cơ quan thuế, kiểm toán độc lập',
+        'Đề xuất tối ưu chi phí thuế trong khuôn khổ pháp luật',
+      ],
+      en:[
+        'Daily transaction bookkeeping',
+        'Prepare monthly, quarterly, annual financial statements per VAS',
+        'File VAT, CIT, PIT taxes on time',
+        'Manage AR/AP and document flow',
+        'Liaise with tax authorities and independent auditors',
+        'Propose tax optimization within legal framework',
+      ],
+      zh:[
+        '每日交易记账',
+        '按越南会计准则准备月度、季度、年度财务报表',
+        '按时申报增值税、企业所得税、个人所得税',
+        '管理应收应付账款和单据流转',
+        '与税务机关和独立审计师联络',
+        '在法律框架内提出税务优化建议',
+      ],
+    },
+    requirements:{
+      vi:[
+        'Tốt nghiệp Đại học chuyên ngành Kế toán, Kiểm toán, Tài chính',
+        '2–4 năm kinh nghiệm kế toán tổng hợp, ưu tiên ngành sản xuất',
+        'Sử dụng thành thạo MISA hoặc Fast Accounting',
+        'Hiểu sâu Luật Thuế và VAS hiện hành',
+        'Cẩn thận, trung thực, kỹ năng phân tích tốt',
+        'Có chứng chỉ kế toán trưởng là lợi thế',
+      ],
+      en:[
+        'BS in Accounting, Auditing or Finance',
+        '2–4 years of general accounting experience; manufacturing preferred',
+        'Proficient in MISA or Fast Accounting',
+        'Deep understanding of current Tax Law and VAS',
+        'Detail-oriented, honest, strong analytical skills',
+        'Chief Accountant certification is a plus',
+      ],
+      zh:[
+        '会计、审计或财务专业本科学历',
+        '2–4年总账会计经验,优先制造业',
+        '熟练使用MISA或Fast Accounting',
+        '深入了解现行税法和VAS',
+        '细心、诚实、强大的分析能力',
+        '总会计师证书是加分项',
+      ],
+    },
+    benefits:{
+      vi:[
+        'Lương cứng 13–22 triệu, xét tăng lương 2 lần/năm',
+        'Thưởng tháng 13, thưởng cuối năm',
+        'BHXH đầy đủ + bảo hiểm sức khỏe',
+        'Hỗ trợ chứng chỉ chuyên môn (CPA, ACCA)',
+        'Văn phòng làm việc tại trung tâm TP. Vinh',
+        'Du lịch công ty hàng năm',
+      ],
+      en:[
+        'Base 13–22M VND, salary review twice a year',
+        '13th month and year-end bonus',
+        'Full insurance + supplementary health',
+        'Support for professional certifications (CPA, ACCA)',
+        'Office in central Vinh City',
+        'Annual company trip',
+      ],
+      zh:[
+        '基本工资13–22M VND,每年调薪2次',
+        '13薪和年终奖',
+        '完整保险 + 补充健康保险',
+        '支持专业证书(CPA, ACCA)',
+        '荣市市中心办公室',
+        '年度公司旅行',
+      ],
+    },
+  },
+};
+
+// ─── Icons ──────────────────────────────────────────────────────────────────
+const Icon = ({ name, size = 18 }) => {
+  const p = {
+    arrow: <path d="M5 12h14M13 6l6 6-6 6"/>,
+    check: <path d="M5 12l4 4 10-10"/>,
+    chevron: <path d="M9 6l6 6-6 6"/>,
+    mail: <><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></>,
+    phone: <path d="M5 4h4l2 5-3 2a12 12 0 005 5l2-3 5 2v4a2 2 0 01-2 2A17 17 0 013 6a2 2 0 012-2z"/>,
+    pin: <><path d="M12 22s-7-7.5-7-13a7 7 0 0114 0c0 5.5-7 13-7 13z"/><circle cx="12" cy="9" r="2.5"/></>,
+    clock: <><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></>,
+    cal: <><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></>,
+    users: <><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></>,
+    bag: <><path d="M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><rect x="3" y="6" width="18" height="14" rx="2"/></>,
+    coin: <><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9 10h4.5a2 2 0 010 4H9"/></>,
+    badge: <><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></>,
+    sun: <><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"/></>,
+    moon: <path d="M21 13a8 8 0 11-10-10 7 7 0 0010 10z"/>,
+  };
+  return (<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">{p[name]}</svg>);
+};
+
+const Logo = ({ size = 30 }) => (
+  <span style={{display:'inline-flex',alignItems:'center'}}>
+    <span style={{width:size,height:size,display:'inline-flex'}}>
+      <img src="assets/long-anh-logo.png" alt="Long Anh" style={{width:'100%',height:'100%',objectFit:'contain'}}/>
+    </span>
+  </span>
+);
+
+// ─── Chrome ─────────────────────────────────────────────────────────────────
+const CHROME_CSS = `
+  .vac *{box-sizing:border-box;}
+  .vac{font-family:var(--va-font,'Inter'),system-ui,sans-serif;color:var(--va-text);background:var(--va-bg);
+    --va-bg:#FAFBFD;--va-bg-alt:#F1F4F9;--va-text:#0E1726;
+    --va-line:rgba(15,61,122,.10);--va-card:#fff;
+    --brand-primary:#0F3D7A;--brand-accent:#F08023;}
+  .vac.dark{--va-bg:#0A1424;--va-bg-alt:#0E1A2E;--va-text:#E6EBF3;
+    --va-line:rgba(255,255,255,.08);--va-card:#0F1B30;}
+  .vac-wrap{max-width:100%;margin:0;padding:0 clamp(24px, 4vw, 80px);}
+  .vac-strip{background:#0A2B57;color:#CFE0F2;font-size:12px;}
+  .vac.dark .vac-strip{background:#06101F;}
+  .vac-strip-in{display:flex;justify-content:space-between;align-items:center;height:36px;}
+  .vac-strip a{color:inherit;text-decoration:none;opacity:.85;}
+  .vac-strip a:hover{opacity:1;color:#fff;}
+  .vac-strip-r{display:flex;gap:18px;align-items:center;}
+  .vac-hd{position:sticky;top:0;z-index:50;background:var(--va-bg);
+    border-bottom:1px solid var(--va-line);backdrop-filter:saturate(140%) blur(8px);}
+  .vac-hd-in{display:flex;align-items:center;justify-content:space-between;height:74px;gap:24px;}
+  .vac-brand{display:flex;align-items:center;gap:14px;text-decoration:none;color:inherit;}
+  .vac-brand-mark{width:48px;height:48px;}
+  .vac-brand-name{display:flex;flex-direction:column;line-height:1;}
+  .vac-brand-name b{font-size:15px;font-weight:700;letter-spacing:.02em;color:#0F3D7A;}
+  .vac.dark .vac-brand-name b{color:#5B9BD5;}
+  .vac-brand-name span{font-size:10.5px;color:var(--va-text);opacity:.55;letter-spacing:.06em;text-transform:uppercase;margin-top:4px;}
+  .vac-nav{display:flex;gap:30px;align-items:center;}
+  .vac-nav a{color:var(--va-text);text-decoration:none;font-size:14px;font-weight:500;
+    opacity:.78;padding:6px 0;position:relative;}
+  .vac-nav a:hover{opacity:1;color:var(--brand-accent,#F08023);}
+  .vac-nav a.is-active{opacity:1;color:var(--brand-accent,#F08023);}
+  .vac-nav a.is-active::after{content:'';position:absolute;left:0;right:0;bottom:-22px;height:2px;background:var(--brand-accent,#F08023);}
+  .vac-nav-item{position:relative;padding:6px 0;}
+  .vac-nav-dropdown{position:absolute;top:calc(100% + 14px);left:50%;
+    transform:translateX(-50%) translateY(-6px);background:var(--va-card);
+    border:1px solid var(--va-line);border-radius:12px;padding:8px;min-width:280px;
+    opacity:0;visibility:hidden;transition:opacity .2s, transform .2s, visibility .2s;
+    box-shadow:0 12px 32px -8px rgba(15,61,122,.22);z-index:100;}
+  .vac-nav-item::before{content:'';position:absolute;top:100%;left:50%;width:140%;
+    height:18px;transform:translateX(-50%);}
+  .vac-nav-item:hover .vac-nav-dropdown{opacity:1;visibility:visible;
+    transform:translateX(-50%) translateY(0);}
+  .vac-nav-dropdown a{display:block;padding:12px 16px;border-radius:8px;font-size:14px;opacity:1;}
+  .vac-nav-dropdown a::after{display:none;}
+  .vac-nav-dropdown a:hover{background:var(--va-bg-alt);color:var(--brand-accent,#F08023);}
+  .vac-nav-dropdown a > b{display:block;font-weight:600;margin-bottom:4px;font-size:14px;line-height:1.2;}
+  .vac-nav-dropdown a > span{display:block;font-size:11.5px;opacity:.6;font-weight:400;}
+  .vac-cta-row{display:flex;gap:10px;align-items:center;}
+  .vac-lang{display:flex;gap:2px;padding:3px;border:1px solid var(--va-line);border-radius:8px;}
+  .vac-lang button{font:inherit;padding:4px 10px;background:transparent;color:var(--va-text);
+    border:0;border-radius:5px;cursor:pointer;font-size:12px;font-weight:600;opacity:.6;}
+  .vac-lang button.on{background:#0F3D7A;color:#fff;opacity:1;}
+  .vac.dark .vac-lang button.on{background:#5B9BD5;color:#0A1424;}
+  .vac-iconbtn{width:34px;height:34px;border-radius:8px;border:1px solid var(--va-line);
+    background:transparent;color:var(--va-text);cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:.7;}
+  .vac-iconbtn:hover{opacity:1;border-color:var(--brand-accent,#F08023);color:var(--brand-accent,#F08023);}
+  .vac-ft{background:#06101F;color:#9CB0CC;padding:54px 0 32px;font-size:13px;
+    font-family:var(--va-font,'Inter'),system-ui,sans-serif;}
+  .vac-ft-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:42px;
+    padding-bottom:32px;border-bottom:1px solid rgba(255,255,255,.08);}
+  .vac-ft h5{color:#fff;font-size:13px;font-weight:600;margin:0 0 14px;}
+  .vac-ft a{color:inherit;text-decoration:none;opacity:.75;display:block;padding:4px 0;}
+  .vac-ft a:hover{color:#F08023;opacity:1;}
+  .vac-ft-social{display:flex;gap:10px;margin-top:18px;}
+  .vac-ft-social a{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;
+    justify-content:center;padding:0;background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.1);color:#9CB0CC;transition:.25s;opacity:1;}
+  .vac-ft-social a:hover{background:#F08023;color:#fff;border-color:transparent;transform:translateY(-2px);}
+  .vac-ft-social svg{width:16px;height:16px;}
+  .vac-ft-bottom{display:flex;justify-content:space-between;align-items:center;
+    padding-top:24px;opacity:.6;font-size:12px;}
+  @media (max-width:980px){.vac-nav{display:none}.vac-ft-grid{grid-template-columns:1fr 1fr}}
+`;
+
+const NAV_HREFS = ['index.html','about.html','products.html','career.html','index.html#contact'];
+const NAV_SLUGS = ['home','about','products','career','contact'];
+
+function VAHeader({ tweaks, current = 'career' }) {
+  const t = tweaks; const C = COPY[t.lang];
+  return (
+    <>
+      <div className="vac-strip">
+        <div className="vac-wrap vac-strip-in">
+          <span>{t.lang==='vi'?'Hotline kinh doanh:':t.lang==='zh'?'销售热线:':'Sales hotline:'} <b style={{color:'#fff'}}>{C.phone[0]}</b></span>
+          <div className="vac-strip-r">
+            <a href={'mailto:'+C.email}><Icon name="mail" size={13}/> {C.email}</a>
+            <span style={{opacity:.4}}>·</span>
+            <a href="#">ISO 9001 : 2015</a>
+          </div>
+        </div>
+      </div>
+      <header className="vac-hd">
+        <div className="vac-wrap vac-hd-in">
+          <a className="vac-brand" href="index.html">
+            <span className="vac-brand-mark"><Logo size={48}/></span>
+            <span className="vac-brand-name">
+              <b>{t.lang==='zh'?'龙英矿业':t.lang==='en'?'LONG ANH MINERAL':'KS LONG ANH'}</b>
+              <span>{C.tagline}</span>
+            </span>
+          </a>
+          <nav className="vac-nav">
+            {C.nav.map((n,i)=>{
+              if (NAV_SLUGS[i] === 'products') {
+                return (
+                  <div key={i} className="vac-nav-item">
+                    <a href={NAV_HREFS[i]} className={current===NAV_SLUGS[i]?'is-active':''}>{n}</a>
+                    <div className="vac-nav-dropdown">
+                      <a href="products.html#powder">
+                        <b>{t.lang==='zh'?'碳酸钙粉':t.lang==='en'?'CaCO₃ Powder':'Bột đá CaCO₃'}</b>
+                        <span>Coated · Uncoated · 5–20 µm</span>
+                      </a>
+                      <a href="products.html#stone">
+                        <b>{t.lang==='zh'?'天然石材饰面':t.lang==='en'?'Natural cladding stone':'Đá ốp lát tự nhiên'}</b>
+                        <span>{t.lang==='zh'?'大板 · 定制石材 · 装饰石材':t.lang==='en'?'Slab · Cut tile · Decorative':'Slab · Đá xẻ · Đá trang trí'}</span>
+                      </a>
+                    </div>
+                  </div>
+                );
+              }
+              if (NAV_SLUGS[i] === 'career') {
+                return (
+                  <div key={i} className="vac-nav-item">
+                    <a href={NAV_HREFS[i]} className={current===NAV_SLUGS[i]?'is-active':''}>{n}</a>
+                    <div className="vac-nav-dropdown">
+                      <a href="career.html#dept=san-xuat">
+                        <b>{t.lang==='zh'?'生产':t.lang==='en'?'Manufacturing':'Sản xuất'}</b>
+                        <span>{t.lang==='zh'?'工厂运营 · 设备维护':t.lang==='en'?'Plant ops · Equipment maintenance':'Vận hành nhà máy · Bảo trì thiết bị'}</span>
+                      </a>
+                      <a href="career.html#dept=kinh-doanh">
+                        <b>{t.lang==='zh'?'销售':t.lang==='en'?'Sales':'Kinh doanh'}</b>
+                        <span>{t.lang==='zh'?'出口销售 · 国内销售':t.lang==='en'?'Export sales · Domestic sales':'Xuất khẩu · Bán hàng nội địa'}</span>
+                      </a>
+                      <a href="career.html#dept=ky-thuat">
+                        <b>{t.lang==='zh'?'工程':t.lang==='en'?'Engineering':'Kỹ thuật'}</b>
+                        <span>{t.lang==='zh'?'工艺改进 · PLC':t.lang==='en'?'Process · PLC':'Cải tiến quy trình · PLC'}</span>
+                      </a>
+                      <a href="career.html#dept=chat-luong">
+                        <b>{t.lang==='zh'?'质量':t.lang==='en'?'Quality':'Chất lượng'}</b>
+                        <span>{t.lang==='zh'?'QC实验室 · ISO':t.lang==='en'?'QC lab · ISO':'Kỹ thuật QC · ISO'}</span>
+                      </a>
+                      <a href="career.html#dept=hanh-chinh">
+                        <b>{t.lang==='zh'?'行政':t.lang==='en'?'Admin':'Hành chính'}</b>
+                        <span>{t.lang==='zh'?'人力资源 · 会计':t.lang==='en'?'HR · Accounting':'Nhân sự · Kế toán'}</span>
+                      </a>
+                    </div>
+                  </div>
+                );
+              }
+              return <a key={i} href={NAV_HREFS[i]} className={current===NAV_SLUGS[i]?'is-active':''}>{n}</a>;
+            })}
+          </nav>
+          <div className="vac-cta-row">
+            <div className="vac-lang">
+              <button className={t.lang==='vi'?'on':''} onClick={()=>tweaks.set('lang','vi')}>VI</button>
+              <button className={t.lang==='en'?'on':''} onClick={()=>tweaks.set('lang','en')}>EN</button>
+              <button className={t.lang==='zh'?'on':''} onClick={()=>tweaks.set('lang','zh')}>中</button>
+            </div>
+            <button className="vac-iconbtn" onClick={()=>tweaks.set('dark',!t.dark)}>
+              <Icon name={t.dark?'sun':'moon'} size={15}/>
+            </button>
+          </div>
+        </div>
+      </header>
+    </>
+  );
+}
+
+function VAFooter({ tweaks }) {
+  const t = tweaks; const C = COPY[t.lang];
+  return (
+    <footer className="vac-ft">
+      <div className="vac-wrap">
+        <div className="vac-ft-grid">
+          <div>
+            <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:14}}>
+              <Logo size={42}/>
+              <b style={{color:'#fff',fontSize:14,letterSpacing:'.04em'}}>
+                {t.lang==='zh'?'龙英矿业':t.lang==='en'?'LONG ANH MINERAL':'KS LONG ANH'}
+              </b>
+            </div>
+            <p style={{lineHeight:1.6,opacity:.65,margin:0}}>
+              {t.lang==='zh'?'越南北中部领先的碳酸钙粉和天然石材制造商。'
+                :t.lang==='en'?'A leading manufacturer of calcium carbonate powder and natural stone in North-Central Vietnam.'
+                :'Nhà sản xuất bột đá Canxi Cacbonat và đá tự nhiên hàng đầu Bắc Trung Bộ.'}
+            </p>
+            <div className="vac-ft-social">
+              <a href="https://www.facebook.com/longanhcorp" target="_blank" rel="noopener" aria-label="Facebook">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.198 21.5h4v-8.01h3.604l.396-3.98h-4V7.5a1 1 0 0 1 1-1h3v-4h-3a5 5 0 0 0-5 5v2.01h-2l-.396 3.98h2.396v8.01z"/></svg>
+              </a>
+              <a href="https://www.linkedin.com/company/longanhcorp" target="_blank" rel="noopener" aria-label="LinkedIn">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43c-1.14 0-2.07-.93-2.07-2.07s.93-2.07 2.07-2.07 2.07.93 2.07 2.07-.93 2.07-2.07 2.07zm1.78 13.02H3.55V9h3.57v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.55C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg>
+              </a>
+              <a href="https://twitter.com/longanhcorp" target="_blank" rel="noopener" aria-label="X / Twitter">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.45-6.231zm-1.161 17.52h1.833L7.084 4.126H5.117l11.966 15.644z"/></svg>
+              </a>
+              <a href="https://zalo.me/longanhcorp" target="_blank" rel="noopener" aria-label="Zalo">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 5.94 2 10.8c0 2.78 1.47 5.26 3.77 6.88l-.84 2.97c-.07.24.18.44.4.32l3.16-1.78c1.07.32 2.22.49 3.41.49h.1c5.52 0 10-3.94 10-8.8S17.52 2 12 2z"/></svg>
+              </a>
+            </div>
+          </div>
+          <div>
+            <h5>{t.lang==='zh'?'招聘':t.lang==='en'?'Career':'Tuyển dụng'}</h5>
+            <a href="career.html#dept=san-xuat">{t.lang==='zh'?'生产':t.lang==='en'?'Manufacturing':'Sản xuất'}</a>
+            <a href="career.html#dept=kinh-doanh">{t.lang==='zh'?'销售':t.lang==='en'?'Sales':'Kinh doanh'}</a>
+            <a href="career.html#dept=ky-thuat">{t.lang==='zh'?'工程':t.lang==='en'?'Engineering':'Kỹ thuật'}</a>
+            <a href="career.html#dept=chat-luong">{t.lang==='zh'?'质量':t.lang==='en'?'Quality':'Chất lượng'}</a>
+            <a href="career.html#dept=hanh-chinh">{t.lang==='zh'?'行政':t.lang==='en'?'Admin':'Hành chính'}</a>
+          </div>
+          <div>
+            <h5>{t.lang==='zh'?'公司':t.lang==='en'?'Company':'Công ty'}</h5>
+            {C.nav.map((n,i)=><a key={i} href={NAV_HREFS[i]}>{n}</a>)}
+          </div>
+          <div>
+            <h5>{t.lang==='zh'?'联系':t.lang==='en'?'Contact':'Liên hệ'}</h5>
+            <a>{C.phone[0]}</a><a>{C.phone[1]}</a><a>{C.email}</a>
+            <a href={'mailto:'+C.hrEmail}>{C.hrEmail}</a>
+          </div>
+        </div>
+        <div className="vac-ft-bottom">
+          <span>{C.footnote}</span>
+          <span>Made in Nghệ An · Vietnam</span>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+// ─── Job detail page ────────────────────────────────────────────────────────
+const JD_CSS = `
+  .jd{font-family:var(--va-font,'Inter'),system-ui,sans-serif;color:var(--va-text);background:var(--va-bg);}
+  .jd h1,.jd h2,.jd h3,.jd h4{margin:0;font-weight:700;letter-spacing:-.025em;line-height:1.15;}
+  .jd p{margin:0;}
+
+  /* Breadcrumb */
+  .jd-bcrumb{padding:18px 0 0;font-size:12.5px;
+    font-family:ui-monospace,Menlo,monospace;letter-spacing:.04em;display:flex;
+    gap:10px;align-items:center;color:var(--va-text);opacity:.65;flex-wrap:wrap;}
+  .jd-bcrumb a{color:inherit;text-decoration:none;transition:.2s;}
+  .jd-bcrumb a:hover{color:var(--brand-accent,#F08023);opacity:1;}
+  .jd-bcrumb .now{color:var(--brand-accent,#F08023);opacity:1;}
+  .jd-bcrumb svg{width:12px;height:12px;opacity:.5;}
+
+  /* Hero — title + meta + CTAs */
+  .jd-hero{padding:32px 0 56px;background:var(--va-bg);}
+  .jd-hero-inner{display:grid;grid-template-columns:1.4fr 1fr;gap:48px;
+    align-items:flex-start;}
+  .jd-hero-l h1{font-size:clamp(28px,3.4vw,42px);margin-bottom:18px;line-height:1.15;}
+  .jd-dept-chip{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;
+    border-radius:99px;font-size:12px;font-weight:700;letter-spacing:.06em;
+    text-transform:uppercase;background:rgba(240,128,35,0.1);
+    color:var(--brand-accent,#F08023);margin-bottom:14px;}
+  .jd-hero-meta{display:flex;flex-wrap:wrap;gap:20px;margin-top:20px;}
+  .jd-hero-meta-item{display:flex;align-items:center;gap:8px;font-size:13.5px;}
+  .jd-hero-meta-item svg{color:var(--brand-accent,#F08023);flex-shrink:0;}
+  .jd-hero-meta-item b{font-weight:700;}
+  .jd-hero-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:22px;}
+  .jd-hero-tags span{font-size:11.5px;padding:5px 12px;border-radius:99px;
+    background:var(--va-bg-alt);font-weight:500;letter-spacing:.04em;}
+
+  /* Sticky sidebar info card */
+  .jd-aside{position:sticky;top:90px;}
+  .jd-info-card{background:var(--va-card);border:1px solid var(--va-line);
+    border-radius:16px;overflow:hidden;
+    box-shadow:0 24px 48px -28px rgba(15,61,122,.18);}
+  .jd-info-head{background:linear-gradient(135deg,var(--brand-primary,#0F3D7A) 0%,#0A2B57 100%);
+    color:#fff;padding:22px 24px;}
+  .jd-info-head .label{font-size:11px;font-weight:700;letter-spacing:.12em;
+    text-transform:uppercase;opacity:.72;margin-bottom:6px;}
+  .jd-info-head .salary{font-size:24px;font-weight:800;letter-spacing:-.02em;line-height:1.1;}
+  .jd-info-rows{padding:8px 0;}
+  .jd-info-row{display:flex;align-items:flex-start;gap:14px;padding:14px 24px;
+    border-bottom:1px solid var(--va-line);font-size:14px;}
+  .jd-info-row:last-of-type{border-bottom:0;}
+  .jd-info-row .ico{width:32px;height:32px;border-radius:8px;
+    background:rgba(240,128,35,0.1);color:var(--brand-accent,#F08023);
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .jd-info-row .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.08em;
+    opacity:.6;font-weight:600;margin-bottom:3px;}
+  .jd-info-row .val{font-weight:600;line-height:1.35;}
+  .jd-info-cta{padding:18px 24px;background:var(--va-bg-alt);
+    border-top:1px solid var(--va-line);display:flex;flex-direction:column;gap:10px;}
+  .jd-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    padding:14px 22px;border-radius:10px;font-size:14px;font-weight:700;text-decoration:none;
+    cursor:pointer;border:0;font-family:inherit;transition:.2s;}
+  .jd-btn-p{background:var(--brand-accent,#F08023);color:#fff;
+    box-shadow:0 12px 24px -8px rgba(240,128,35,.5);}
+  .jd-btn-p:hover{background:#D26713;transform:translateY(-2px);}
+  .jd-btn-g{background:var(--va-card);color:var(--brand-primary,#0F3D7A);
+    border:1px solid var(--va-line);}
+  .jd-btn-g:hover{border-color:var(--brand-accent,#F08023);
+    color:var(--brand-accent,#F08023);}
+  .pd.dark .jd-btn-g, .jd.dark .jd-btn-g{color:#5B9BD5;}
+
+  /* Content sections */
+  .jd-content{padding:0 0 64px;}
+  .jd-content-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:48px;
+    align-items:flex-start;}
+  .jd-section{margin-bottom:40px;}
+  .jd-section-head{display:flex;align-items:center;gap:14px;margin-bottom:20px;
+    padding-bottom:14px;border-bottom:2px solid var(--brand-accent,#F08023);}
+  .jd-section-head .ico{width:36px;height:36px;border-radius:9px;
+    background:rgba(240,128,35,0.12);color:var(--brand-accent,#F08023);
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .jd-section-head h2{font-size:20px;}
+  .jd-section p{font-size:15px;line-height:1.75;opacity:.8;}
+  .jd-section ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px;}
+  .jd-section li{display:flex;gap:14px;align-items:flex-start;font-size:14.5px;line-height:1.6;}
+  .jd-section li::before{content:'';width:6px;height:6px;border-radius:50%;
+    background:var(--brand-accent,#F08023);flex-shrink:0;margin-top:9px;}
+  .jd-section.benefits li::before{background:#15803D;}
+  .jd-section.benefits .ico{background:rgba(34,197,94,0.12);color:#15803D;}
+
+  /* Apply box */
+  .jd-apply{background:linear-gradient(135deg,rgba(240,128,35,0.08),rgba(15,61,122,0.04));
+    border:1px solid rgba(240,128,35,0.2);border-radius:14px;padding:24px 28px;}
+  .jd-apply h3{font-size:17px;font-weight:700;margin-bottom:10px;color:var(--brand-accent,#F08023);}
+  .jd-apply p{font-size:14px;line-height:1.7;opacity:.85;margin-bottom:16px;}
+  .jd-apply-row{display:flex;gap:12px;flex-wrap:wrap;}
+
+  /* Related jobs */
+  .jd-related{padding:64px 0;background:var(--va-bg-alt);}
+  .jd-related-head{margin-bottom:28px;}
+  .jd-related-head h2{font-size:clamp(22px,2.4vw,30px);}
+  .jd-related-head .num{font-family:ui-monospace,Menlo,monospace;font-size:11px;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--brand-accent,#F08023);
+    margin-bottom:6px;}
+  .jd-related-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;}
+  .jd-related-card{background:var(--va-card);border:1px solid var(--va-line);
+    border-radius:12px;padding:22px 24px;text-decoration:none;color:inherit;
+    transition:transform .3s, box-shadow .3s, border-color .25s;display:flex;flex-direction:column;}
+  .jd-related-card:hover{transform:translateY(-5px);
+    box-shadow:0 20px 40px -20px rgba(15,61,122,.25);border-color:transparent;}
+  .jd-related-card .dept{font-size:10.5px;font-weight:700;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--brand-accent,#F08023);margin-bottom:8px;}
+  .jd-related-card h4{font-size:16px;font-weight:700;line-height:1.3;margin-bottom:12px;}
+  .jd-related-card .meta{display:flex;flex-wrap:wrap;gap:10px;font-size:12px;opacity:.65;
+    margin-top:auto;}
+  .jd-related-card .meta span{display:inline-flex;align-items:center;gap:4px;}
+
+  @media (max-width:1100px){
+    .jd-hero-inner,.jd-content-grid{grid-template-columns:1fr;}
+    .jd-aside{position:static;}
+  }
+`;
+
+function fmtDate(d, lang) {
+  if (!d) return '';
+  if (lang === 'en') {
+    const [day, m, y] = d.split('/');
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return `${months[parseInt(m)-1]} ${day}, ${y}`;
+  }
+  if (lang === 'zh') {
+    const [day, m, y] = d.split('/');
+    return `${y}年${parseInt(m)}月${parseInt(day)}日`;
+  }
+  return d;
+}
+
+function JobDetailPage({ tweaks, id }) {
+  const t = tweaks;
+  const C = COPY[t.lang];
+  const job = JOBS[id];
+
+  if (!job) {
+    return (
+      <div className={'vac jd '+(t.dark?'dark':'')}>
+        <style>{CHROME_CSS}</style>
+        <style>{JD_CSS}</style>
+        <VAHeader tweaks={tweaks} current="career"/>
+        <div className="vac-wrap" style={{padding:'120px 32px',textAlign:'center'}}>
+          <h2>{C.notFound}</h2>
+          <p style={{margin:'20px 0',opacity:.7}}>ID: {id}</p>
+          <a href="career.html" className="jd-btn jd-btn-p" style={{display:'inline-flex'}}>
+            ← {C.backToCareer}
+          </a>
+        </div>
+        <VAFooter tweaks={tweaks}/>
+      </div>
+    );
+  }
+
+  const cssVars = { '--va-font':t.font, '--va-display':t.font };
+  const title = job.title[t.lang] || job.title.vi;
+  const deptLabel = job.deptLabel[t.lang];
+
+  // Related: 3 other jobs from same dept first, fill with others
+  const related = Object.values(JOBS)
+    .filter(j => j.id !== id)
+    .sort((a, b) => (a.dept === job.dept ? -1 : 1) - (b.dept === job.dept ? -1 : 1))
+    .slice(0, 3);
+
+  const subjectLine = `[${job.id}] ${title}`;
+  const mailtoLink = `mailto:${C.hrEmail}?subject=${encodeURIComponent(subjectLine)}`;
+
+  return (
+    <div className={'vac jd '+(t.dark?'dark':'')} style={cssVars}>
+      <style>{CHROME_CSS}</style>
+      <style>{JD_CSS}</style>
+      <VAHeader tweaks={tweaks} current="career"/>
+
+      {/* HERO */}
+      <section className="jd-hero">
+        <div className="vac-wrap">
+          <nav className="jd-bcrumb">
+            <a href="index.html">{C.home}</a>
+            <Icon name="chevron" size={12}/>
+            <a href="career.html">{C.career}</a>
+            <Icon name="chevron" size={12}/>
+            <a href={'career.html#dept='+job.dept}>{deptLabel}</a>
+            <Icon name="chevron" size={12}/>
+            <span className="now">{title}</span>
+          </nav>
+
+          <div className="jd-hero-inner" style={{marginTop:24}}>
+            <div className="jd-hero-l">
+              <div className="jd-dept-chip">
+                <Icon name="bag" size={13}/> {deptLabel}
+              </div>
+              <h1>{title}</h1>
+              <div className="jd-hero-meta">
+                <div className="jd-hero-meta-item">
+                  <Icon name="pin" size={16}/> <b>{job.loc[t.lang]}</b>
+                </div>
+                <div className="jd-hero-meta-item">
+                  <Icon name="clock" size={16}/> <b>{job.type[t.lang]}</b>
+                </div>
+                <div className="jd-hero-meta-item">
+                  <Icon name="users" size={16}/> {job.exp[t.lang]}
+                </div>
+                <div className="jd-hero-meta-item">
+                  <Icon name="badge" size={16}/> {job.level[t.lang]}
+                </div>
+              </div>
+              <div className="jd-hero-tags">
+                {job.tags.map((tag,i)=><span key={i}>{tag}</span>)}
+              </div>
+            </div>
+
+            <div className="jd-aside">
+              <div className="jd-info-card">
+                <div className="jd-info-head">
+                  <div className="label">{C.salary}</div>
+                  <div className="salary">{job.salary[t.lang]}</div>
+                </div>
+                <div className="jd-info-rows">
+                  <div className="jd-info-row">
+                    <div className="ico"><Icon name="bag" size={15}/></div>
+                    <div>
+                      <div className="lbl">{C.department}</div>
+                      <div className="val">{deptLabel}</div>
+                    </div>
+                  </div>
+                  <div className="jd-info-row">
+                    <div className="ico"><Icon name="pin" size={15}/></div>
+                    <div>
+                      <div className="lbl">{C.location}</div>
+                      <div className="val">{job.loc[t.lang]}</div>
+                    </div>
+                  </div>
+                  <div className="jd-info-row">
+                    <div className="ico"><Icon name="clock" size={15}/></div>
+                    <div>
+                      <div className="lbl">{C.type}</div>
+                      <div className="val">{job.type[t.lang]}</div>
+                    </div>
+                  </div>
+                  <div className="jd-info-row">
+                    <div className="ico"><Icon name="badge" size={15}/></div>
+                    <div>
+                      <div className="lbl">{C.level} · {C.experience}</div>
+                      <div className="val">{job.level[t.lang]} · {job.exp[t.lang]}</div>
+                    </div>
+                  </div>
+                  <div className="jd-info-row">
+                    <div className="ico"><Icon name="users" size={15}/></div>
+                    <div>
+                      <div className="lbl">{C.headcount}</div>
+                      <div className="val">{job.headcount}</div>
+                    </div>
+                  </div>
+                  <div className="jd-info-row">
+                    <div className="ico"><Icon name="cal" size={15}/></div>
+                    <div>
+                      <div className="lbl">{C.deadline}</div>
+                      <div className="val">{fmtDate(job.deadline, t.lang)}</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="jd-info-cta">
+                  <a className="jd-btn jd-btn-p" href={mailtoLink}>
+                    <Icon name="mail" size={16}/> {C.applyNow}
+                  </a>
+                  <a className="jd-btn jd-btn-g" href={'tel:'+C.phone[0].replace(/[^+\d]/g,'')}>
+                    <Icon name="phone" size={16}/> {C.contactHr}
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CONTENT */}
+      <section className="jd-content">
+        <div className="vac-wrap">
+          <div className="jd-content-grid">
+            <div>
+              <div className="jd-section">
+                <div className="jd-section-head">
+                  <div className="ico"><Icon name="badge" size={18}/></div>
+                  <h2>{C.jobOverview}</h2>
+                </div>
+                <p>{job.overview[t.lang]}</p>
+              </div>
+
+              <div className="jd-section">
+                <div className="jd-section-head">
+                  <div className="ico"><Icon name="check" size={18}/></div>
+                  <h2>{C.responsibilities}</h2>
+                </div>
+                <ul>
+                  {job.responsibilities[t.lang].map((r,i)=>(<li key={i}>{r}</li>))}
+                </ul>
+              </div>
+
+              <div className="jd-section">
+                <div className="jd-section-head">
+                  <div className="ico"><Icon name="users" size={18}/></div>
+                  <h2>{C.requirements}</h2>
+                </div>
+                <ul>
+                  {job.requirements[t.lang].map((r,i)=>(<li key={i}>{r}</li>))}
+                </ul>
+              </div>
+
+              <div className="jd-section benefits">
+                <div className="jd-section-head">
+                  <div className="ico"><Icon name="coin" size={18}/></div>
+                  <h2>{C.benefits}</h2>
+                </div>
+                <ul>
+                  {job.benefits[t.lang].map((b,i)=>(<li key={i}>{b}</li>))}
+                </ul>
+              </div>
+
+              <div className="jd-section">
+                <div className="jd-section-head">
+                  <div className="ico"><Icon name="mail" size={18}/></div>
+                  <h2>{C.howToApply}</h2>
+                </div>
+                <div className="jd-apply">
+                  <h3>{C.applyNow}</h3>
+                  <p>{C.applyText}</p>
+                  <div className="jd-apply-row">
+                    <a className="jd-btn jd-btn-p" href={mailtoLink}>
+                      <Icon name="mail" size={16}/> {C.sendCv}
+                    </a>
+                    <a className="jd-btn jd-btn-g" href={'mailto:'+C.hrEmail}>
+                      {C.hrEmail}
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* RELATED JOBS */}
+      <section className="jd-related">
+        <div className="vac-wrap">
+          <div className="jd-related-head">
+            <div className="num">— {C.relatedJobs}</div>
+            <h2>{C.relatedJobs}</h2>
+          </div>
+          <div className="jd-related-grid">
+            {related.map(r => (
+              <a key={r.id} href={'job.html?id='+r.id} className="jd-related-card">
+                <div className="dept">{r.deptLabel[t.lang]}</div>
+                <h4>{r.title[t.lang]}</h4>
+                <div className="meta">
+                  <span><Icon name="pin" size={11}/> {r.loc[t.lang]}</span>
+                  <span><Icon name="clock" size={11}/> {r.type[t.lang]}</span>
+                  <span><Icon name="coin" size={11}/> {r.salary[t.lang]}</span>
+                </div>
+              </a>
+            ))}
+          </div>
+          <div style={{textAlign:'center',marginTop:32}}>
+            <a className="jd-btn jd-btn-g" href="career.html" style={{display:'inline-flex'}}>
+              <Icon name="arrow" size={16}/> {C.viewAll}
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <VAFooter tweaks={tweaks}/>
+    </div>
+  );
+}
+
+function App() {
+  const [t, setT] = React.useState({ lang:'vi', dark:false, font:'Inter' });
+  const setTweak = (k, v) => setT(s => ({ ...s, [k]: v }));
+  const tweaks = { ...t, set: setTweak };
+
+  const params = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
+  const id = params.get('id') || '1';
+
+  return <JobDetailPage tweaks={tweaks} id={id}/>;
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

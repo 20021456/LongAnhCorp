@@ -993,7 +993,7 @@
     }
     $('no-jobs').style.display = 'none';
     list.innerHTML = jobs.map(j => `
-      <a href="mailto:hr@longanhcorp.com?subject=${encodeURIComponent('Ứng tuyển: ' + j.title)}"
+      <a href="job.html?id=${j.id}"
          class="job-card"
          onmouseenter="this.querySelectorAll('[data-txt]').forEach(el=>el.style.color='#fff')"
          onmouseleave="this.querySelectorAll('[data-txt]').forEach(el=>el.style.color='')">
