@@ -1334,6 +1334,66 @@ function JobDetailPage({ tweaks, id }) {
               <div className="jd-hero-tags">
                 {job.tags.map((tag,i)=><span key={i}>{tag}</span>)}
               </div>
+
+              {/* Content sections — placed inside left column to align with sticky info card */}
+              <div style={{marginTop:48}}>
+                <div className="jd-section">
+                  <div className="jd-section-head">
+                    <div className="ico"><Icon name="badge" size={18}/></div>
+                    <h2>{C.jobOverview}</h2>
+                  </div>
+                  <p>{job.overview[t.lang]}</p>
+                </div>
+
+                <div className="jd-section">
+                  <div className="jd-section-head">
+                    <div className="ico"><Icon name="check" size={18}/></div>
+                    <h2>{C.responsibilities}</h2>
+                  </div>
+                  <ul>
+                    {job.responsibilities[t.lang].map((r,i)=>(<li key={i}>{r}</li>))}
+                  </ul>
+                </div>
+
+                <div className="jd-section">
+                  <div className="jd-section-head">
+                    <div className="ico"><Icon name="users" size={18}/></div>
+                    <h2>{C.requirements}</h2>
+                  </div>
+                  <ul>
+                    {job.requirements[t.lang].map((r,i)=>(<li key={i}>{r}</li>))}
+                  </ul>
+                </div>
+
+                <div className="jd-section benefits">
+                  <div className="jd-section-head">
+                    <div className="ico"><Icon name="coin" size={18}/></div>
+                    <h2>{C.benefits}</h2>
+                  </div>
+                  <ul>
+                    {job.benefits[t.lang].map((b,i)=>(<li key={i}>{b}</li>))}
+                  </ul>
+                </div>
+
+                <div className="jd-section">
+                  <div className="jd-section-head">
+                    <div className="ico"><Icon name="mail" size={18}/></div>
+                    <h2>{C.howToApply}</h2>
+                  </div>
+                  <div className="jd-apply">
+                    <h3>{C.applyNow}</h3>
+                    <p>{C.applyText}</p>
+                    <div className="jd-apply-row">
+                      <a className="jd-btn jd-btn-p" href={mailtoLink}>
+                        <Icon name="mail" size={16}/> {C.sendCv}
+                      </a>
+                      <a className="jd-btn jd-btn-g" href={'mailto:'+C.hrEmail}>
+                        {C.hrEmail}
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div className="jd-aside">
@@ -1393,72 +1453,6 @@ function JobDetailPage({ tweaks, id }) {
                   <a className="jd-btn jd-btn-g" href={'tel:'+C.phone[0].replace(/[^+\d]/g,'')}>
                     <Icon name="phone" size={16}/> {C.contactHr}
                   </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CONTENT */}
-      <section className="jd-content">
-        <div className="vac-wrap">
-          <div className="jd-content-grid">
-            <div>
-              <div className="jd-section">
-                <div className="jd-section-head">
-                  <div className="ico"><Icon name="badge" size={18}/></div>
-                  <h2>{C.jobOverview}</h2>
-                </div>
-                <p>{job.overview[t.lang]}</p>
-              </div>
-
-              <div className="jd-section">
-                <div className="jd-section-head">
-                  <div className="ico"><Icon name="check" size={18}/></div>
-                  <h2>{C.responsibilities}</h2>
-                </div>
-                <ul>
-                  {job.responsibilities[t.lang].map((r,i)=>(<li key={i}>{r}</li>))}
-                </ul>
-              </div>
-
-              <div className="jd-section">
-                <div className="jd-section-head">
-                  <div className="ico"><Icon name="users" size={18}/></div>
-                  <h2>{C.requirements}</h2>
-                </div>
-                <ul>
-                  {job.requirements[t.lang].map((r,i)=>(<li key={i}>{r}</li>))}
-                </ul>
-              </div>
-
-              <div className="jd-section benefits">
-                <div className="jd-section-head">
-                  <div className="ico"><Icon name="coin" size={18}/></div>
-                  <h2>{C.benefits}</h2>
-                </div>
-                <ul>
-                  {job.benefits[t.lang].map((b,i)=>(<li key={i}>{b}</li>))}
-                </ul>
-              </div>
-
-              <div className="jd-section">
-                <div className="jd-section-head">
-                  <div className="ico"><Icon name="mail" size={18}/></div>
-                  <h2>{C.howToApply}</h2>
-                </div>
-                <div className="jd-apply">
-                  <h3>{C.applyNow}</h3>
-                  <p>{C.applyText}</p>
-                  <div className="jd-apply-row">
-                    <a className="jd-btn jd-btn-p" href={mailtoLink}>
-                      <Icon name="mail" size={16}/> {C.sendCv}
-                    </a>
-                    <a className="jd-btn jd-btn-g" href={'mailto:'+C.hrEmail}>
-                      {C.hrEmail}
-                    </a>
-                  </div>
                 </div>
               </div>
             </div>
