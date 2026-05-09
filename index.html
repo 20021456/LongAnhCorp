@@ -1092,6 +1092,26 @@
     .va-app p { font-size:13px; opacity:.7; line-height:1.55; transition:.3s; }
     .va-app:hover p { opacity:.85; }
 
+    .va-certs-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:24px; margin-bottom:48px; }
+    .va-cert-card { background:var(--va-card); border:1px solid var(--va-line);
+          border-radius:14px; overflow:hidden; transition:transform .35s cubic-bezier(.2,.7,.3,1),
+          box-shadow .35s, border-color .35s; cursor:pointer; display:flex; flex-direction:column; }
+    .va-cert-card:hover { transform:translateY(-8px);
+          box-shadow:0 22px 50px -20px rgba(15,61,122,.25); border-color:transparent; }
+    .va-cert-card:hover .va-cert-img img { transform:scale(1.05); }
+    .va-cert-img { aspect-ratio:3/4; overflow:hidden; background:#FAF7F0;
+          position:relative; display:flex; align-items:center; justify-content:center; padding:18px; }
+    .va-cert-img img { max-width:100%; max-height:100%; width:auto; height:auto;
+          object-fit:contain; transition:transform .6s cubic-bezier(.2,.7,.3,1);
+          filter:drop-shadow(0 4px 12px rgba(15,61,122,.12)); }
+    .va-cert-body { padding:20px 22px; flex:1; display:flex; flex-direction:column; }
+    .va-cert-meta { font-family:ui-monospace,Menlo,monospace; font-size:11px;
+          color:var(--brand-accent,#F08023); letter-spacing:.06em; margin-bottom:8px;
+          font-weight:600; text-transform:uppercase; }
+    .va-cert-card h3 { font-size:18px; margin:0 0 8px; line-height:1.3;
+          font-weight:700; letter-spacing:-.01em; }
+    .va-cert-card p { font-size:13px; opacity:.7; line-height:1.5; margin:0; }
+
     .va-cap { background:#0F3D7A; color:#fff; border-radius:18px; padding:64px 56px;
           display:grid; grid-template-columns:1fr 1.2fr; gap:48px; align-items:center; }
     .va-cap h2 { color:#fff; font-size:clamp(28px,3vw,40px); margin-bottom:18px; }
@@ -1147,6 +1167,10 @@
       .va-caps4 .va-cap4:nth-child(3),
       .va-caps4 .va-cap4:nth-child(4),
       .va-caps4 .va-cap4:nth-child(5) { grid-column: span 6; }
+      .va-certs-grid { grid-template-columns:repeat(2,1fr); }
+    }
+    @media (max-width: 600px) {
+      .va-certs-grid { grid-template-columns:1fr; }
     }
   `;
 
@@ -1367,60 +1391,78 @@
           </div>
         </section>
 
-        {/* CAREER TEASER */}
-        <section id="career" className="va-section">
+        {/* CERTIFICATIONS */}
+        <section id="certs" className="va-section">
           <div className="va-wrap">
             <div className="va-shead">
               <div>
-                <div className="va-eyebrow">{t.lang === 'zh' ? '招聘' : t.lang === 'en' ? 'Career' : 'Tuyển dụng'}</div>
-                <h2>{t.lang === 'zh' ? '与我们共建未来。' : t.lang === 'en' ? 'Build the future with us.' : 'Cùng nhau xây dựng tương lai.'}</h2>
+                <div className="va-eyebrow">{t.lang === 'zh' ? '认证' : t.lang === 'en' ? 'Certifications' : 'Chứng chỉ'}</div>
+                <h2>{t.lang === 'zh' ? '符合国际标准。' : t.lang === 'en' ? 'Built to international standards.' : 'Đạt chuẩn chất lượng quốc tế.'}</h2>
               </div>
               <p>{t.lang === 'zh'
-                ? '龙英寻找有才华、有热情的人才与我们共同成长。我们重视创新、团队合作和长期承诺。'
+                ? '每批产品均按ISO 9001进行QC检测,提供COA和MSDS — 满足韩国、日本、印度和中东市场最严苛的要求。'
                 : t.lang === 'en'
-                ? 'Long Anh is looking for talented, passionate people to grow with us. We value innovation, teamwork and long-term commitment.'
-                : 'Long Anh tìm kiếm những người tài năng và đam mê để cùng phát triển. Chúng tôi coi trọng sự đổi mới, tinh thần đồng đội và cam kết gắn bó lâu dài.'}</p>
+                ? 'Each batch is QC-controlled to ISO 9001 and ships with COA and MSDS — meeting the toughest requirements from Korea, Japan, India and the Middle East.'
+                : 'Mỗi lô sản phẩm đều được kiểm tra QC theo ISO 9001, kèm COA và MSDS — đáp ứng yêu cầu khắt khe nhất từ thị trường Hàn Quốc, Nhật Bản, Ấn Độ và Trung Đông.'}</p>
             </div>
-            <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:1,
-                          background:'var(--va-line)', border:'1px solid var(--va-line)',
-                          borderRadius:14, overflow:'hidden', marginBottom:48 }}>
-              {(t.lang === 'zh' ? [
-                { role:'工厂运营工程师', dept:'生产', loc:'归合,义安省', type:'全职' },
-                { role:'出口销售专员', dept:'销售', loc:'荣市,义安省', type:'全职' },
-                { role:'QC实验室技术员', dept:'质量', loc:'归合,义安省', type:'全职' },
-              ] : t.lang === 'en' ? [
-                { role:'Plant Operations Engineer', dept:'Manufacturing', loc:'Quy Hop, Nghe An', type:'Full-time' },
-                { role:'Export Sales Specialist', dept:'Sales', loc:'Vinh City, Nghe An', type:'Full-time' },
-                { role:'QC Laboratory Technician', dept:'Quality', loc:'Quy Hop, Nghe An', type:'Full-time' },
-              ] : [
-                { role:'Kỹ sư Vận hành', dept:'Sản xuất', loc:'Quỳ Hợp, Nghệ An', type:'Toàn thời gian' },
-                { role:'Chuyên viên Kinh doanh Xuất khẩu', dept:'Kinh doanh', loc:'TP. Vinh, Nghệ An', type:'Toàn thời gian' },
-                { role:'Kỹ thuật viên Phòng QC', dept:'Chất lượng', loc:'Quỳ Hợp, Nghệ An', type:'Toàn thời gian' },
-              ]).map((job, i) => (
-                <a key={i} href="career.html" style={{ background:'var(--va-card)', padding:'28px 26px',
-                    textDecoration:'none', color:'inherit', display:'block',
-                    transition:'.25s', cursor:'pointer' }}
-                  onMouseEnter={e => e.currentTarget.style.background = '#0F3D7A'}
-                  onMouseLeave={e => e.currentTarget.style.background = 'var(--va-card)'}>
-                  <div style={{ fontSize:10, fontWeight:600, letterSpacing:'.12em',
-                      textTransform:'uppercase', color:'var(--brand-accent,#F08023)',
-                      marginBottom:10 }}>{job.dept}</div>
-                  <div style={{ fontSize:17, fontWeight:700, lineHeight:1.25,
-                      marginBottom:12, color:'inherit' }}
-                    onMouseEnter={e => e.currentTarget.style.color='#fff'}
-                    onMouseLeave={e => e.currentTarget.style.color='inherit'}>
-                    {job.role}
+
+            <div className="va-certs-grid">
+              {[
+                { key: 'iso',
+                  img: 'assets/cert-iso-9001.svg',
+                  name: 'ISO 9001:2015',
+                  issuerVi: 'BSI · 2020',
+                  issuerEn: 'BSI · 2020',
+                  issuerZh: 'BSI · 2020',
+                  descVi: 'Hệ thống quản lý chất lượng',
+                  descEn: 'Quality Management System',
+                  descZh: '质量管理体系' },
+                { key: 'reach',
+                  img: 'assets/cert-reach.svg',
+                  name: 'REACH',
+                  issuerVi: 'EU · 2021',
+                  issuerEn: 'EU · 2021',
+                  issuerZh: '欧盟 · 2021',
+                  descVi: 'Tuân thủ hóa chất Châu Âu',
+                  descEn: 'EU Chemical Compliance',
+                  descZh: '欧盟化学品合规' },
+                { key: 'sgs',
+                  img: 'assets/cert-sgs.svg',
+                  name: 'SGS',
+                  issuerVi: 'Báo cáo · 2024',
+                  issuerEn: 'Inspection · 2024',
+                  issuerZh: '检测报告 · 2024',
+                  descVi: 'Kiểm định độc lập độ trắng & cỡ hạt',
+                  descEn: 'Independent test for whiteness & particle size',
+                  descZh: '独立白度和粒径检测' },
+                { key: 'msds',
+                  img: 'assets/cert-msds.svg',
+                  name: 'MSDS',
+                  issuerVi: 'GHS / OSHA',
+                  issuerEn: 'GHS / OSHA',
+                  issuerZh: 'GHS / OSHA',
+                  descVi: 'Phiếu an toàn hóa chất sản phẩm',
+                  descEn: 'Material safety data sheet',
+                  descZh: '材料安全数据表' }
+              ].map((c) => (
+                <div key={c.key} className="va-cert-card">
+                  <div className="va-cert-img">
+                    <img src={c.img} alt={c.name} />
                   </div>
-                  <div style={{ display:'flex', gap:14, fontSize:12, opacity:.65 }}>
-                    <span><Icon name="pin" size={12} style={{verticalAlign:'middle'}}/> {job.loc}</span>
-                    <span>{job.type}</span>
+                  <div className="va-cert-body">
+                    <div className="va-cert-meta">
+                      {t.lang === 'zh' ? c.issuerZh : t.lang === 'en' ? c.issuerEn : c.issuerVi}
+                    </div>
+                    <h3>{c.name}</h3>
+                    <p>{t.lang === 'zh' ? c.descZh : t.lang === 'en' ? c.descEn : c.descVi}</p>
                   </div>
-                </a>
+                </div>
               ))}
             </div>
+
             <div style={{ textAlign:'center' }}>
-              <a className="va-btn va-btn-p" href="career.html">
-                {t.lang === 'zh' ? '查看所有职位' : t.lang === 'en' ? 'View all open positions' : 'Xem tất cả vị trí tuyển dụng'} <Icon name="arrow" size={15} />
+              <a className="va-btn va-btn-p" href="about.html#certs">
+                {t.lang === 'zh' ? '查看所有认证' : t.lang === 'en' ? 'View all certifications' : 'Xem tất cả chứng chỉ'} <Icon name="arrow" size={15} />
               </a>
             </div>
           </div>
