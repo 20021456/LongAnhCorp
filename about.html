@@ -383,14 +383,26 @@ const AB_CSS = `
   .ab-certs-head{display:grid;grid-template-columns:1fr 1.4fr;gap:60px;margin-bottom:48px;align-items:end;}
   .ab-certs-head h2{font-size:clamp(30px,3.6vw,46px);}
   .ab-certs-head p{font-size:15px;opacity:.7;line-height:1.65;max-width:480px;}
-  .ab-clogo{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;
-    background:var(--va-line);border:1px solid var(--va-line);border-radius:14px;overflow:hidden;}
-  .ab-clogo>div{background:var(--va-card);padding:32px 18px;display:flex;flex-direction:column;
-    align-items:center;justify-content:center;text-align:center;
-    font-family:ui-monospace,Menlo,monospace;letter-spacing:.06em;transition:.25s;}
-  .ab-clogo>div:hover{background:var(--va-bg-alt);}
-  .ab-clogo b{font-size:18px;color:var(--brand-primary,#0F3D7A);margin-bottom:6px;}
-  .ab-clogo span{font-size:10px;opacity:.6;}
+  .ab-certs-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;}
+  .ab-cert-card{background:var(--va-card);border:1px solid var(--va-line);
+    border-radius:14px;overflow:hidden;
+    transition:transform .35s cubic-bezier(.2,.7,.3,1),
+    box-shadow .35s, border-color .35s;cursor:pointer;display:flex;flex-direction:column;}
+  .ab-cert-card:hover{transform:translateY(-8px);
+    box-shadow:0 22px 50px -20px rgba(15,61,122,.25);border-color:transparent;}
+  .ab-cert-card:hover .ab-cert-img img{transform:scale(1.05);}
+  .ab-cert-img{aspect-ratio:3/4;overflow:hidden;background:#FAF7F0;
+    position:relative;display:flex;align-items:center;justify-content:center;padding:18px;}
+  .ab-cert-img img{max-width:100%;max-height:100%;width:auto;height:auto;
+    object-fit:contain;transition:transform .6s cubic-bezier(.2,.7,.3,1);
+    filter:drop-shadow(0 4px 12px rgba(15,61,122,.12));}
+  .ab-cert-body{padding:20px 22px;flex:1;display:flex;flex-direction:column;}
+  .ab-cert-meta{font-family:ui-monospace,Menlo,monospace;font-size:11px;
+    color:var(--brand-accent,#F08023);letter-spacing:.06em;margin-bottom:8px;
+    font-weight:600;text-transform:uppercase;}
+  .ab-cert-card h3{font-size:18px;margin:0 0 8px;line-height:1.3;
+    font-weight:700;letter-spacing:-.01em;}
+  .ab-cert-card p{font-size:13px;opacity:.7;line-height:1.5;margin:0;}
   .ab-cta{background:#0F3D7A;color:#fff;border-radius:18px;padding:64px 56px;
     display:grid;grid-template-columns:1.2fr 1fr;gap:48px;align-items:center;margin:64px 0;}
   .ab-cta h2{font-size:clamp(28px,3.2vw,40px);color:#fff;margin-bottom:14px;}
@@ -407,7 +419,7 @@ const AB_CSS = `
     .ab-warehouse-grid{grid-template-columns:1fr;height:auto;}
     .ab-warehouse-grid .ab-wh-img{aspect-ratio:16/10;}
     .ab-wh-col{grid-template-rows:auto auto;}
-    .ab-time-grid,.ab-clogo{grid-template-columns:1fr 1fr;}
+    .ab-time-grid,.ab-clogo,.ab-certs-grid{grid-template-columns:1fr 1fr;}
     .ab-time-grid::before{display:none;}
     .ab-vals{grid-template-columns:1fr;}
   }
@@ -660,9 +672,41 @@ function App() {
               ?'Every batch ships with COA and MSDS, meeting the toughest requirements from Korea, Japan, India and the Middle East.'
               :'Tất cả lô sản phẩm đều được kiểm tra COA, MSDS và đáp ứng yêu cầu khắt khe nhất từ thị trường Hàn Quốc, Nhật Bản, Ấn Độ và Trung Đông.'}</p>
           </div>
-          <div className="ab-clogo">
-            {CERTS.map((c,i)=>(
-              <div key={i}><b>{c}</b><span>{t.lang==='zh'?'已认证':t.lang==='en'?'Certified':'Chứng nhận'}</span></div>
+          <div className="ab-certs-grid">
+            {[
+              { key:'iso', img:'assets/cert-iso-9001.svg', name:'ISO 9001:2015',
+                issuerVi:'BSI · 2020', issuerEn:'BSI · 2020', issuerZh:'BSI · 2020',
+                descVi:'Hệ thống quản lý chất lượng',
+                descEn:'Quality Management System',
+                descZh:'质量管理体系' },
+              { key:'reach', img:'assets/cert-reach.svg', name:'REACH',
+                issuerVi:'EU · 2021', issuerEn:'EU · 2021', issuerZh:'欧盟 · 2021',
+                descVi:'Tuân thủ hóa chất Châu Âu',
+                descEn:'EU Chemical Compliance',
+                descZh:'欧盟化学品合规' },
+              { key:'sgs', img:'assets/cert-sgs.svg', name:'SGS',
+                issuerVi:'Báo cáo · 2024', issuerEn:'Inspection · 2024', issuerZh:'检测报告 · 2024',
+                descVi:'Kiểm định độc lập độ trắng & cỡ hạt',
+                descEn:'Independent test for whiteness & particle size',
+                descZh:'独立白度和粒径检测' },
+              { key:'msds', img:'assets/cert-msds.svg', name:'MSDS',
+                issuerVi:'GHS / OSHA', issuerEn:'GHS / OSHA', issuerZh:'GHS / OSHA',
+                descVi:'Phiếu an toàn hóa chất sản phẩm',
+                descEn:'Material safety data sheet',
+                descZh:'材料安全数据表' }
+            ].map((c)=>(
+              <div key={c.key} className="ab-cert-card">
+                <div className="ab-cert-img">
+                  <img src={c.img} alt={c.name}/>
+                </div>
+                <div className="ab-cert-body">
+                  <div className="ab-cert-meta">
+                    {t.lang==='zh'?c.issuerZh:t.lang==='en'?c.issuerEn:c.issuerVi}
+                  </div>
+                  <h3>{c.name}</h3>
+                  <p>{t.lang==='zh'?c.descZh:t.lang==='en'?c.descEn:c.descVi}</p>
+                </div>
+              </div>
             ))}
           </div>
         </div>
