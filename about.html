@@ -352,6 +352,13 @@ const AB_CSS = `
   .ab-cap-n{font-family:ui-monospace,Menlo,monospace;font-size:11px;opacity:.5;letter-spacing:.06em;}
   .ab-cap-row h4{font-size:15px;font-weight:600;}
   .ab-cap-row span{font-family:ui-monospace,Menlo,monospace;font-size:13px;color:var(--brand-accent,#F08023);font-weight:600;}
+  .ab-shead-row{display:grid;grid-template-columns:1fr 1.4fr;gap:60px;align-items:end;margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--va-line);}
+  .ab-warehouse-grid{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:16px;height:380px;}
+  .ab-wh-col{display:grid;grid-template-rows:1fr 1fr;gap:16px;}
+  .ab-wh-img{border-radius:14px;overflow:hidden;position:relative;}
+  .ab-wh-img img{width:100%;height:100%;object-fit:cover;display:block;
+    transition:transform .6s cubic-bezier(.2,.7,.3,1);}
+  .ab-wh-img:hover img{transform:scale(1.04);}
   .ab-certs{padding:96px 0;background:var(--va-bg-alt);}
   .ab-certs-head{display:grid;grid-template-columns:1fr 1.4fr;gap:60px;margin-bottom:48px;align-items:end;}
   .ab-certs-head h2{font-size:clamp(30px,3.6vw,46px);}
@@ -376,7 +383,10 @@ const AB_CSS = `
   .ab-btn-g{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.3);}
   .ab-btn-g:hover{border-color:#fff;}
   @media (max-width:980px){
-    .ab-intro,.ab-caps,.ab-cta,.ab-certs-head{grid-template-columns:1fr;gap:32px;}
+    .ab-intro,.ab-caps,.ab-cta,.ab-certs-head,.ab-shead-row{grid-template-columns:1fr;gap:24px;}
+    .ab-warehouse-grid{grid-template-columns:1fr;height:auto;}
+    .ab-warehouse-grid .ab-wh-img{aspect-ratio:16/10;}
+    .ab-wh-col{grid-template-rows:auto auto;}
     .ab-time-grid,.ab-clogo{grid-template-columns:1fr 1fr;}
     .ab-time-grid::before{display:none;}
     .ab-vals{grid-template-columns:1fr;}
@@ -574,6 +584,43 @@ function App() {
                   </div>
                 ))}
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* WAREHOUSE */}
+      <section className="ab-section">
+        <div className="ab-wrap">
+          <div className="ab-shead-row">
+            <div>
+              <div className="ab-eyebrow">{t.lang==='zh'?'仓库与物流':t.lang==='en'?'Warehouse & Logistics':'Kho bãi & Logistics'}</div>
+              <h2 style={{fontSize:'clamp(28px,3.4vw,42px)',marginBottom:0}}>
+                {t.lang==='zh'?'准时发货 — 按规格交付。':t.lang==='en'?'Ready to ship — on time, to spec.':'Sẵn sàng giao hàng — đúng hẹn, đúng quy cách.'}
+              </h2>
+            </div>
+            <p style={{fontSize:15,opacity:.7,lineHeight:1.65,maxWidth:480}}>
+              {t.lang==='zh'?
+                '归合的宽敞仓库 — 灵活包装,国内和出口准时交付。':
+                t.lang==='en'?
+                'Spacious warehouses at Quy Hop — flexible packaging, on-time delivery for both domestic and export.':
+                'Hệ thống kho rộng tại Quỳ Hợp — đóng gói linh hoạt, lịch giao đúng hẹn cho cả nội địa và xuất khẩu.'}
+            </p>
+          </div>
+          <div className="ab-warehouse-grid">
+            <div className="ab-wh-img">
+              <img src="assets/kho-hang.webp" alt="Kho hàng Long Anh"/>
+            </div>
+            <div className="ab-wh-col">
+              <div className="ab-wh-img">
+                <img src="assets/kho-hang-2.webp" alt="Kho hàng"/>
+              </div>
+              <div className="ab-wh-img">
+                <img src="assets/kho-da-nguyen-lieu.webp" alt="Kho đá nguyên liệu"/>
+              </div>
+            </div>
+            <div className="ab-wh-img">
+              <img src="assets/kho-hang-xuat-khau.webp" alt="Kho hàng xuất khẩu"/>
             </div>
           </div>
         </div>
