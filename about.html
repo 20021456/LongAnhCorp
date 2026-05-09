@@ -222,6 +222,35 @@ function VAHeader({ tweaks, current = 'home' }) {
                   </div>
                 );
               }
+              if (NAV_SLUGS[i] === 'career') {
+                return (
+                  <div key={i} className="vac-nav-item">
+                    <a href={NAV_HREFS[i]} className={current===NAV_SLUGS[i]?'is-active':''}>{n}</a>
+                    <div className="vac-nav-dropdown">
+                      <a href="career.html#dept=san-xuat">
+                        <b>{t.lang==='zh'?'生产':t.lang==='en'?'Manufacturing':'Sản xuất'}</b>
+                        <span>{t.lang==='zh'?'工厂运营 · 设备维护':t.lang==='en'?'Plant ops · Equipment maintenance':'Vận hành nhà máy · Bảo trì thiết bị'}</span>
+                      </a>
+                      <a href="career.html#dept=kinh-doanh">
+                        <b>{t.lang==='zh'?'销售':t.lang==='en'?'Sales':'Kinh doanh'}</b>
+                        <span>{t.lang==='zh'?'出口销售 · 国内销售':t.lang==='en'?'Export sales · Domestic sales':'Xuất khẩu · Bán hàng nội địa'}</span>
+                      </a>
+                      <a href="career.html#dept=ky-thuat">
+                        <b>{t.lang==='zh'?'工程':t.lang==='en'?'Engineering':'Kỹ thuật'}</b>
+                        <span>{t.lang==='zh'?'工艺改进 · PLC':t.lang==='en'?'Process · PLC':'Cải tiến quy trình · PLC'}</span>
+                      </a>
+                      <a href="career.html#dept=chat-luong">
+                        <b>{t.lang==='zh'?'质量':t.lang==='en'?'Quality':'Chất lượng'}</b>
+                        <span>{t.lang==='zh'?'QC实验室 · ISO':t.lang==='en'?'QC lab · ISO':'Kỹ thuật QC · ISO'}</span>
+                      </a>
+                      <a href="career.html#dept=hanh-chinh">
+                        <b>{t.lang==='zh'?'行政':t.lang==='en'?'Admin':'Hành chính'}</b>
+                        <span>{t.lang==='zh'?'人力资源 · 会计':t.lang==='en'?'HR · Accounting':'Nhân sự · Kế toán'}</span>
+                      </a>
+                    </div>
+                  </div>
+                );
+              }
               return <a key={i} href={NAV_HREFS[i]} className={current===NAV_SLUGS[i]?'is-active':''}>{n}</a>;
             })}
           </nav>

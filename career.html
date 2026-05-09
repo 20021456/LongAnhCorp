@@ -295,7 +295,31 @@
             </a>
           </div>
         </div>
-        <a href="career.html" class="active" id="nav-career">Tuyển dụng</a>
+        <div class="nav-item">
+          <a href="career.html" class="active" id="nav-career">Tuyển dụng</a>
+          <div class="nav-dropdown">
+            <a href="career.html#dept=san-xuat">
+              <b id="dd-sx-title">Sản xuất</b>
+              <span id="dd-sx-meta">Vận hành nhà máy · Bảo trì thiết bị</span>
+            </a>
+            <a href="career.html#dept=kinh-doanh">
+              <b id="dd-kd-title">Kinh doanh</b>
+              <span id="dd-kd-meta">Xuất khẩu · Bán hàng nội địa</span>
+            </a>
+            <a href="career.html#dept=ky-thuat">
+              <b id="dd-kt-title">Kỹ thuật</b>
+              <span id="dd-kt-meta">Cải tiến quy trình · PLC</span>
+            </a>
+            <a href="career.html#dept=chat-luong">
+              <b id="dd-cl-title">Chất lượng</b>
+              <span id="dd-cl-meta">Kỹ thuật QC · ISO</span>
+            </a>
+            <a href="career.html#dept=hanh-chinh">
+              <b id="dd-hc-title">Hành chính</b>
+              <span id="dd-hc-meta">Nhân sự · Kế toán</span>
+            </a>
+          </div>
+        </div>
         <a href="index.html#contact" id="nav-contact">Liên hệ</a>
       </nav>
       <div class="hd-actions">
@@ -592,6 +616,11 @@
       navCareer:'Tuyển dụng', navContact:'Liên hệ',
       ddPowderTitle:'Bột đá CaCO₃', ddPowderMeta:'Coated · Uncoated · 5–20 µm',
       ddStoneTitle:'Đá ốp lát tự nhiên', ddStoneMeta:'Slab · Đá xẻ · Đá trang trí',
+      ddSxTitle:'Sản xuất', ddSxMeta:'Vận hành nhà máy · Bảo trì thiết bị',
+      ddKdTitle:'Kinh doanh', ddKdMeta:'Xuất khẩu · Bán hàng nội địa',
+      ddKtTitle:'Kỹ thuật', ddKtMeta:'Cải tiến quy trình · PLC',
+      ddClTitle:'Chất lượng', ddClMeta:'Kỹ thuật QC · ISO',
+      ddHcTitle:'Hành chính', ddHcMeta:'Nhân sự · Kế toán',
       bcHome:'Trang chủ', bcCareer:'Tuyển dụng',
       heroEyebrow:'Cơ hội nghề nghiệp',
       heroTitle:'Gia nhập đội ngũ <span>Long Anh</span> —<br>nơi tài năng được phát triển.',
@@ -647,6 +676,11 @@
       navCareer:'Career', navContact:'Contact',
       ddPowderTitle:'CaCO₃ Powder', ddPowderMeta:'Coated · Uncoated · 5–20 µm',
       ddStoneTitle:'Natural cladding stone', ddStoneMeta:'Slab · Cut tile · Decorative',
+      ddSxTitle:'Manufacturing', ddSxMeta:'Plant ops · Equipment maintenance',
+      ddKdTitle:'Sales', ddKdMeta:'Export sales · Domestic sales',
+      ddKtTitle:'Engineering', ddKtMeta:'Process · PLC',
+      ddClTitle:'Quality', ddClMeta:'QC lab · ISO',
+      ddHcTitle:'Admin', ddHcMeta:'HR · Accounting',
       bcHome:'Home', bcCareer:'Career',
       heroEyebrow:'Career Opportunities',
       heroTitle:'Join the <span>Long Anh</span> team —<br>where talent grows.',
@@ -702,6 +736,11 @@
       navCareer:'招聘', navContact:'联系',
       ddPowderTitle:'碳酸钙粉', ddPowderMeta:'涂层 · 未涂层 · 5–20 µm',
       ddStoneTitle:'天然石材饰面', ddStoneMeta:'大板 · 定制石材 · 装饰石材',
+      ddSxTitle:'生产', ddSxMeta:'工厂运营 · 设备维护',
+      ddKdTitle:'销售', ddKdMeta:'出口销售 · 国内销售',
+      ddKtTitle:'工程', ddKtMeta:'工艺改进 · PLC',
+      ddClTitle:'质量', ddClMeta:'QC实验室 · ISO',
+      ddHcTitle:'行政', ddHcMeta:'HR · 会计',
       bcHome:'首页', bcCareer:'招聘',
       heroEyebrow:'职业机会',
       heroTitle:'加入<span>龙英</span>团队 —<br>让人才得以成长。',
@@ -877,6 +916,11 @@
     txt('nav-contact', t.navContact);
     txt('dd-powder-title', t.ddPowderTitle); txt('dd-powder-meta', t.ddPowderMeta);
     txt('dd-stone-title', t.ddStoneTitle); txt('dd-stone-meta', t.ddStoneMeta);
+    txt('dd-sx-title', t.ddSxTitle); txt('dd-sx-meta', t.ddSxMeta);
+    txt('dd-kd-title', t.ddKdTitle); txt('dd-kd-meta', t.ddKdMeta);
+    txt('dd-kt-title', t.ddKtTitle); txt('dd-kt-meta', t.ddKtMeta);
+    txt('dd-cl-title', t.ddClTitle); txt('dd-cl-meta', t.ddClMeta);
+    txt('dd-hc-title', t.ddHcTitle); txt('dd-hc-meta', t.ddHcMeta);
     txt('bc-home', t.bcHome); txt('bc-career', t.bcCareer);
     txt('hero-eyebrow', t.heroEyebrow);
     html('hero-title', t.heroTitle);
@@ -1009,8 +1053,27 @@
     renderJobs();
   }
 
+  // ── URL hash filter: career.html#dept=xxx → auto-filter to that department
+  function applyHashFilter() {
+    const m = window.location.hash.match(/dept=([\w-]+)/);
+    if (!m) return;
+    const dept = m[1];
+    const validDepts = ['san-xuat', 'kinh-doanh', 'ky-thuat', 'chat-luong', 'hanh-chinh'];
+    if (!validDepts.includes(dept)) return;
+    activeFilter = dept;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('on'));
+    const idMap = {'san-xuat':'filter-sx','kinh-doanh':'filter-kd','ky-thuat':'filter-kt','chat-luong':'filter-cl','hanh-chinh':'filter-hc'};
+    const btn = $(idMap[dept]);
+    if (btn) btn.classList.add('on');
+    renderJobs();
+    // Smooth scroll to jobs section
+    setTimeout(() => $('jobs')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+  }
+
   // ── Init ──────────────────────────────────────────────────────────────────
   applyLang();
+  applyHashFilter();
+  window.addEventListener('hashchange', applyHashFilter);
   </script>
 </body>
 </html>
