@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sửa: Liên hệ · Long Anh Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="admin-shell.jsx"></script>
+<script type="text/babel" src="page-edit-shell.jsx"></script>
+<script type="text/babel">
+  const style = document.createElement('style');
+  style.textContent = ADMIN_GLOBAL_CSS + PAGE_EDIT_CSS;
+  document.head.appendChild(style);
+
+  function PageEditContact() {
+    const [lang, setLang] = React.useState('vi');
+    const [status, setStatus] = React.useState('pub');
+
+    const OFFICES = [
+      { name: 'Trụ sở chính', addr: 'Khu CN Quỳ Hợp, Nghệ An, Việt Nam',
+        phone: '+84 238 xxx xxxx', email: 'sales@long-anh.com', hours: 'T2–T7 · 8:00–17:30' },
+      { name: 'Văn phòng Hà Nội', addr: 'Tòa nhà …, Cầu Giấy, Hà Nội',
+        phone: '+84 24 xxxx xxxx', email: 'hanoi@long-anh.com', hours: 'T2–T6 · 8:30–17:30' },
+      { name: 'Kho xuất khẩu Hải Phòng', addr: 'KCN …, Hải Phòng',
+        phone: '+84 225 xxx xxx', email: 'logistics@long-anh.com', hours: 'T2–T7 · 7:00–17:00' },
+    ];
+
+    const FORM_FIELDS = [
+      { key: 'name',    label: 'Họ tên',         type: 'text',     req: true },
+      { key: 'company', label: 'Công ty',        type: 'text',     req: false },
+      { key: 'email',   label: 'Email',          type: 'email',    req: true },
+      { key: 'phone',   label: 'Điện thoại',     type: 'tel',      req: false },
+      { key: 'product', label: 'Quan tâm sản phẩm', type: 'select', req: false },
+      { key: 'message', label: 'Nội dung yêu cầu', type: 'textarea', req: true },
+    ];
+
+    return (
+      <PeEditorShell
+        active="pages"
+        crumb={[
+          { label: 'Trang chủ', href: 'index.html' },
+          { label: 'Trang', href: 'pages.html' },
+          { label: 'Liên hệ' },
+        ]}
+        title="Liên hệ"
+        slug="/lien-he"
+        status={status} setStatus={setStatus}
+        previewHref="../index.html#contact"
+        lang={lang} setLang={setLang}>
+
+        {/* 01 — Page header */}
+        <PeSection num="01" icon="layers" title="Page header — Banner trang"
+                   sub="Eyebrow, tiêu đề, mô tả cho trang Liên hệ">
+          <div className="pe-stack">
+            <div className="pe-row">
+              <AdField label="Eyebrow"><input className="ad-input" defaultValue="// Liên hệ với Long Anh" /></AdField>
+              <AdField label="Tiêu đề chính" req>
+                <input className="ad-input" defaultValue="Cần báo giá hoặc tư vấn kỹ thuật?" />
+              </AdField>
+            </div>
+            <AdField label="Mô tả ngắn">
+              <textarea className="ad-textarea" defaultValue="Đội ngũ kinh doanh của chúng tôi sẽ phản hồi trong vòng 4 giờ làm việc — kèm spec, COA và báo giá FOB chi tiết." />
+            </AdField>
+          </div>
+        </PeSection>
+
+        {/* 02 — Quick contact methods */}
+        <PeSection num="02" icon="bell" title="Phương thức liên hệ nhanh"
+                   sub="Hotline, email, chat — hiển thị thành các thẻ ngang">
+          <div className="pe-row three">
+            {[
+              { ico: 'chat', label: 'Hotline', val: '+84 238 xxx xxxx' },
+              { ico: 'mail', label: 'Email kinh doanh', val: 'sales@long-anh.com' },
+              { ico: 'globe', label: 'Zalo / WhatsApp', val: '+84 9xx xxx xxx' },
+            ].map((c, i) => (
+              <div key={i} style={{ background: '#fff', border: '1px solid var(--ad-line)',
+                                    borderRadius: 8, padding: 12, display: 'flex',
+                                    flexDirection: 'column', gap: 8 }}>
+                <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--ad-text-mute)' }}>
+                  KÊNH 0{i + 1}
+                </span>
+                <input className="ad-input" defaultValue={c.label} style={{ fontSize: 13 }} />
+                <input className="ad-input" defaultValue={c.val} style={{ fontWeight: 600 }} />
+              </div>
+            ))}
+          </div>
+        </PeSection>
+
+        {/* 03 — Offices / map */}
+        <PeSection num="03" icon="globe" title="Văn phòng & Kho"
+                   sub="Danh sách các điểm liên hệ trên toàn quốc">
+          <div className="pe-stack">
+            {OFFICES.map((o, i) => (
+              <div key={i} className="pe-card-edit">
+                <div className="head">
+                  <span className="pill">CS 0{i + 1}</span>
+                  <div className="name">{o.name}</div>
+                  <button title="Kéo"><AdIcon name="drag" size={14} /></button>
+                  <button title="Xóa"><AdIcon name="trash" size={13} /></button>
+                </div>
+                <div className="pe-row">
+                  <AdField label="Tên cơ sở"><input className="ad-input" defaultValue={o.name} /></AdField>
+                  <AdField label="Giờ làm việc"><input className="ad-input" defaultValue={o.hours} /></AdField>
+                </div>
+                <AdField label="Địa chỉ"><input className="ad-input" defaultValue={o.addr} /></AdField>
+                <div className="pe-row">
+                  <AdField label="Điện thoại"><input className="ad-input" defaultValue={o.phone} /></AdField>
+                  <AdField label="Email"><input className="ad-input" defaultValue={o.email} /></AdField>
+                </div>
+                <AdField label="Google Maps embed (URL)">
+                  <input className="ad-input" defaultValue="https://www.google.com/maps/embed?pb=…" />
+                </AdField>
+              </div>
+            ))}
+            <button className="ad-btn" style={{ width: 'fit-content' }}>
+              <AdIcon name="plus" size={13} /> Thêm cơ sở
+            </button>
+          </div>
+        </PeSection>
+
+        {/* 04 — Contact form */}
+        <PeSection num="04" icon="edit" title="Form liên hệ"
+                   sub="Cấu hình các trường, validation và email nhận">
+          <div className="pe-stack">
+            <div className="pe-row">
+              <AdField label="Email nhận liên hệ" req>
+                <input className="ad-input" defaultValue="sales@long-anh.com" />
+              </AdField>
+              <AdField label="Email CC (nội bộ)">
+                <input className="ad-input" defaultValue="ops@long-anh.com" />
+              </AdField>
+            </div>
+            <AdField label="Thông báo sau khi gửi (success message)">
+              <textarea className="ad-textarea" defaultValue="Cảm ơn bạn đã liên hệ. Đội ngũ Long Anh sẽ phản hồi trong vòng 4 giờ làm việc." />
+            </AdField>
+            <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--ad-text-mute)',
+                          letterSpacing: '.05em', textTransform: 'uppercase' }}>
+              Trường của form
+            </div>
+            <div className="pe-list">
+              {FORM_FIELDS.map((f, i) => (
+                <div key={i} className="pe-list-item">
+                  <span className="num">{i + 1}</span>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr auto', gap: 10, alignItems: 'center' }}>
+                    <input className="ad-input" defaultValue={f.label} placeholder="Nhãn" />
+                    <input className="ad-input" defaultValue={f.key} placeholder="Tên trường" />
+                    <select className="ad-select" defaultValue={f.type}>
+                      <option value="text">Text</option>
+                      <option value="email">Email</option>
+                      <option value="tel">Phone</option>
+                      <option value="select">Select</option>
+                      <option value="textarea">Textarea</option>
+                    </select>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12.5 }}>
+                      <input type="checkbox" defaultChecked={f.req} /> Bắt buộc
+                    </label>
+                  </div>
+                  <div className="actions">
+                    <button title="Kéo"><AdIcon name="drag" size={13} /></button>
+                    <button title="Xóa"><AdIcon name="trash" size={13} /></button>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <button className="ad-btn" style={{ width: 'fit-content' }}>
+              <AdIcon name="plus" size={13} /> Thêm trường
+            </button>
+            <AdField label="Hiển thị reCAPTCHA">
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <AdSwitch on={true} onChange={() => {}} />
+                <span style={{ fontSize: 12.5, color: 'var(--ad-text-mute)' }}>Chống spam — phiên bản v3 (vô hình)</span>
+              </div>
+            </AdField>
+          </div>
+        </PeSection>
+
+        {/* 05 — Social */}
+        <PeSection num="05" icon="link" title="Mạng xã hội & nền tảng B2B"
+                   sub="Liên kết Facebook, LinkedIn, Alibaba, Made-in-China…" defaultOpen={false}>
+          <div className="pe-stack">
+            {[
+              ['Facebook', 'https://facebook.com/longanhcorp'],
+              ['LinkedIn', 'https://linkedin.com/company/long-anh'],
+              ['Alibaba', 'https://long-anh.en.alibaba.com'],
+              ['Made-in-China', 'https://long-anh.en.made-in-china.com'],
+              ['YouTube', ''],
+            ].map(([name, url], i) => (
+              <div key={i} className="pe-row">
+                <AdField label={`${name} - Hiển thị`}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '8px 0' }}>
+                    <AdSwitch on={!!url} onChange={() => {}} />
+                  </div>
+                </AdField>
+                <AdField label={`${name} - URL`}>
+                  <input className="ad-input" defaultValue={url} />
+                </AdField>
+              </div>
+            ))}
+          </div>
+        </PeSection>
+
+        {/* 06 — SEO */}
+        <PeSeoSection
+          num="06"
+          metaTitle="Liên hệ Long Anh — Báo giá FOB và tư vấn kỹ thuật"
+          metaDesc="Hotline, email, văn phòng và kho xuất khẩu Long Anh. Báo giá nhanh trong 4 giờ làm việc kèm spec và COA."
+          keywords={['liên hệ Long Anh', 'báo giá CaCO3', 'sales bột đá', 'long anh contact']}
+          ogImage="../assets/co-so-ha-tang.jpg"
+          googleSlug="liên hệ" />
+
+      </PeEditorShell>
+    );
+  }
+
+  ReactDOM.createRoot(document.getElementById('root')).render(<PageEditContact />);
+</script>
+</body>
+</html>

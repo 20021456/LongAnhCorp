@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sửa: Giới thiệu · Long Anh Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="admin-shell.jsx"></script>
+<script type="text/babel" src="page-edit-shell.jsx"></script>
+<script type="text/babel">
+  const style = document.createElement('style');
+  style.textContent = ADMIN_GLOBAL_CSS + PAGE_EDIT_CSS;
+  document.head.appendChild(style);
+
+  function PageEditAbout() {
+    const [lang, setLang] = React.useState('vi');
+    const [status, setStatus] = React.useState('pub');
+
+    const VALUES = [
+      { name: 'Chất lượng từ gốc', body: 'Đá nguyên sinh, độ trắng > 96%, kiểm soát từng lô qua phòng QC nội bộ.' },
+      { name: 'Đúng hẹn — đúng quy cách', body: 'Hệ thống kho rộng, đóng gói linh hoạt, lịch giao đúng cam kết.' },
+      { name: 'Quan hệ dài hạn', body: 'Coi mỗi tấn bột đá là cam kết — với chất lượng, thời hạn và đối tác.' },
+    ];
+
+    const TIMELINE = [
+      ['2005', 'Khởi đầu', 'Khai thác mỏ đá vôi đầu tiên tại Quỳ Hợp.'],
+      ['2010', 'Mở rộng', 'Đầu tư dây chuyền nghiền siêu mịn nhập khẩu.'],
+      ['2015', 'Xuất khẩu', 'Container đầu tiên đi Hàn Quốc, Nhật Bản.'],
+      ['2020', '350K tấn/năm', 'Vận hành 5 nhà máy, đạt công suất kỷ lục.'],
+      ['2024', '30+ quốc gia', 'Hệ thống kho xuất khẩu toàn cầu.'],
+    ];
+
+    const CAPS = [
+      ['Nhà máy', '5 cơ sở · 12ha'],
+      ['Công suất', '350,000 tấn/năm'],
+      ['Dây chuyền nghiền', 'Công nghệ Châu Âu'],
+      ['Nguyên liệu', 'Đá nguyên sinh Quỳ Hợp'],
+    ];
+
+    const CERTS = ['ISO 9001:2015', 'REACH', 'SGS', 'MSDS'];
+
+    return (
+      <PeEditorShell
+        active="pages"
+        crumb={[
+          { label: 'Trang chủ', href: 'index.html' },
+          { label: 'Trang', href: 'pages.html' },
+          { label: 'Giới thiệu' },
+        ]}
+        title="Giới thiệu"
+        slug="/gioi-thieu"
+        status={status} setStatus={setStatus}
+        previewHref="../about.html"
+        lang={lang} setLang={setLang}>
+
+        {/* 01 — Page header */}
+        <PeSection num="01" icon="layers" title="Page header — Banner trang"
+                   sub="Eyebrow, tiêu đề và mô tả ngắn ở đầu trang">
+          <div className="pe-stack">
+            <div className="pe-row">
+              <AdField label="Eyebrow"><input className="ad-input" defaultValue="// Long Anh · 20 năm khai thác" /></AdField>
+              <AdField label="Tiêu đề chính" req>
+                <input className="ad-input" defaultValue="Khai thác bền vững. Chế biến chính xác." />
+              </AdField>
+            </div>
+            <AdField label="Mô tả ngắn">
+              <textarea className="ad-textarea" defaultValue="Hơn 20 năm khai thác và chế biến — chúng tôi xây dựng từng mối quan hệ qua từng container giao đúng hẹn." />
+            </AdField>
+          </div>
+        </PeSection>
+
+        {/* 02 — Story / intro */}
+        <PeSection num="02" icon="file" title="Câu chuyện thương hiệu"
+                   sub="Khối intro với ảnh và chữ ký người sáng lập">
+          <div className="pe-stack">
+            <div className="pe-row">
+              <AdField label="Eyebrow"><input className="ad-input" defaultValue="// Câu chuyện" /></AdField>
+              <AdField label="Tiêu đề (2 dòng)"><input className="ad-input" defaultValue="Khai thác bền vững. / Chế biến chính xác." /></AdField>
+            </div>
+            <AdField label="Đoạn 1">
+              <textarea className="ad-textarea" defaultValue="Long Anh sản xuất bột đá CaCO₃ siêu mịn từ mỏ đá vôi nguyên sinh tại Quỳ Hợp – Nghệ An." />
+            </AdField>
+            <AdField label="Đoạn 2">
+              <textarea className="ad-textarea" defaultValue="Chúng tôi vận hành 5 nhà máy với dây chuyền hiện đại và tổng công suất trên 350,000 tấn/năm." />
+            </AdField>
+            <AdField label="Đoạn 3 (kết)">
+              <textarea className="ad-textarea" defaultValue="Chúng tôi xem mỗi tấn bột đá là một cam kết — về chất lượng, thời hạn và mối quan hệ lâu dài với đối tác." />
+            </AdField>
+            <div className="pe-imgrow">
+              <PeImg src="../assets/da-nguyen-lieu-cao-cap.webp" size="1600×1200" />
+              <div className="pe-stack">
+                <AdField label="Mô tả ảnh (alt)"><input className="ad-input" defaultValue="Mỏ đá Long Anh tại Quỳ Hợp" /></AdField>
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <button className="ad-btn"><AdIcon name="upload" size={13} /> Đổi ảnh</button>
+                  <button className="ad-btn"><AdIcon name="image" size={13} /> Thư viện</button>
+                </div>
+              </div>
+            </div>
+            <div className="pe-row">
+              <AdField label="Tên người ký"><input className="ad-input" defaultValue="Nguyễn Long Anh" /></AdField>
+              <AdField label="Chức danh"><input className="ad-input" defaultValue="Chủ tịch · Sáng lập" /></AdField>
+            </div>
+          </div>
+        </PeSection>
+
+        {/* 03 — Timeline */}
+        <PeSection num="03" icon="trend" title="Timeline — 20 năm hành trình"
+                   sub="Mỗi mốc gồm năm, tiêu đề ngắn và mô tả">
+          <div className="pe-stack">
+            <AdField label="Tiêu đề section"><input className="ad-input" defaultValue="20 năm — một mạch đá" /></AdField>
+            <div className="pe-list">
+              {TIMELINE.map((row, i) => (
+                <div key={i} className="pe-list-item">
+                  <span className="num">{row[0]}</span>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 10 }}>
+                    <input className="ad-input" defaultValue={row[1]} />
+                    <input className="ad-input" defaultValue={row[2]} />
+                  </div>
+                  <div className="actions">
+                    <button title="Kéo"><AdIcon name="drag" size={13} /></button>
+                    <button title="Xóa"><AdIcon name="trash" size={13} /></button>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <button className="ad-btn" style={{ width: 'fit-content' }}>
+              <AdIcon name="plus" size={13} /> Thêm mốc thời gian
+            </button>
+          </div>
+        </PeSection>
+
+        {/* 04 — Values */}
+        <PeSection num="04" icon="grid" title="Giá trị cốt lõi"
+                   sub="3 giá trị Long Anh không bao giờ thỏa hiệp">
+          <div className="pe-stack">
+            <AdField label="Tiêu đề section"><input className="ad-input" defaultValue="Ba điều chúng tôi không bao giờ thỏa hiệp" /></AdField>
+            <div className="pe-row three">
+              {VALUES.map((v, i) => (
+                <div key={i} className="pe-card-edit">
+                  <div className="head">
+                    <span className="pill">VAL 0{i + 1}</span>
+                    <div className="name">{v.name}</div>
+                    <button title="Xóa"><AdIcon name="trash" size={13} /></button>
+                  </div>
+                  <AdField label="Tên giá trị"><input className="ad-input" defaultValue={v.name} /></AdField>
+                  <AdField label="Mô tả"><textarea className="ad-textarea" defaultValue={v.body} style={{ minHeight: 60 }} /></AdField>
+                </div>
+              ))}
+            </div>
+          </div>
+        </PeSection>
+
+        {/* 05 — Capabilities */}
+        <PeSection num="05" icon="layers" title="Năng lực sản xuất"
+                   sub="Khối capabilities với ảnh nhà máy và list 4 chỉ số">
+          <div className="pe-stack">
+            <div className="pe-row">
+              <AdField label="Eyebrow"><input className="ad-input" defaultValue="// Năng lực sản xuất" /></AdField>
+              <AdField label="Tiêu đề"><input className="ad-input" defaultValue="Hệ thống nhà máy. Đo bằng con số." /></AdField>
+            </div>
+            <AdField label="Mô tả">
+              <textarea className="ad-textarea" defaultValue="Hệ thống nhà máy của Long Anh được thiết kế để sản xuất ổn định, công suất lớn và linh hoạt theo từng đơn hàng B2B." />
+            </AdField>
+            <div className="pe-imgrow">
+              <PeImg src="../assets/nha-may-bot-sieu-min-3.webp" size="1920×1280" />
+              <div className="pe-stack">
+                <AdField label="Mô tả ảnh (alt)"><input className="ad-input" defaultValue="Nhà máy bột siêu mịn Long Anh" /></AdField>
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <button className="ad-btn"><AdIcon name="upload" size={13} /> Đổi ảnh</button>
+                </div>
+              </div>
+            </div>
+            <div className="pe-list">
+              {CAPS.map((row, i) => (
+                <div key={i} className="pe-list-item">
+                  <span className="num">— 0{i + 1}</span>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                    <input className="ad-input" defaultValue={row[0]} />
+                    <input className="ad-input" defaultValue={row[1]} />
+                  </div>
+                  <div className="actions">
+                    <button title="Xóa"><AdIcon name="trash" size={13} /></button>
+                  </div>
+                </div>
+              ))}
+              <button className="ad-btn ghost sm" style={{ width: 'fit-content' }}>
+                <AdIcon name="plus" size={12} /> Thêm chỉ số
+              </button>
+            </div>
+          </div>
+        </PeSection>
+
+        {/* 06 — Warehouse strip */}
+        <PeSection num="06" icon="image" title="Dải ảnh kho hàng & Logistics"
+                   sub="4 ảnh full-bleed, kéo để sắp xếp">
+          <div className="pe-stack">
+            <div className="pe-row">
+              <AdField label="Eyebrow"><input className="ad-input" defaultValue="// Kho bãi & Logistics" /></AdField>
+              <AdField label="Tiêu đề"><input className="ad-input" defaultValue="Sẵn sàng giao hàng — đúng hẹn, đúng quy cách." /></AdField>
+            </div>
+            <div className="pe-strip">
+              {[
+                '../assets/kho-hang.webp',
+                '../assets/kho-hang-2.webp',
+                '../assets/kho-da-nguyen-lieu.webp',
+                '../assets/kho-hang-xuat-khau.webp',
+              ].map((src, i) => (
+                <div key={i} className="pe-strip-item">
+                  <img src={src} alt={`Kho ${i + 1}`} />
+                  <div className="drag"><AdIcon name="drag" size={12} /></div>
+                </div>
+              ))}
+            </div>
+            <button className="ad-btn" style={{ width: 'fit-content' }}>
+              <AdIcon name="upload" size={13} /> Thêm ảnh
+            </button>
+          </div>
+        </PeSection>
+
+        {/* 07 — Certifications */}
+        <PeSection num="07" icon="shield" title="Chứng nhận quốc tế"
+                   sub="Logo & nhãn các chứng nhận">
+          <div className="pe-stack">
+            <div className="pe-row">
+              <AdField label="Eyebrow"><input className="ad-input" defaultValue="// Chứng nhận" /></AdField>
+              <AdField label="Tiêu đề"><input className="ad-input" defaultValue="Đạt chuẩn quốc tế" /></AdField>
+            </div>
+            <AdField label="Mô tả">
+              <textarea className="ad-textarea" defaultValue="Tất cả lô sản phẩm đều được kiểm tra COA, MSDS và đáp ứng yêu cầu khắt khe nhất từ thị trường Hàn Quốc, Nhật Bản, Ấn Độ và Trung Đông." />
+            </AdField>
+            <div className="pe-row four">
+              {CERTS.map((c, i) => (
+                <div key={i} style={{ background: '#fff', border: '1px solid var(--ad-line)',
+                                      borderRadius: 8, padding: 10, display: 'flex',
+                                      alignItems: 'center', gap: 8 }}>
+                  <input type="checkbox" defaultChecked />
+                  <input className="ad-input" defaultValue={c} style={{ height: 28, fontSize: 13 }} />
+                </div>
+              ))}
+            </div>
+          </div>
+        </PeSection>
+
+        {/* 08 — CTA */}
+        <PeSection num="08" icon="mail" title="CTA cuối trang"
+                   sub="Block kêu gọi liên hệ ở cuối About" defaultOpen={false}>
+          <div className="pe-stack">
+            <div className="pe-row">
+              <AdField label="Eyebrow"><input className="ad-input" defaultValue="// Đối tác cùng Long Anh" /></AdField>
+              <AdField label="Tiêu đề"><input className="ad-input" defaultValue="Hãy bắt đầu từ một câu hỏi." /></AdField>
+            </div>
+            <AdField label="Mô tả">
+              <textarea className="ad-textarea" defaultValue="Đội ngũ kinh doanh phản hồi trong 24h làm việc — kèm spec, COA và báo giá FOB." />
+            </AdField>
+            <div className="pe-row">
+              <AdField label="Nút chính - chữ"><input className="ad-input" defaultValue="Xem sản phẩm" /></AdField>
+              <AdField label="Nút chính - link"><input className="ad-input" defaultValue="/products.html" /></AdField>
+            </div>
+            <div className="pe-row">
+              <AdField label="Nút phụ - chữ"><input className="ad-input" defaultValue="Liên hệ ngay" /></AdField>
+              <AdField label="Nút phụ - link"><input className="ad-input" defaultValue="/index.html#contact" /></AdField>
+            </div>
+          </div>
+        </PeSection>
+
+        {/* 09 — SEO */}
+        <PeSeoSection
+          num="09"
+          metaTitle="Giới thiệu Long Anh — 20 năm khai thác và chế biến đá vôi"
+          metaDesc="Long Anh là nhà sản xuất bột đá CaCO₃ và đá tự nhiên hàng đầu Việt Nam — 5 nhà máy, 350K tấn/năm, xuất khẩu 30+ quốc gia."
+          keywords={['giới thiệu Long Anh', 'lịch sử', 'nhà máy bột đá', 'mỏ đá Quỳ Hợp', 'năng lực sản xuất']}
+          ogImage="../assets/nha-may-bot-sieu-min-1.webp"
+          googleSlug="giới thiệu" />
+
+      </PeEditorShell>
+    );
+  }
+
+  ReactDOM.createRoot(document.getElementById('root')).render(<PageEditAbout />);
+</script>
+</body>
+</html>
