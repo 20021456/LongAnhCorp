@@ -143,6 +143,21 @@ const CHROME_CSS = `
   .vac-nav a:hover{opacity:1;color:var(--brand-accent,#F08023);}
   .vac-nav a.is-active{opacity:1;color:var(--brand-accent,#F08023);}
   .vac-nav a.is-active::after{content:'';position:absolute;left:0;right:0;bottom:-22px;height:2px;background:var(--brand-accent,#F08023);}
+  .vac-nav-item{position:relative;padding:6px 0;}
+  .vac-nav-dropdown{position:absolute;top:calc(100% + 14px);left:50%;
+    transform:translateX(-50%) translateY(-6px);background:var(--va-card);
+    border:1px solid var(--va-line);border-radius:12px;padding:8px;min-width:280px;
+    opacity:0;visibility:hidden;transition:opacity .2s, transform .2s, visibility .2s;
+    box-shadow:0 12px 32px -8px rgba(15,61,122,.22);z-index:100;}
+  .vac-nav-item::before{content:'';position:absolute;top:100%;left:50%;width:140%;
+    height:18px;transform:translateX(-50%);}
+  .vac-nav-item:hover .vac-nav-dropdown{opacity:1;visibility:visible;
+    transform:translateX(-50%) translateY(0);}
+  .vac-nav-dropdown a{display:block;padding:12px 16px;border-radius:8px;font-size:14px;opacity:1;}
+  .vac-nav-dropdown a::after{display:none;}
+  .vac-nav-dropdown a:hover{background:var(--va-bg-alt);color:var(--brand-accent,#F08023);}
+  .vac-nav-dropdown a > b{display:block;font-weight:600;margin-bottom:4px;font-size:14px;line-height:1.2;}
+  .vac-nav-dropdown a > span{display:block;font-size:11.5px;opacity:.6;font-weight:400;}
   .vac-cta-row{display:flex;gap:10px;align-items:center;}
   .vac-lang{display:flex;gap:2px;padding:3px;border:1px solid var(--va-line);border-radius:8px;}
   .vac-lang button{font:inherit;padding:4px 10px;background:transparent;color:var(--va-text);
@@ -201,9 +216,26 @@ function VAHeader({ tweaks, current = 'home' }) {
             </span>
           </a>
           <nav className="vac-nav">
-            {C.nav.map((n,i)=>(
-              <a key={i} href={NAV_HREFS[i]} className={current===NAV_SLUGS[i]?'is-active':''}>{n}</a>
-            ))}
+            {C.nav.map((n,i)=>{
+              if (NAV_SLUGS[i] === 'products') {
+                return (
+                  <div key={i} className="vac-nav-item">
+                    <a href={NAV_HREFS[i]} className={current===NAV_SLUGS[i]?'is-active':''}>{n}</a>
+                    <div className="vac-nav-dropdown">
+                      <a href="products.html#powder">
+                        <b>{t.lang==='vi'?'Bột đá CaCO₃':'CaCO₃ Powder'}</b>
+                        <span>{t.lang==='vi'?'Coated · Uncoated · 5–20 µm':'Coated · Uncoated · 5–20 µm'}</span>
+                      </a>
+                      <a href="products.html#stone">
+                        <b>{t.lang==='vi'?'Đá ốp lát tự nhiên':'Natural cladding stone'}</b>
+                        <span>{t.lang==='vi'?'Slab · Đá xẻ · Đá trang trí':'Slab · Cut tile · Decorative'}</span>
+                      </a>
+                    </div>
+                  </div>
+                );
+              }
+              return <a key={i} href={NAV_HREFS[i]} className={current===NAV_SLUGS[i]?'is-active':''}>{n}</a>;
+            })}
           </nav>
           <div className="vac-cta-row">
             <div className="vac-lang">
@@ -404,7 +436,26 @@ function App() {
   const setTweak = (k, v) => setT(s => ({ ...s, [k]: v }));
   const tweaks = { ...t, set: setTweak };
   const C = COPY[t.lang];
-  const [activeCat, setActiveCat] = React.useState(null);
+  // Read URL hash to pre-set category: #powder → 0 (CaCO₃), #stone → 1 (natural stone)
+  const initialCat = (() => {
+    if (typeof window === 'undefined') return null;
+    const h = window.location.hash;
+    if (h === '#powder') return 0;
+    if (h === '#stone') return 1;
+    return null;
+  })();
+  const [activeCat, setActiveCat] = React.useState(initialCat);
+  // Re-sync when hash changes (so clicking dropdown items on the same page works)
+  React.useEffect(() => {
+    const onHash = () => {
+      const h = window.location.hash;
+      if (h === '#powder') setActiveCat(0);
+      else if (h === '#stone') setActiveCat(1);
+      else setActiveCat(null);
+    };
+    window.addEventListener('hashchange', onHash);
+    return () => window.removeEventListener('hashchange', onHash);
+  }, []);
   const cssVars = { '--brand-primary':t.primary, '--brand-accent':t.accent, '--va-font':t.font, '--va-display':t.font };
   const cats = C.catTitles;
   const filtered = activeCat===null ? C.products : C.products.filter(p => p.cat === activeCat);

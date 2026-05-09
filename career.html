@@ -60,6 +60,27 @@
     nav.main a.active { opacity: 1; color: var(--orange); }
     nav.main a.active::after { content: ''; position: absolute; left: 0; right: 0; bottom: -22px;
                                height: 2px; background: var(--orange); }
+    .nav-item { position: relative; padding: 6px 0; }
+    .nav-item > a { padding: 6px 0; }
+    .nav-dropdown { position: absolute; top: calc(100% + 14px); left: 50%;
+                    transform: translateX(-50%) translateY(-6px);
+                    background: var(--card); border: 1px solid var(--line);
+                    border-radius: 12px; padding: 8px; min-width: 280px;
+                    opacity: 0; visibility: hidden;
+                    transition: opacity .2s, transform .2s, visibility .2s;
+                    box-shadow: 0 12px 32px -8px rgba(15,61,122,.22); z-index: 100; }
+    .nav-item::before { content: ''; position: absolute; top: 100%; left: 50%;
+                        width: 140%; height: 18px; transform: translateX(-50%); }
+    .nav-item:hover .nav-dropdown { opacity: 1; visibility: visible;
+                                    transform: translateX(-50%) translateY(0); }
+    .nav-dropdown a { display: block; padding: 12px 16px; border-radius: 8px;
+                      font-size: 14px; opacity: 1; }
+    .nav-dropdown a::after { display: none; }
+    .nav-dropdown a:hover { background: var(--bg-alt); color: var(--orange); }
+    .nav-dropdown a > b { display: block; font-weight: 600; margin-bottom: 4px;
+                          font-size: 14px; line-height: 1.2; color: var(--text); }
+    .nav-dropdown a:hover > b { color: var(--orange); }
+    .nav-dropdown a > span { display: block; font-size: 11.5px; opacity: .6; font-weight: 400; }
     .hd-actions { display: flex; gap: 10px; align-items: center; }
     .lang-sw { display: flex; gap: 2px; padding: 3px; border: 1px solid var(--line); border-radius: 8px; }
     .lang-sw button { font: inherit; padding: 4px 10px; background: transparent; color: var(--text);
@@ -254,7 +275,19 @@
       <nav class="main">
         <a href="index.html" id="nav-home">Trang chủ</a>
         <a href="about.html" id="nav-about">Giới thiệu</a>
-        <a href="products.html" id="nav-products">Sản phẩm</a>
+        <div class="nav-item">
+          <a href="products.html" id="nav-products">Sản phẩm</a>
+          <div class="nav-dropdown">
+            <a href="products.html#powder">
+              <b id="dd-powder-title">Bột đá CaCO₃</b>
+              <span id="dd-powder-meta">Coated · Uncoated · 5–20 µm</span>
+            </a>
+            <a href="products.html#stone">
+              <b id="dd-stone-title">Đá ốp lát tự nhiên</b>
+              <span id="dd-stone-meta">Slab · Đá xẻ · Đá trang trí</span>
+            </a>
+          </div>
+        </div>
         <a href="career.html" class="active" id="nav-career">Tuyển dụng</a>
         <a href="index.html#contact" id="nav-contact">Liên hệ</a>
       </nav>
@@ -541,6 +574,8 @@
       brandTagline: 'Bột đá Canxi Cacbonat & Đá tự nhiên Việt Nam',
       navHome:'Trang chủ', navAbout:'Giới thiệu', navProducts:'Sản phẩm',
       navCareer:'Tuyển dụng', navContact:'Liên hệ',
+      ddPowderTitle:'Bột đá CaCO₃', ddPowderMeta:'Coated · Uncoated · 5–20 µm',
+      ddStoneTitle:'Đá ốp lát tự nhiên', ddStoneMeta:'Slab · Đá xẻ · Đá trang trí',
       bcHome:'Trang chủ', bcCareer:'Tuyển dụng',
       heroEyebrow:'Cơ hội nghề nghiệp',
       heroTitle:'Gia nhập đội ngũ <span>Long Anh</span> —<br>nơi tài năng được phát triển.',
@@ -594,6 +629,8 @@
       brandTagline: 'Vietnamese Calcium Carbonate & Natural Stone',
       navHome:'Home', navAbout:'About', navProducts:'Products',
       navCareer:'Career', navContact:'Contact',
+      ddPowderTitle:'CaCO₃ Powder', ddPowderMeta:'Coated · Uncoated · 5–20 µm',
+      ddStoneTitle:'Natural cladding stone', ddStoneMeta:'Slab · Cut tile · Decorative',
       bcHome:'Home', bcCareer:'Career',
       heroEyebrow:'Career Opportunities',
       heroTitle:'Join the <span>Long Anh</span> team —<br>where talent grows.',
@@ -733,6 +770,8 @@
     txt('nav-home', t.navHome); txt('nav-about', t.navAbout);
     txt('nav-products', t.navProducts); txt('nav-career', t.navCareer);
     txt('nav-contact', t.navContact);
+    txt('dd-powder-title', t.ddPowderTitle); txt('dd-powder-meta', t.ddPowderMeta);
+    txt('dd-stone-title', t.ddStoneTitle); txt('dd-stone-meta', t.ddStoneMeta);
     txt('bc-home', t.bcHome); txt('bc-career', t.bcCareer);
     txt('hero-eyebrow', t.heroEyebrow);
     html('hero-title', t.heroTitle);
