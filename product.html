@@ -1203,86 +1203,13 @@ function ProductDetailPage({ tweaks, code }) {
         </div>
       </section>
 
-      {/* SIZES */}
-      <section className="pd-section alt">
-        <div className="vac-wrap">
-          <div className="pd-section-head">
-            <div className="ix"><Icon name="box" size={20}/></div>
-            <div>
-              <div className="num">— 03 · {isPowder ? C.sizes : C.dimensions}</div>
-              <h2>{isPowder ? (t.lang==='vi'?'Cỡ hạt khả dụng':t.lang==='zh'?'可用粒径':'Available particle sizes')
-                            : (t.lang==='vi'?'Kích thước & quy cách':t.lang==='zh'?'尺寸和规格':'Sizes & formats')}</h2>
-            </div>
-          </div>
-          {isPowder ? (
-            <div className="pd-sizes-grid">
-              {product.sizes.map(s => {
-                const dotSize = 36 + (s - 5) * 3.6;
-                return (
-                  <div key={s} className="pd-size-cell">
-                    <div className="pd-size-dot" style={{width:dotSize,height:dotSize}}>{s}</div>
-                    <div className="pd-size-label">{s} {product.sizesUnit}</div>
-                  </div>
-                );
-              })}
-            </div>
-          ) : (
-            <div className="pd-sizes-chips">
-              {product.sizes.map(s => <span key={s}>{s}</span>)}
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* APPLICATIONS */}
-      <section className="pd-section">
-        <div className="vac-wrap">
-          <div className="pd-section-head">
-            <div className="ix"><Icon name="spark" size={20}/></div>
-            <div>
-              <div className="num">— 04 · {C.applications}</div>
-              <h2>{t.lang==='vi'?'Ứng dụng tiêu biểu':t.lang==='zh'?'典型应用':'Typical applications'}</h2>
-            </div>
-          </div>
-          <div className="pd-apps-grid">
-            {product.applications.map((app,i) => (
-              <div key={i} className="pd-app">
-                <div className="pd-app-i"><Icon name={app.icon} size={26}/></div>
-                <h4>{app[t.lang]}</h4>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* PACKAGING */}
-      <section className="pd-section alt">
-        <div className="vac-wrap">
-          <div className="pd-section-head">
-            <div className="ix"><Icon name="box" size={20}/></div>
-            <div>
-              <div className="num">— 05 · {C.packaging}</div>
-              <h2>{t.lang==='vi'?'Quy cách đóng gói':t.lang==='zh'?'包装规格':'Packaging options'}</h2>
-            </div>
-          </div>
-          <div className="pd-pack-grid">
-            {product.packaging.map((pk,i) => (
-              <div key={i} className="pd-pack-card">
-                <div className="pd-pack-icon"><Icon name="box" size={20}/></div>
-                <span>{pk[t.lang]}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* RELATED PRODUCTS */}
       <section className="pd-section">
         <div className="vac-wrap">
           <div className="pd-section-head">
             <div className="ix"><Icon name="grid" size={20}/></div>
             <div>
-              <div className="num">— 06 · {C.relatedProducts}</div>
+              <div className="num">— 03 · {C.relatedProducts}</div>
               <h2>{C.relatedProducts}</h2>
             </div>
           </div>
