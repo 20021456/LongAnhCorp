@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chi tiết sản phẩm — KS Long Anh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fraunces:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0;padding:0;min-height:100%;background:#FAFBFD;}
+  body{font-family:'Inter',system-ui,sans-serif;}
+  *{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+// ─── Translations ───────────────────────────────────────────────────────────
+const COPY = {
+  vi: {
+    nav: ['Trang chủ', 'Giới thiệu', 'Sản phẩm', 'Tuyển dụng', 'Liên hệ'],
+    tagline: 'Bột đá Canxi Cacbonat & Đá tự nhiên Việt Nam',
+    catTitles: ['Bột đá CaCO₃', 'Đá ốp lát tự nhiên'],
+    phone: ['(+84) 912 779 799', '(+84-2383) 982 555'],
+    email: 'info@longanhcorp.com',
+    footnote: '© 2026 Công ty TNHH KS Long Anh · Mã số DN 2901xxxxx',
+    home: 'Trang chủ', products: 'Sản phẩm',
+    notFound: 'Không tìm thấy sản phẩm', backToProducts: 'Quay lại danh sách sản phẩm',
+    overview: 'Tổng quan', technicalSpecs: 'Thông số kỹ thuật', applications: 'Ứng dụng',
+    packaging: 'Đóng gói', sizes: 'Cỡ hạt', dimensions: 'Kích thước', features: 'Đặc tính',
+    relatedProducts: 'Sản phẩm liên quan',
+    requestQuote: 'Yêu cầu báo giá', downloadSpec: 'Tải spec sheet (PDF)',
+    sendInquiry: 'Gửi yêu cầu', viewAll: 'Xem tất cả', viewDetails: 'Xem chi tiết',
+    code: 'Mã SP', category: 'Danh mục', brand: 'Thương hiệu',
+    moq: 'Đơn hàng tối thiểu', leadTime: 'Thời gian sản xuất', shipping: 'Giao hàng',
+    qty: 'Số lượng', unit: 'Đơn vị', destination: 'Cảng đến',
+    inStock: 'Sẵn hàng', certified: 'Được chứng nhận',
+    spec_caco3: 'Hàm lượng CaCO₃', spec_white: 'Độ trắng', spec_moist: 'Độ ẩm',
+    spec_density: 'Tỷ trọng đổ đống', spec_stearic: 'Hàm lượng Stearic', spec_d50: 'Cỡ hạt D50',
+    spec_format: 'Quy cách', spec_thickness: 'Độ dày', spec_finish: 'Hoàn thiện',
+    descTitle: 'Mô tả chi tiết',
+    keyFeatures: 'Đặc điểm nổi bật',
+  },
+  en: {
+    nav: ['Home', 'About', 'Products', 'Career', 'Contact'],
+    tagline: 'Vietnamese Calcium Carbonate & Natural Stone',
+    catTitles: ['CaCO₃ powder', 'Natural cladding stone'],
+    phone: ['(+84) 912 779 799', '(+84-2383) 982 555'],
+    email: 'info@longanhcorp.com',
+    footnote: '© 2026 Long Anh Mineral Co., Ltd · Reg. No. 2901xxxxx',
+    home: 'Home', products: 'Products',
+    notFound: 'Product not found', backToProducts: 'Back to products',
+    overview: 'Overview', technicalSpecs: 'Technical Specifications', applications: 'Applications',
+    packaging: 'Packaging', sizes: 'Particle sizes', dimensions: 'Dimensions', features: 'Features',
+    relatedProducts: 'Related products',
+    requestQuote: 'Request a quote', downloadSpec: 'Download spec sheet (PDF)',
+    sendInquiry: 'Send inquiry', viewAll: 'View all', viewDetails: 'View details',
+    code: 'SKU', category: 'Category', brand: 'Brand',
+    moq: 'Min. order', leadTime: 'Lead time', shipping: 'Shipping',
+    qty: 'Quantity', unit: 'Unit', destination: 'Destination port',
+    inStock: 'In stock', certified: 'Certified',
+    spec_caco3: 'CaCO₃ content', spec_white: 'Whiteness', spec_moist: 'Moisture',
+    spec_density: 'Bulk density', spec_stearic: 'Stearic content', spec_d50: 'Particle size D50',
+    spec_format: 'Format', spec_thickness: 'Thickness', spec_finish: 'Finish',
+    descTitle: 'Detailed description',
+    keyFeatures: 'Key features',
+  },
+  zh: {
+    nav: ['首页', '关于我们', '产品', '招聘', '联系'],
+    tagline: '越南碳酸钙粉与天然石材',
+    catTitles: ['碳酸钙粉', '天然石材饰面'],
+    phone: ['(+84) 912 779 799', '(+84-2383) 982 555'],
+    email: 'info@longanhcorp.com',
+    footnote: '© 2026 龙英矿业有限公司 · 注册号 2901xxxxx',
+    home: '首页', products: '产品',
+    notFound: '找不到产品', backToProducts: '返回产品列表',
+    overview: '概览', technicalSpecs: '技术规格', applications: '应用',
+    packaging: '包装', sizes: '粒径', dimensions: '尺寸', features: '特性',
+    relatedProducts: '相关产品',
+    requestQuote: '请求报价', downloadSpec: '下载规格表 (PDF)',
+    sendInquiry: '发送咨询', viewAll: '查看全部', viewDetails: '查看详情',
+    code: '编码', category: '类别', brand: '品牌',
+    moq: '最低订量', leadTime: '生产时间', shipping: '运输',
+    qty: '数量', unit: '单位', destination: '目的港',
+    inStock: '现货', certified: '认证',
+    spec_caco3: '碳酸钙含量', spec_white: '白度', spec_moist: '水分',
+    spec_density: '堆积密度', spec_stearic: '硬脂酸含量', spec_d50: '粒径D50',
+    spec_format: '规格', spec_thickness: '厚度', spec_finish: '饰面',
+    descTitle: '详细描述',
+    keyFeatures: '主要特性',
+  },
+};
+
+// ─── Product database ───────────────────────────────────────────────────────
+const PRODUCTS = {
+  'P-01': {
+    code: 'P-01', cat: 0,
+    name: { vi:'Bột đá CaCO₃ không phủ', en:'Uncoated CaCO₃ powder', zh:'未涂层碳酸钙粉' },
+    meta: { vi:'Uncoated · 5–20 µm', en:'Uncoated · 5–20 µm', zh:'未涂层 · 5–20 µm' },
+    desc: {
+      vi:'Bột đá nghiền khô độ trắng cao, đa dạng cỡ hạt — dùng cho sơn, bột bả, keo dán, phụ gia thức ăn chăn nuôi và masterbatch.',
+      en:'Dry-ground GCC with high whiteness in multiple particle sizes — for paint, putty, adhesives, animal-feed additives and masterbatch.',
+      zh:'高白度干法研磨碳酸钙粉,多种粒径 — 用于涂料、腻子、胶粘剂、动物饲料添加剂和母粒。',
+    },
+    longDesc: {
+      vi:'Sản phẩm bột đá CaCO₃ không phủ được nghiền khô từ nguồn đá vôi trắng nguyên sinh tại mỏ Quỳ Hợp – Nghệ An. Với hàm lượng CaCO₃ vượt 98.5% và độ trắng trên 96%, sản phẩm đáp ứng các tiêu chuẩn khắt khe nhất cho ngành công nghiệp sơn nước, bột bả, keo dán, sản xuất nhựa và phụ gia thức ăn chăn nuôi. Cỡ hạt từ 5 đến 20 µm được kiểm soát chặt chẽ qua hệ thống nghiền và phân loại hiện đại theo công nghệ Châu Âu.',
+      en:'Our uncoated CaCO₃ powder is dry-ground from pristine white limestone at Quy Hop quarry in Nghe An. With CaCO₃ content above 98.5% and whiteness above 96%, the product meets the toughest standards for water-based paints, putty, adhesives, plastics manufacturing and animal feed additives. Particle sizes from 5 to 20 µm are tightly controlled through European-spec milling and classification systems.',
+      zh:'我们的未涂层碳酸钙粉是从义安省归合矿场的原始白石灰岩干法研磨而成。碳酸钙含量超过98.5%,白度超过96%,符合水性涂料、腻子、胶粘剂、塑料制造和动物饲料添加剂的最严格标准。粒径范围5至20微米,通过欧洲标准的研磨和分类系统严格控制。',
+    },
+    images: [
+      'assets/bot-caco3-sieu-min.webp',
+      'assets/bot-sieu-min.webp',
+      'assets/nha-may-bot-sieu-min.webp',
+      'assets/bao-bi-sieu-trang.jpg',
+    ],
+    sizes: [5, 8, 10, 12, 15, 17, 18, 20],
+    sizesUnit: 'µm',
+    specs: [
+      { key:'caco3', val:'≥ 98.5', unit:'%' },
+      { key:'white', val:'≥ 96', unit:'%' },
+      { key:'moist', val:'≤ 0.3', unit:'%' },
+      { key:'density', val:'0.9 – 1.1', unit:'g/cm³' },
+      { key:'d50', val:'5 – 20', unit:'µm' },
+    ],
+    applications: [
+      { icon:'spark', vi:'Sơn nước & sơn dầu', en:'Water & oil-based paint', zh:'水性和油性涂料' },
+      { icon:'box', vi:'Bột bả tường', en:'Wall putty', zh:'墙面腻子' },
+      { icon:'drop', vi:'Keo dán công nghiệp', en:'Industrial adhesives', zh:'工业胶粘剂' },
+      { icon:'leaf', vi:'Thức ăn chăn nuôi', en:'Animal feed', zh:'动物饲料' },
+      { icon:'grid', vi:'Masterbatch nhựa', en:'Plastic masterbatch', zh:'塑料母粒' },
+      { icon:'factory', vi:'Giấy & cao su', en:'Paper & rubber', zh:'纸张和橡胶' },
+    ],
+    packaging: [
+      { vi:'Bao PP 25kg', en:'PP bag 25kg', zh:'PP袋 25公斤' },
+      { vi:'Bao PP 50kg', en:'PP bag 50kg', zh:'PP袋 50公斤' },
+      { vi:'Jumbo bag 1 tấn', en:'1T jumbo bag', zh:'吨袋 1吨' },
+      { vi:'Container rời (bulk)', en:'Bulk container', zh:'散装集装箱' },
+    ],
+    features: {
+      vi: ['Độ trắng > 96%, CaCO₃ > 98.5%', 'Cỡ hạt đồng đều, kiểm soát chặt', 'Phù hợp đa ứng dụng công nghiệp', 'Đạt ISO 9001:2015, có COA và MSDS'],
+      en: ['Whiteness > 96%, CaCO₃ > 98.5%', 'Uniform particle size, tightly controlled', 'Multi-purpose industrial use', 'ISO 9001:2015 certified, with COA and MSDS'],
+      zh: ['白度>96%,碳酸钙>98.5%', '粒径均匀,严格控制', '多种工业用途', 'ISO 9001:2015认证,提供COA和MSDS'],
+    },
+    tags: { vi:['Sơn','Keo','Bột bả','Thức ăn','Nhựa'], en:['Paint','Adhesive','Putty','Feed','Plastic'], zh:['涂料','胶粘剂','腻子','饲料','塑料'] },
+    moq: { vi:'25 tấn', en:'25 tons', zh:'25吨' },
+    leadTime: { vi:'7–14 ngày', en:'7–14 days', zh:'7–14天' },
+  },
+
+  'P-02': {
+    code: 'P-02', cat: 0,
+    name: { vi:'Bột đá CaCO₃ phủ Stearic Acid', en:'Stearic-acid coated CaCO₃', zh:'硬脂酸涂层碳酸钙' },
+    meta: { vi:'Coated · 5–20 µm', en:'Coated · 5–20 µm', zh:'涂层 · 5–20 µm' },
+    desc: {
+      vi:'Phủ acid stearic cải thiện độ phân tán, giảm hút ẩm — lý tưởng cho compound nhựa PVC, PE, PP và masterbatch cao cấp.',
+      en:'Stearic-acid coating improves dispersion and reduces moisture pickup — ideal for PVC, PE, PP compounds and premium masterbatch.',
+      zh:'硬脂酸涂层提高分散性,降低吸湿性 — 适用于PVC、PE、PP复合材料和高端母粒。',
+    },
+    longDesc: {
+      vi:'Bột đá CaCO₃ phủ stearic acid được sản xuất trên dây chuyền phủ chuyên dụng theo công nghệ Châu Âu. Lớp phủ stearic 1.0–1.5% bao phủ đều bề mặt hạt, giúp cải thiện khả năng phân tán trong nền polymer, giảm độ hút ẩm và tăng độ bóng cho sản phẩm cuối. Sản phẩm đặc biệt phù hợp cho compound PVC cứng/dẻo, ống nhựa, màng PE/PP, masterbatch cao cấp và các ứng dụng yêu cầu kỹ thuật cao.',
+      en:'Our stearic-coated CaCO₃ is produced on a dedicated EU-spec coating line. The 1.0–1.5% stearic acid coating uniformly covers particle surfaces, improving polymer-matrix dispersion, reducing moisture absorption and enhancing surface gloss in finished products. The product is especially suited for rigid/flexible PVC compounds, plastic pipes, PE/PP films, premium masterbatch and other technically demanding applications.',
+      zh:'我们的硬脂酸涂层碳酸钙在欧洲标准的专用涂层生产线上生产。1.0–1.5%的硬脂酸涂层均匀包覆颗粒表面,提高在聚合物基体中的分散性,降低吸湿性,提升成品光泽度。该产品特别适用于硬质/软质PVC复合材料、塑料管材、PE/PP薄膜、高端母粒和其他技术要求高的应用。',
+    },
+    images: [
+      'assets/bot-sieu-min.webp',
+      'assets/bot-caco3-sieu-min.webp',
+      'assets/nha-may-bot-sieu-min-3.webp',
+      'assets/bao-bi-sieu-trang.jpg',
+    ],
+    sizes: [5, 10, 12, 15, 17, 18, 20],
+    sizesUnit: 'µm',
+    specs: [
+      { key:'caco3', val:'≥ 98.5', unit:'%' },
+      { key:'white', val:'≥ 96', unit:'%' },
+      { key:'moist', val:'≤ 0.2', unit:'%' },
+      { key:'density', val:'0.7 – 0.9', unit:'g/cm³' },
+      { key:'stearic', val:'1.0 – 1.5', unit:'%' },
+      { key:'d50', val:'5 – 20', unit:'µm' },
+    ],
+    applications: [
+      { icon:'grid', vi:'PVC cứng & dẻo', en:'Rigid & flexible PVC', zh:'硬质和软质PVC' },
+      { icon:'box', vi:'Ống nhựa & profile', en:'Pipes & profiles', zh:'管材和型材' },
+      { icon:'drop', vi:'Màng PE / PP', en:'PE / PP film', zh:'PE / PP 薄膜' },
+      { icon:'spark', vi:'Masterbatch cao cấp', en:'Premium masterbatch', zh:'高端母粒' },
+      { icon:'factory', vi:'Compound kỹ thuật', en:'Technical compounds', zh:'技术复合材料' },
+      { icon:'leaf', vi:'Cáp & dây điện', en:'Cable & wire', zh:'电缆和电线' },
+    ],
+    packaging: [
+      { vi:'Bao PP 25kg', en:'PP bag 25kg', zh:'PP袋 25公斤' },
+      { vi:'Jumbo bag 500kg / 1 tấn', en:'500kg / 1T jumbo', zh:'吨袋 500公斤 / 1吨' },
+      { vi:'Container rời (bulk)', en:'Bulk container', zh:'散装集装箱' },
+    ],
+    features: {
+      vi: ['Phủ stearic 1.0–1.5%, bám đều', 'Độ phân tán cao, dispersion tốt', 'Giảm hút ẩm, ổn định kích thước', 'Tăng độ bóng và độ bền sản phẩm'],
+      en: ['Stearic coating 1.0–1.5%, uniform coverage', 'High dispersibility', 'Reduced moisture pickup, dimensional stability', 'Improved gloss and product durability'],
+      zh: ['硬脂酸涂层1.0–1.5%,均匀覆盖', '高分散性', '降低吸湿性,尺寸稳定', '提升光泽度和产品耐久性'],
+    },
+    tags: { vi:['Nhựa','PVC','PE/PP','Masterbatch','Cao cấp'], en:['Plastic','PVC','PE/PP','Masterbatch','Premium'], zh:['塑料','PVC','PE/PP','母粒','高端'] },
+    moq: { vi:'25 tấn', en:'25 tons', zh:'25吨' },
+    leadTime: { vi:'10–14 ngày', en:'10–14 days', zh:'10–14天' },
+  },
+
+  'P-03': {
+    code: 'P-03', cat: 1,
+    name: { vi:'Đá Slab', en:'Slab stone', zh:'大板石材' },
+    meta: { vi:'Tấm lớn · 1.6 × 2.4 m', en:'Large slab · 1.6 × 2.4 m', zh:'大板 · 1.6 × 2.4 m' },
+    desc: {
+      vi:'Đá tự nhiên dạng tấm, vân tự nhiên, mài bóng — dành cho mặt bàn, ốp tường nội thất cao cấp và showroom.',
+      en:'Polished natural-vein slab — for premium countertops, interior wall cladding and showroom installations.',
+      zh:'抛光天然纹理板材 — 用于高端台面、室内墙面饰面和展厅安装。',
+    },
+    longDesc: {
+      vi:'Đá Slab tấm lớn 1.6×2.4m được khai thác và xẻ trực tiếp tại mỏ Long Anh – Nghệ An. Mỗi tấm đá có vân tự nhiên độc đáo, được mài bóng cao cấp đáp ứng tiêu chuẩn nội thất cao cấp. Phù hợp cho mặt bàn bếp, ốp tường phòng khách, sảnh khách sạn, showroom và các công trình thương mại đẳng cấp. Đa dạng hoàn thiện: bóng gương, mờ tự nhiên, brushed antique.',
+      en:'Large 1.6×2.4m slab stone is quarried and cut directly at the Long Anh quarry in Nghe An. Each slab has unique natural veining, polished to premium interior standards. Suitable for kitchen countertops, living room cladding, hotel lobbies, showrooms and high-end commercial projects. Multiple finishes: high-gloss, honed matte, brushed antique.',
+      zh:'1.6×2.4米大板石材在义安省龙英矿场直接开采和切割。每块板材都有独特的天然纹理,抛光达到高端室内标准。适用于厨房台面、客厅墙面饰面、酒店大堂、展厅和高端商业项目。多种饰面:高光、哑光、拉丝古典。',
+    },
+    images: [
+      'assets/da-slab-sieu-trang.webp',
+      'assets/da-nguyen-lieu-cao-cap.webp',
+      'assets/da-nguyen-lieu-cao-cap2.webp',
+      'assets/co-so-ha-tang.jpg',
+    ],
+    sizes: ['1.6 × 2.4 m', '1.4 × 2.0 m', '1.0 × 2.0 m'],
+    sizesUnit: '',
+    specs: [
+      { key:'spec_format', val:'1.6 × 2.4 m', unit:'' },
+      { key:'spec_thickness', val:'18 / 20 / 30', unit:'mm' },
+      { key:'spec_finish', val:'Polished / Honed / Brushed', unit:'' },
+      { key:'white', val:'90 – 95', unit:'%' },
+      { key:'density', val:'2.65 – 2.75', unit:'g/cm³' },
+    ],
+    applications: [
+      { icon:'box', vi:'Mặt bàn bếp & quầy bar', en:'Kitchen countertops', zh:'厨房台面' },
+      { icon:'grid', vi:'Ốp tường nội thất', en:'Interior wall cladding', zh:'室内墙面饰面' },
+      { icon:'spark', vi:'Sảnh khách sạn', en:'Hotel lobbies', zh:'酒店大堂' },
+      { icon:'pin', vi:'Showroom thương mại', en:'Commercial showroom', zh:'商业展厅' },
+      { icon:'factory', vi:'Mặt tiền cao cấp', en:'Premium façade', zh:'高端外墙' },
+    ],
+    packaging: [
+      { vi:'Khung gỗ A-frame', en:'A-frame wooden crate', zh:'A型木架' },
+      { vi:'Bundle 5–8 tấm', en:'Bundle 5–8 slabs', zh:'5-8块捆装' },
+      { vi:'Container 20ft / 40ft', en:'20ft / 40ft container', zh:'20英尺/40英尺集装箱' },
+    ],
+    features: {
+      vi: ['Vân tự nhiên 100%, độc bản', 'Mài bóng cao cấp, đa hoàn thiện', 'Khai thác trực tiếp tại mỏ riêng', 'Kích thước lớn, ít mối nối'],
+      en: ['100% natural unique veining', 'High-quality polish, multiple finishes', 'Mined directly from owned quarry', 'Large format, fewer joints'],
+      zh: ['100%天然独特纹理', '高品质抛光,多种饰面', '自有矿场直接开采', '大尺寸,接缝少'],
+    },
+    tags: { vi:['Nội thất','Mặt bàn','Ốp tường','Cao cấp'], en:['Interior','Countertop','Cladding','Premium'], zh:['室内','台面','饰面','高端'] },
+    moq: { vi:'01 container 20ft', en:'1 × 20ft container', zh:'1个20英尺集装箱' },
+    leadTime: { vi:'14–21 ngày', en:'14–21 days', zh:'14–21天' },
+  },
+
+  'P-04': {
+    code: 'P-04', cat: 1,
+    name: { vi:'Đá xẻ quy cách', en:'Cut-to-size tile', zh:'定制规格石材' },
+    meta: { vi:'60×30, 40×60, 80×40 cm · dày 2cm', en:'60×30, 40×60, 80×40 cm · 2cm thick', zh:'60×30, 40×60, 80×40 cm · 厚2cm' },
+    desc: {
+      vi:'Đá xẻ theo kích thước tiêu chuẩn hoặc tùy chỉnh, hoàn thiện đa dạng — phù hợp ốp lát sàn, tường, mặt tiền công trình.',
+      en:'Standard or custom-cut natural stone tile with multiple finishes — for floors, walls and façade applications.',
+      zh:'标准或定制切割天然石材,多种饰面 — 适用于地板、墙面和外墙应用。',
+    },
+    longDesc: {
+      vi:'Đá xẻ quy cách Long Anh được sản xuất theo các kích thước tiêu chuẩn (60×30×2, 40×60×2, 80×40×2 cm) hoặc tùy chỉnh theo yêu cầu khách hàng. Sản phẩm phù hợp cho ốp lát sàn nội ngoại thất, ốp tường, mặt tiền công trình thương mại và dân dụng. Đa dạng hoàn thiện bề mặt: bóng gương cho sảnh sang trọng, mờ honed cho phòng khách, brushed antique cho không gian cổ điển, flamed cho lát sàn ngoài trời chống trượt.',
+      en:'Long Anh cut-to-size tiles come in standard sizes (60×30×2, 40×60×2, 80×40×2 cm) or custom dimensions on request. Suitable for indoor and outdoor floor cladding, wall facing, commercial and residential façades. Multiple surface finishes: high-gloss for premium lobbies, honed matte for living rooms, brushed antique for classic spaces, flamed for anti-slip outdoor flooring.',
+      zh:'龙英定制规格石材按标准尺寸(60×30×2、40×60×2、80×40×2 cm)或客户要求的定制尺寸生产。适用于室内外地板饰面、墙面饰面、商业和住宅外墙。多种表面饰面:高端大堂的高光、客厅的哑光、古典空间的拉丝古典、户外防滑地板的火烧面。',
+    },
+    images: [
+      'assets/da-nguyen-lieu-cao-cap.webp',
+      'assets/da-nguyen-lieu-cao-cap2.webp',
+      'assets/da-slab-sieu-trang.webp',
+      'assets/kho-da-nguyen-lieu.webp',
+    ],
+    sizes: ['60×30 cm', '40×60 cm', '80×40 cm', 'Custom'],
+    sizesUnit: '',
+    specs: [
+      { key:'spec_format', val:'60×30 / 40×60 / 80×40', unit:'cm' },
+      { key:'spec_thickness', val:'15 / 20 / 25 / 30', unit:'mm' },
+      { key:'spec_finish', val:'Polished · Honed · Brushed · Flamed', unit:'' },
+      { key:'white', val:'90 – 95', unit:'%' },
+      { key:'density', val:'2.65 – 2.75', unit:'g/cm³' },
+    ],
+    applications: [
+      { icon:'grid', vi:'Lát sàn nội thất', en:'Interior flooring', zh:'室内地板' },
+      { icon:'box', vi:'Ốp tường', en:'Wall cladding', zh:'墙面饰面' },
+      { icon:'factory', vi:'Mặt tiền tòa nhà', en:'Building façade', zh:'建筑外墙' },
+      { icon:'pin', vi:'Lát sàn ngoài trời', en:'Outdoor flooring', zh:'户外地板' },
+      { icon:'spark', vi:'Khu công cộng', en:'Public spaces', zh:'公共空间' },
+    ],
+    packaging: [
+      { vi:'Pallet gỗ + foam bảo vệ', en:'Wooden pallet + foam', zh:'木托盘+泡沫保护' },
+      { vi:'Container 20ft / 40ft', en:'20ft / 40ft container', zh:'20英尺/40英尺集装箱' },
+    ],
+    features: {
+      vi: ['Cắt chính xác theo yêu cầu', '4 hoàn thiện: bóng/mờ/brushed/flamed', 'Đá tự nhiên 100%', 'Phù hợp cả nội và ngoại thất'],
+      en: ['Precise cuts to specification', '4 finishes: polished/honed/brushed/flamed', '100% natural stone', 'Suitable for indoor and outdoor'],
+      zh: ['精确按规格切割', '4种饰面:抛光/哑光/拉丝/火烧', '100%天然石材', '适用于室内和室外'],
+    },
+    tags: { vi:['Sàn','Tường','Mặt tiền','Ngoại thất'], en:['Floor','Wall','Façade','Outdoor'], zh:['地板','墙面','外墙','户外'] },
+    moq: { vi:'500 m²', en:'500 m²', zh:'500平方米' },
+    leadTime: { vi:'14–21 ngày', en:'14–21 days', zh:'14–21天' },
+  },
+
+  'P-05': {
+    code: 'P-05', cat: 1,
+    name: { vi:'Đá trang trí', en:'Decorative stone', zh:'装饰石材' },
+    meta: { vi:'Sân vườn · Bể bơi · Lối đi', en:'Garden · Pool · Pathway', zh:'花园 · 泳池 · 步道' },
+    desc: {
+      vi:'Đá trang trí cảnh quan ngoại thất — viền sân vườn, ốp bể bơi, lối đi đá tự nhiên với bề mặt chống trượt.',
+      en:'Landscape decorative stone — garden borders, pool coping, natural-stone pathways with anti-slip finish.',
+      zh:'景观装饰石材 — 花园边缘、泳池压顶、防滑表面的天然石材步道。',
+    },
+    longDesc: {
+      vi:'Đá trang trí Long Anh dành cho không gian ngoại thất, cảnh quan sân vườn, hồ bơi và khu vực công cộng. Sản phẩm bao gồm đá viền hồ bơi (pool coping) chống trượt, đá lát lối đi vườn, đá trang trí non bộ và đá ốp tường rào. Bề mặt được xử lý chống trượt (flamed/sandblasted), chịu được thời tiết khắc nghiệt và bền màu theo thời gian. Phù hợp cho biệt thự, khu nghỉ dưỡng, khách sạn và khu đô thị cao cấp.',
+      en:'Long Anh decorative stones are designed for outdoor spaces, garden landscapes, swimming pools and public areas. The range includes anti-slip pool coping stones, garden pathway tiles, rockery decoration and wall stones. Surface treatments include flamed and sandblasted finishes for anti-slip safety, weather-resistant and color-stable over time. Suitable for villas, resorts, hotels and premium urban developments.',
+      zh:'龙英装饰石材适用于户外空间、花园景观、游泳池和公共区域。产品包括防滑泳池压顶、花园步道砖、假山装饰和墙面石材。表面处理包括火烧和喷砂饰面以确保防滑安全,耐候性强,长期保色。适用于别墅、度假村、酒店和高端城市开发。',
+    },
+    images: [
+      'assets/da-nguyen-lieu-cao-cap.webp',
+      'assets/da-nguyen-lieu-cao-cap2.webp',
+      'assets/da-slab-sieu-trang.webp',
+      'assets/kiem-dinh.jpg',
+    ],
+    sizes: ['Pool coping', 'Garden tile', 'Step stone', 'Wall facing'],
+    sizesUnit: '',
+    specs: [
+      { key:'spec_format', val:'30×30 / 50×50 / Custom', unit:'cm' },
+      { key:'spec_thickness', val:'25 / 30 / 50', unit:'mm' },
+      { key:'spec_finish', val:'Flamed · Sandblasted · Brushed', unit:'' },
+      { key:'density', val:'2.65 – 2.75', unit:'g/cm³' },
+    ],
+    applications: [
+      { icon:'leaf', vi:'Sân vườn cảnh quan', en:'Landscape garden', zh:'景观花园' },
+      { icon:'drop', vi:'Hồ bơi & spa', en:'Swimming pool & spa', zh:'游泳池和水疗' },
+      { icon:'pin', vi:'Lối đi tự nhiên', en:'Natural pathways', zh:'天然步道' },
+      { icon:'factory', vi:'Mặt tiền biệt thự', en:'Villa façade', zh:'别墅外墙' },
+      { icon:'spark', vi:'Khu nghỉ dưỡng', en:'Resort & hotel', zh:'度假村和酒店' },
+    ],
+    packaging: [
+      { vi:'Pallet gỗ + dây buộc', en:'Wooden pallet + strapping', zh:'木托盘+捆扎带' },
+      { vi:'Container 20ft / 40ft', en:'20ft / 40ft container', zh:'20英尺/40英尺集装箱' },
+    ],
+    features: {
+      vi: ['Bề mặt chống trượt, an toàn', 'Chịu thời tiết, bền màu', 'Đa dạng hình dạng và kích thước', 'Phù hợp khu cao cấp'],
+      en: ['Anti-slip surface, safe', 'Weather-resistant, color-stable', 'Various shapes and sizes', 'Premium development suitable'],
+      zh: ['防滑表面,安全', '耐候性强,保色', '形状和尺寸多样', '适合高端开发项目'],
+    },
+    tags: { vi:['Sân vườn','Bể bơi','Cảnh quan','Ngoại thất'], en:['Garden','Pool','Landscape','Outdoor'], zh:['花园','泳池','景观','户外'] },
+    moq: { vi:'200 m²', en:'200 m²', zh:'200平方米' },
+    leadTime: { vi:'14–21 ngày', en:'14–21 days', zh:'14–21天' },
+  },
+};
+
+// ─── Icons ──────────────────────────────────────────────────────────────────
+const Icon = ({ name, size = 18 }) => {
+  const p = {
+    arrow: <path d="M5 12h14M13 6l6 6-6 6"/>,
+    check: <path d="M5 12l4 4 10-10"/>,
+    chevron: <path d="M9 6l6 6-6 6"/>,
+    download: <><path d="M12 3v14M5 12l7 7 7-7"/><path d="M5 21h14"/></>,
+    mail: <><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></>,
+    phone: <path d="M5 4h4l2 5-3 2a12 12 0 005 5l2-3 5 2v4a2 2 0 01-2 2A17 17 0 013 6a2 2 0 012-2z"/>,
+    pin: <><path d="M12 22s-7-7.5-7-13a7 7 0 0114 0c0 5.5-7 13-7 13z"/><circle cx="12" cy="9" r="2.5"/></>,
+    box: <path d="M3 7l9-4 9 4-9 4-9-4zM3 7v10l9 4 9-4V7M12 11v10"/>,
+    drop: <path d="M12 3s-7 8-7 13a7 7 0 0014 0c0-5-7-13-7-13z"/>,
+    grid: <path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"/>,
+    spark: <path d="M12 3v6M12 15v6M3 12h6M15 12h6M6 6l4 4M14 14l4 4M18 6l-4 4M10 14l-4 4"/>,
+    leaf: <path d="M4 20c0-9 7-16 16-16 0 9-7 16-16 16zM4 20l8-8"/>,
+    factory: <path d="M3 21V11l6 4V11l6 4V7l6 4v10H3zM7 17h2M11 17h2M15 17h2"/>,
+    sun: <><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"/></>,
+    moon: <path d="M21 13a8 8 0 11-10-10 7 7 0 0010 10z"/>,
+    badge: <><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></>,
+  };
+  return (<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">{p[name]}</svg>);
+};
+
+const Logo = ({ size = 30 }) => (
+  <span style={{display:'inline-flex',alignItems:'center'}}>
+    <span style={{width:size,height:size,display:'inline-flex'}}>
+      <img src="assets/long-anh-logo.png" alt="Long Anh" style={{width:'100%',height:'100%',objectFit:'contain'}}/>
+    </span>
+  </span>
+);
+
+// ─── Chrome (header / footer) — same as other pages ─────────────────────────
+const CHROME_CSS = `
+  .vac *{box-sizing:border-box;}
+  .vac{font-family:var(--va-font,'Inter'),system-ui,sans-serif;color:var(--va-text);background:var(--va-bg);
+    --va-bg:#FAFBFD;--va-bg-alt:#F1F4F9;--va-text:#0E1726;
+    --va-line:rgba(15,61,122,.10);--va-card:#fff;
+    --brand-primary:#0F3D7A;--brand-accent:#F08023;}
+  .vac.dark{--va-bg:#0A1424;--va-bg-alt:#0E1A2E;--va-text:#E6EBF3;
+    --va-line:rgba(255,255,255,.08);--va-card:#0F1B30;}
+  .vac-wrap{max-width:100%;margin:0;padding:0 clamp(24px, 4vw, 80px);}
+  .vac-strip{background:#0A2B57;color:#CFE0F2;font-size:12px;}
+  .vac.dark .vac-strip{background:#06101F;}
+  .vac-strip-in{display:flex;justify-content:space-between;align-items:center;height:36px;}
+  .vac-strip a{color:inherit;text-decoration:none;opacity:.85;}
+  .vac-strip a:hover{opacity:1;color:#fff;}
+  .vac-strip-r{display:flex;gap:18px;align-items:center;}
+  .vac-hd{position:sticky;top:0;z-index:50;background:var(--va-bg);
+    border-bottom:1px solid var(--va-line);backdrop-filter:saturate(140%) blur(8px);}
+  .vac-hd-in{display:flex;align-items:center;justify-content:space-between;height:74px;gap:24px;}
+  .vac-brand{display:flex;align-items:center;gap:14px;text-decoration:none;color:inherit;}
+  .vac-brand-mark{width:48px;height:48px;}
+  .vac-brand-name{display:flex;flex-direction:column;line-height:1;}
+  .vac-brand-name b{font-size:15px;font-weight:700;letter-spacing:.02em;color:#0F3D7A;}
+  .vac.dark .vac-brand-name b{color:#5B9BD5;}
+  .vac-brand-name span{font-size:10.5px;color:var(--va-text);opacity:.55;letter-spacing:.06em;text-transform:uppercase;margin-top:4px;}
+  .vac-nav{display:flex;gap:30px;align-items:center;}
+  .vac-nav a{color:var(--va-text);text-decoration:none;font-size:14px;font-weight:500;
+    opacity:.78;padding:6px 0;position:relative;}
+  .vac-nav a:hover{opacity:1;color:var(--brand-accent,#F08023);}
+  .vac-nav a.is-active{opacity:1;color:var(--brand-accent,#F08023);}
+  .vac-nav a.is-active::after{content:'';position:absolute;left:0;right:0;bottom:-22px;height:2px;background:var(--brand-accent,#F08023);}
+  .vac-nav-item{position:relative;padding:6px 0;}
+  .vac-nav-dropdown{position:absolute;top:calc(100% + 14px);left:50%;
+    transform:translateX(-50%) translateY(-6px);background:var(--va-card);
+    border:1px solid var(--va-line);border-radius:12px;padding:8px;min-width:280px;
+    opacity:0;visibility:hidden;transition:opacity .2s, transform .2s, visibility .2s;
+    box-shadow:0 12px 32px -8px rgba(15,61,122,.22);z-index:100;}
+  .vac-nav-item::before{content:'';position:absolute;top:100%;left:50%;width:140%;
+    height:18px;transform:translateX(-50%);}
+  .vac-nav-item:hover .vac-nav-dropdown{opacity:1;visibility:visible;
+    transform:translateX(-50%) translateY(0);}
+  .vac-nav-dropdown a{display:block;padding:12px 16px;border-radius:8px;font-size:14px;opacity:1;}
+  .vac-nav-dropdown a::after{display:none;}
+  .vac-nav-dropdown a:hover{background:var(--va-bg-alt);color:var(--brand-accent,#F08023);}
+  .vac-nav-dropdown a > b{display:block;font-weight:600;margin-bottom:4px;font-size:14px;line-height:1.2;}
+  .vac-nav-dropdown a > span{display:block;font-size:11.5px;opacity:.6;font-weight:400;}
+  .vac-cta-row{display:flex;gap:10px;align-items:center;}
+  .vac-lang{display:flex;gap:2px;padding:3px;border:1px solid var(--va-line);border-radius:8px;}
+  .vac-lang button{font:inherit;padding:4px 10px;background:transparent;color:var(--va-text);
+    border:0;border-radius:5px;cursor:pointer;font-size:12px;font-weight:600;opacity:.6;}
+  .vac-lang button.on{background:#0F3D7A;color:#fff;opacity:1;}
+  .vac.dark .vac-lang button.on{background:#5B9BD5;color:#0A1424;}
+  .vac-iconbtn{width:34px;height:34px;border-radius:8px;border:1px solid var(--va-line);
+    background:transparent;color:var(--va-text);cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:.7;}
+  .vac-iconbtn:hover{opacity:1;border-color:var(--brand-accent,#F08023);color:var(--brand-accent,#F08023);}
+  .vac-ft{background:#06101F;color:#9CB0CC;padding:54px 0 32px;font-size:13px;
+    font-family:var(--va-font,'Inter'),system-ui,sans-serif;}
+  .vac-ft-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:42px;
+    padding-bottom:32px;border-bottom:1px solid rgba(255,255,255,.08);}
+  .vac-ft h5{color:#fff;font-size:13px;font-weight:600;margin:0 0 14px;}
+  .vac-ft a{color:inherit;text-decoration:none;opacity:.75;display:block;padding:4px 0;}
+  .vac-ft a:hover{color:#F08023;opacity:1;}
+  .vac-ft-social{display:flex;gap:10px;margin-top:18px;}
+  .vac-ft-social a{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;
+    justify-content:center;padding:0;background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.1);color:#9CB0CC;transition:.25s;opacity:1;}
+  .vac-ft-social a:hover{background:#F08023;color:#fff;border-color:transparent;transform:translateY(-2px);}
+  .vac-ft-social svg{width:16px;height:16px;}
+  .vac-ft-bottom{display:flex;justify-content:space-between;align-items:center;
+    padding-top:24px;opacity:.6;font-size:12px;}
+  @media (max-width:980px){.vac-nav{display:none}.vac-ft-grid{grid-template-columns:1fr 1fr}}
+`;
+
+const NAV_HREFS = ['index.html','about.html','products.html','career.html','index.html#contact'];
+const NAV_SLUGS = ['home','about','products','career','contact'];
+
+function VAHeader({ tweaks, current = 'products' }) {
+  const t = tweaks; const C = COPY[t.lang];
+  return (
+    <>
+      <div className="vac-strip">
+        <div className="vac-wrap vac-strip-in">
+          <span>{t.lang==='vi'?'Hotline kinh doanh:':t.lang==='zh'?'销售热线:':'Sales hotline:'} <b style={{color:'#fff'}}>{C.phone[0]}</b></span>
+          <div className="vac-strip-r">
+            <a href={'mailto:'+C.email}><Icon name="mail" size={13}/> {C.email}</a>
+            <span style={{opacity:.4}}>·</span>
+            <a href="#">ISO 9001 : 2015</a>
+          </div>
+        </div>
+      </div>
+      <header className="vac-hd">
+        <div className="vac-wrap vac-hd-in">
+          <a className="vac-brand" href="index.html">
+            <span className="vac-brand-mark"><Logo size={48}/></span>
+            <span className="vac-brand-name">
+              <b>{t.lang==='zh'?'龙英矿业':t.lang==='en'?'LONG ANH MINERAL':'KS LONG ANH'}</b>
+              <span>{C.tagline}</span>
+            </span>
+          </a>
+          <nav className="vac-nav">
+            {C.nav.map((n,i)=>{
+              if (NAV_SLUGS[i] === 'products') {
+                return (
+                  <div key={i} className="vac-nav-item">
+                    <a href={NAV_HREFS[i]} className={current===NAV_SLUGS[i]?'is-active':''}>{n}</a>
+                    <div className="vac-nav-dropdown">
+                      <a href="products.html#powder">
+                        <b>{t.lang==='zh'?'碳酸钙粉':t.lang==='en'?'CaCO₃ Powder':'Bột đá CaCO₃'}</b>
+                        <span>Coated · Uncoated · 5–20 µm</span>
+                      </a>
+                      <a href="products.html#stone">
+                        <b>{t.lang==='zh'?'天然石材饰面':t.lang==='en'?'Natural cladding stone':'Đá ốp lát tự nhiên'}</b>
+                        <span>{t.lang==='zh'?'大板 · 定制石材 · 装饰石材':t.lang==='en'?'Slab · Cut tile · Decorative':'Slab · Đá xẻ · Đá trang trí'}</span>
+                      </a>
+                    </div>
+                  </div>
+                );
+              }
+              return <a key={i} href={NAV_HREFS[i]} className={current===NAV_SLUGS[i]?'is-active':''}>{n}</a>;
+            })}
+          </nav>
+          <div className="vac-cta-row">
+            <div className="vac-lang">
+              <button className={t.lang==='vi'?'on':''} onClick={()=>tweaks.set('lang','vi')}>VI</button>
+              <button className={t.lang==='en'?'on':''} onClick={()=>tweaks.set('lang','en')}>EN</button>
+              <button className={t.lang==='zh'?'on':''} onClick={()=>tweaks.set('lang','zh')}>中</button>
+            </div>
+            <button className="vac-iconbtn" onClick={()=>tweaks.set('dark',!t.dark)}>
+              <Icon name={t.dark?'sun':'moon'} size={15}/>
+            </button>
+          </div>
+        </div>
+      </header>
+    </>
+  );
+}
+
+function VAFooter({ tweaks }) {
+  const t = tweaks; const C = COPY[t.lang];
+  const productNames = {
+    vi: ['Bột đá CaCO₃ không phủ','Bột đá CaCO₃ phủ Stearic Acid','Đá Slab','Đá xẻ quy cách','Đá trang trí'],
+    en: ['Uncoated CaCO₃ powder','Stearic-acid coated CaCO₃','Slab stone','Cut-to-size tile','Decorative stone'],
+    zh: ['未涂层碳酸钙粉','硬脂酸涂层碳酸钙','大板石材','定制规格石材','装饰石材'],
+  };
+  return (
+    <footer className="vac-ft">
+      <div className="vac-wrap">
+        <div className="vac-ft-grid">
+          <div>
+            <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:14}}>
+              <Logo size={42}/>
+              <b style={{color:'#fff',fontSize:14,letterSpacing:'.04em'}}>
+                {t.lang==='zh'?'龙英矿业':t.lang==='en'?'LONG ANH MINERAL':'KS LONG ANH'}
+              </b>
+            </div>
+            <p style={{lineHeight:1.6,opacity:.65,margin:0}}>
+              {t.lang==='zh'?'越南北中部领先的碳酸钙粉和天然石材制造商。'
+                :t.lang==='en'?'A leading manufacturer of calcium carbonate powder and natural stone in North-Central Vietnam.'
+                :'Nhà sản xuất bột đá Canxi Cacbonat và đá tự nhiên hàng đầu Bắc Trung Bộ.'}
+            </p>
+            <div className="vac-ft-social">
+              <a href="https://www.facebook.com/longanhcorp" target="_blank" rel="noopener" aria-label="Facebook">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.198 21.5h4v-8.01h3.604l.396-3.98h-4V7.5a1 1 0 0 1 1-1h3v-4h-3a5 5 0 0 0-5 5v2.01h-2l-.396 3.98h2.396v8.01z"/></svg>
+              </a>
+              <a href="https://www.linkedin.com/company/longanhcorp" target="_blank" rel="noopener" aria-label="LinkedIn">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43c-1.14 0-2.07-.93-2.07-2.07s.93-2.07 2.07-2.07 2.07.93 2.07 2.07-.93 2.07-2.07 2.07zm1.78 13.02H3.55V9h3.57v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.55C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg>
+              </a>
+              <a href="https://twitter.com/longanhcorp" target="_blank" rel="noopener" aria-label="X / Twitter">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.45-6.231zm-1.161 17.52h1.833L7.084 4.126H5.117l11.966 15.644z"/></svg>
+              </a>
+              <a href="https://zalo.me/longanhcorp" target="_blank" rel="noopener" aria-label="Zalo">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 5.94 2 10.8c0 2.78 1.47 5.26 3.77 6.88l-.84 2.97c-.07.24.18.44.4.32l3.16-1.78c1.07.32 2.22.49 3.41.49h.1c5.52 0 10-3.94 10-8.8S17.52 2 12 2z"/></svg>
+              </a>
+            </div>
+          </div>
+          <div>
+            <h5>{t.lang==='zh'?'产品':t.lang==='en'?'Products':'Sản phẩm'}</h5>
+            {Object.keys(PRODUCTS).map(code => (
+              <a key={code} href={'product.html?code='+code}>{productNames[t.lang][parseInt(code.slice(2))-1]}</a>
+            ))}
+          </div>
+          <div>
+            <h5>{t.lang==='zh'?'公司':t.lang==='en'?'Company':'Công ty'}</h5>
+            {C.nav.map((n,i)=><a key={i} href={NAV_HREFS[i]}>{n}</a>)}
+          </div>
+          <div>
+            <h5>{t.lang==='zh'?'联系':t.lang==='en'?'Contact':'Liên hệ'}</h5>
+            <a>{C.phone[0]}</a><a>{C.phone[1]}</a><a>{C.email}</a>
+          </div>
+        </div>
+        <div className="vac-ft-bottom">
+          <span>{C.footnote}</span>
+          <span>Made in Nghệ An · Vietnam</span>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+// ─── Product detail page ────────────────────────────────────────────────────
+const PD_CSS = `
+  .pd{font-family:var(--va-font,'Inter'),system-ui,sans-serif;color:var(--va-text);background:var(--va-bg);}
+  .pd h1,.pd h2,.pd h3,.pd h4{margin:0;font-weight:700;letter-spacing:-.025em;line-height:1.15;}
+  .pd p{margin:0;}
+
+  /* Breadcrumb */
+  .pd-bcrumb{padding:18px 0 0;font-size:12.5px;
+    font-family:ui-monospace,Menlo,monospace;letter-spacing:.04em;display:flex;
+    gap:10px;align-items:center;color:var(--va-text);opacity:.65;flex-wrap:wrap;}
+  .pd-bcrumb a{color:inherit;text-decoration:none;transition:.2s;}
+  .pd-bcrumb a:hover{color:var(--brand-accent,#F08023);opacity:1;}
+  .pd-bcrumb .now{color:var(--brand-accent,#F08023);opacity:1;}
+  .pd-bcrumb svg{width:12px;height:12px;opacity:.5;}
+
+  /* Hero split: gallery + info */
+  .pd-hero{padding:32px 0 56px;}
+  .pd-hero-grid{display:grid;grid-template-columns:1.15fr 1fr;gap:56px;align-items:flex-start;}
+
+  /* Gallery */
+  .pd-gallery{position:sticky;top:90px;}
+  .pd-gallery-main{position:relative;aspect-ratio:4/3;background:var(--va-bg-alt);
+    border-radius:18px;overflow:hidden;border:1px solid var(--va-line);}
+  .pd-gallery-main img{width:100%;height:100%;object-fit:cover;display:block;
+    transition:opacity .35s;}
+  .pd-gallery-badge{position:absolute;top:18px;left:18px;background:rgba(15,61,122,.92);
+    color:#fff;font-size:11px;padding:7px 14px;border-radius:99px;
+    font-family:ui-monospace,Menlo,monospace;letter-spacing:.08em;
+    backdrop-filter:blur(6px);font-weight:600;}
+  .pd-gallery-cat{position:absolute;top:18px;right:18px;background:rgba(255,255,255,.92);
+    color:var(--brand-primary,#0F3D7A);font-size:11px;padding:7px 14px;border-radius:99px;
+    letter-spacing:.04em;backdrop-filter:blur(6px);font-weight:600;}
+  .pd-gallery-thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:14px;}
+  .pd-gallery-thumb{aspect-ratio:1;border-radius:10px;overflow:hidden;cursor:pointer;
+    border:2px solid transparent;transition:.25s;background:var(--va-bg-alt);position:relative;}
+  .pd-gallery-thumb img{width:100%;height:100%;object-fit:cover;}
+  .pd-gallery-thumb.on{border-color:var(--brand-accent,#F08023);
+    box-shadow:0 6px 16px -6px rgba(240,128,35,.4);}
+  .pd-gallery-thumb:hover{border-color:var(--brand-primary,#0F3D7A);}
+
+  /* Info panel */
+  .pd-info-meta{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
+  .pd-info-meta-chip{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;
+    padding:5px 11px;border-radius:99px;font-weight:600;letter-spacing:.04em;}
+  .pd-info-meta-chip.brand{background:rgba(15,61,122,.08);color:var(--brand-primary,#0F3D7A);
+    font-family:ui-monospace,Menlo,monospace;letter-spacing:.06em;}
+  .pd.dark .pd-info-meta-chip.brand{color:#5B9BD5;background:rgba(91,155,213,.12);}
+  .pd-info-meta-chip.cat{background:var(--va-bg-alt);}
+  .pd-info-meta-chip.stock{background:rgba(34,197,94,.1);color:#15803D;}
+  .pd-info h1{font-size:clamp(28px,3.2vw,40px);margin-bottom:14px;line-height:1.15;}
+  .pd-info-sub{font-family:ui-monospace,Menlo,monospace;font-size:13px;
+    color:var(--brand-accent,#F08023);font-weight:600;letter-spacing:.04em;margin-bottom:18px;}
+  .pd-info-desc{font-size:15px;line-height:1.7;opacity:.75;margin-bottom:28px;}
+
+  /* Quick specs grid (4 cells) */
+  .pd-quick{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;
+    background:var(--va-line);border:1px solid var(--va-line);border-radius:14px;
+    overflow:hidden;margin-bottom:28px;}
+  .pd-quick-cell{background:var(--va-card);padding:18px 20px;}
+  .pd-quick-cell .lbl{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;
+    opacity:.55;margin-bottom:6px;font-weight:600;}
+  .pd-quick-cell .val{font-size:15px;font-weight:700;color:var(--brand-primary,#0F3D7A);
+    font-family:ui-monospace,Menlo,monospace;}
+  .pd.dark .pd-quick-cell .val{color:#5B9BD5;}
+  .pd-quick-cell .val.accent{color:var(--brand-accent,#F08023);}
+
+  /* Features list */
+  .pd-features{margin-bottom:28px;}
+  .pd-features-title{font-size:11px;font-weight:700;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--brand-accent,#F08023);margin-bottom:14px;}
+  .pd-features ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px;}
+  .pd-features li{display:flex;gap:12px;align-items:flex-start;font-size:14px;line-height:1.5;}
+  .pd-features li svg{color:var(--brand-accent,#F08023);flex-shrink:0;margin-top:2px;}
+
+  /* Tags */
+  .pd-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px;}
+  .pd-tags span{font-size:11.5px;padding:6px 14px;border-radius:99px;
+    background:var(--va-bg-alt);font-weight:500;letter-spacing:.04em;}
+
+  /* Buy/CTA box */
+  .pd-cta-box{background:linear-gradient(135deg,var(--brand-primary,#0F3D7A) 0%,#0A2B57 100%);
+    color:#fff;border-radius:16px;padding:24px 26px;
+    box-shadow:0 24px 48px -24px rgba(15,61,122,.5);}
+  .pd-cta-box-title{font-size:13px;font-weight:600;margin-bottom:14px;letter-spacing:.04em;}
+  .pd-cta-box-row{display:flex;gap:12px;}
+  .pd-cta-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    padding:14px 22px;border-radius:10px;font-size:14px;font-weight:600;text-decoration:none;
+    cursor:pointer;border:0;font-family:inherit;transition:.2s;flex:1;}
+  .pd-cta-btn.primary{background:var(--brand-accent,#F08023);color:#fff;
+    box-shadow:0 12px 24px -8px rgba(240,128,35,.5);}
+  .pd-cta-btn.primary:hover{background:#D26713;transform:translateY(-2px);}
+  .pd-cta-btn.secondary{background:rgba(255,255,255,.08);color:#fff;
+    border:1px solid rgba(255,255,255,.18);}
+  .pd-cta-btn.secondary:hover{background:rgba(255,255,255,.15);}
+
+  /* Detail sections */
+  .pd-section{padding:64px 0;}
+  .pd-section.alt{background:var(--va-bg-alt);}
+  .pd-section-head{margin-bottom:32px;display:flex;align-items:center;gap:18px;}
+  .pd-section-head .ix{width:40px;height:40px;border-radius:10px;
+    background:rgba(240,128,35,0.12);color:var(--brand-accent,#F08023);
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .pd-section-head h2{font-size:clamp(22px,2.4vw,30px);}
+  .pd-section-head .num{font-family:ui-monospace,Menlo,monospace;font-size:11px;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--brand-accent,#F08023);
+    margin-bottom:4px;}
+
+  /* Long description */
+  .pd-longdesc{display:grid;grid-template-columns:1fr 1.6fr;gap:48px;align-items:start;}
+  .pd-longdesc p{font-size:15px;line-height:1.8;opacity:.78;}
+
+  /* Spec table */
+  .pd-spec-card{background:var(--va-card);border:1px solid var(--va-line);
+    border-radius:16px;overflow:hidden;
+    box-shadow:0 24px 48px -28px rgba(15,61,122,.18);}
+  .pd-spec-row{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:0;
+    border-bottom:1px solid var(--va-line);padding:18px 28px;font-size:14px;}
+  .pd-spec-row:last-child{border-bottom:0;}
+  .pd-spec-row.h{background:linear-gradient(180deg,var(--brand-primary,#0F3D7A),#0A2B57);
+    color:#fff;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+    border-bottom:0;}
+  .pd-spec-row .label{font-weight:700;}
+  .pd-spec-row .val{font-family:ui-monospace,Menlo,monospace;font-weight:700;
+    color:var(--brand-accent,#F08023);}
+  .pd-spec-row .unit{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;opacity:.55;}
+
+  /* Sizes visualizer */
+  .pd-sizes-grid{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-end;}
+  .pd-size-cell{display:flex;flex-direction:column;align-items:center;
+    cursor:default;transition:.3s;}
+  .pd-size-cell:hover{transform:translateY(-4px);}
+  .pd-size-dot{border-radius:50%;background:var(--brand-primary,#0F3D7A);
+    box-shadow:0 8px 18px -8px rgba(15,61,122,.4);transition:.35s;
+    display:flex;align-items:center;justify-content:center;
+    color:#fff;font-family:ui-monospace,Menlo,monospace;font-size:11px;font-weight:700;}
+  .pd-size-cell:hover .pd-size-dot{background:var(--brand-accent,#F08023);
+    box-shadow:0 14px 24px -8px rgba(240,128,35,.5);}
+  .pd-size-label{font-family:ui-monospace,Menlo,monospace;font-size:12px;
+    margin-top:10px;font-weight:600;}
+  /* For stone — show as chips instead */
+  .pd-sizes-chips{display:flex;flex-wrap:wrap;gap:10px;}
+  .pd-sizes-chips span{font-family:ui-monospace,Menlo,monospace;font-size:13px;
+    padding:12px 20px;border-radius:10px;background:var(--va-card);
+    border:1px solid var(--va-line);color:var(--brand-primary,#0F3D7A);
+    font-weight:600;transition:.25s;}
+  .pd-sizes-chips span:hover{background:var(--brand-primary,#0F3D7A);color:#fff;
+    border-color:var(--brand-primary,#0F3D7A);transform:translateY(-2px);}
+  .pd.dark .pd-sizes-chips span{color:#5B9BD5;}
+
+  /* Applications grid */
+  .pd-apps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+    background:var(--va-line);border:1px solid var(--va-line);border-radius:14px;overflow:hidden;}
+  .pd-app{background:var(--va-card);padding:28px 24px;transition:.3s;cursor:pointer;}
+  .pd-app:hover{background:var(--brand-primary,#0F3D7A);color:#fff;}
+  .pd-app:hover .pd-app-i{color:#fff;}
+  .pd-app-i{color:var(--brand-accent,#F08023);margin-bottom:14px;transition:.3s;}
+  .pd-app h4{font-size:15px;font-weight:700;}
+
+  /* Packaging grid */
+  .pd-pack-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;}
+  .pd-pack-card{background:var(--va-card);border:1px solid var(--va-line);
+    border-radius:12px;padding:20px 22px;display:flex;align-items:center;gap:14px;
+    transition:.3s;}
+  .pd-pack-card:hover{border-color:var(--brand-accent,#F08023);transform:translateY(-3px);
+    box-shadow:0 16px 32px -16px rgba(240,128,35,.25);}
+  .pd-pack-icon{width:40px;height:40px;border-radius:10px;
+    background:rgba(240,128,35,0.1);color:var(--brand-accent,#F08023);
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .pd-pack-card span{font-size:14px;font-weight:600;}
+
+  /* Related products */
+  .pd-related-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;}
+  .pd-related-card{background:var(--va-card);border:1px solid var(--va-line);
+    border-radius:14px;overflow:hidden;text-decoration:none;color:inherit;
+    transition:transform .35s, box-shadow .35s, border-color .25s;}
+  .pd-related-card:hover{transform:translateY(-6px);
+    box-shadow:0 24px 48px -24px rgba(15,61,122,.25);border-color:transparent;}
+  .pd-related-img{aspect-ratio:4/3;overflow:hidden;background:var(--va-bg-alt);}
+  .pd-related-img img{width:100%;height:100%;object-fit:cover;transition:.5s;}
+  .pd-related-card:hover .pd-related-img img{transform:scale(1.06);}
+  .pd-related-body{padding:18px 20px;}
+  .pd-related-body .meta{font-family:ui-monospace,Menlo,monospace;font-size:10.5px;
+    color:var(--brand-accent,#F08023);letter-spacing:.06em;margin-bottom:6px;font-weight:600;}
+  .pd-related-body h4{font-size:15px;font-weight:700;}
+
+  /* Quote CTA */
+  .pd-quote{position:relative;background:#0F3D7A;color:#fff;border-radius:18px;
+    padding:64px 48px;display:grid;grid-template-columns:1.3fr 1fr;gap:48px;
+    align-items:center;overflow:hidden;isolation:isolate;}
+  .pd-quote::before{content:'';position:absolute;inset:0;z-index:-1;
+    background-image:linear-gradient(135deg,rgba(15,61,122,.94) 0%,rgba(10,43,87,.96) 100%),
+                     url('assets/nha-may-bot-sieu-min-3.webp');
+    background-size:cover;background-position:center;}
+  .pd-quote h2{color:#fff;font-size:clamp(24px,2.6vw,32px);margin-bottom:14px;}
+  .pd-quote p{opacity:.82;line-height:1.65;font-size:14.5px;}
+  .pd-quote-r{display:flex;flex-direction:column;gap:12px;}
+
+  @media (max-width:1100px){
+    .pd-hero-grid{grid-template-columns:1fr;gap:32px;}
+    .pd-gallery{position:static;}
+    .pd-longdesc{grid-template-columns:1fr;}
+    .pd-apps-grid{grid-template-columns:repeat(2,1fr);}
+    .pd-quote{grid-template-columns:1fr;padding:40px 32px;}
+  }
+  @media (max-width:600px){
+    .pd-quick{grid-template-columns:1fr;}
+    .pd-apps-grid{grid-template-columns:1fr;}
+    .pd-spec-row{grid-template-columns:1fr 1fr;font-size:13px;padding:14px 18px;}
+  }
+`;
+
+function ProductDetailPage({ tweaks, code }) {
+  const t = tweaks;
+  const C = COPY[t.lang];
+  const product = PRODUCTS[code];
+  const [activeImg, setActiveImg] = React.useState(0);
+
+  if (!product) {
+    return (
+      <div className={'vac pd '+(t.dark?'dark':'')}>
+        <style>{CHROME_CSS}</style>
+        <style>{PD_CSS}</style>
+        <VAHeader tweaks={tweaks} current="products"/>
+        <div className="vac-wrap" style={{padding:'120px 32px',textAlign:'center'}}>
+          <h2>{C.notFound}</h2>
+          <p style={{margin:'20px 0',opacity:.7}}>Code: {code}</p>
+          <a href="products.html" className="pd-cta-btn primary" style={{display:'inline-flex'}}>
+            ← {C.backToProducts}
+          </a>
+        </div>
+        <VAFooter tweaks={tweaks}/>
+      </div>
+    );
+  }
+
+  const cssVars = { '--va-font':t.font, '--va-display':t.font };
+  const isPowder = product.cat === 0;
+  const productName = product.name[t.lang] || product.name.vi;
+  const categoryName = C.catTitles[product.cat];
+
+  // Related products: other products in same category
+  const related = Object.values(PRODUCTS)
+    .filter(p => p.code !== code && p.cat === product.cat)
+    .concat(Object.values(PRODUCTS).filter(p => p.cat !== product.cat).slice(0,2))
+    .slice(0,3);
+
+  return (
+    <div className={'vac pd '+(t.dark?'dark':'')} style={cssVars}>
+      <style>{CHROME_CSS}</style>
+      <style>{PD_CSS}</style>
+      <VAHeader tweaks={tweaks} current="products"/>
+
+      {/* HERO: gallery + info panel */}
+      <section className="pd-hero">
+        <div className="vac-wrap">
+          <nav className="pd-bcrumb">
+            <a href="index.html">{C.home}</a>
+            <Icon name="chevron" size={12}/>
+            <a href="products.html">{C.products}</a>
+            <Icon name="chevron" size={12}/>
+            <span className="now">{product.code} · {productName}</span>
+          </nav>
+
+          <div className="pd-hero-grid" style={{marginTop:24}}>
+            <div className="pd-gallery">
+              <div className="pd-gallery-main">
+                <img src={product.images[activeImg]} alt={productName} key={activeImg}/>
+                <div className="pd-gallery-badge">{product.code}</div>
+                <div className="pd-gallery-cat">{categoryName}</div>
+              </div>
+              <div className="pd-gallery-thumbs">
+                {product.images.map((img, i) => (
+                  <div key={i} className={'pd-gallery-thumb'+(i===activeImg?' on':'')}
+                       onClick={()=>setActiveImg(i)}>
+                    <img src={img} alt=""/>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="pd-info">
+              <div className="pd-info-meta">
+                <span className="pd-info-meta-chip brand">{product.code}</span>
+                <span className="pd-info-meta-chip cat">{categoryName}</span>
+                <span className="pd-info-meta-chip stock">
+                  <Icon name="check" size={11}/> {C.inStock}
+                </span>
+              </div>
+              <h1>{productName}</h1>
+              <div className="pd-info-sub">{product.meta[t.lang]}</div>
+              <p className="pd-info-desc">{product.desc[t.lang]}</p>
+
+              <div className="pd-quick">
+                {product.specs.slice(0,4).map((s,i) => (
+                  <div key={i} className="pd-quick-cell">
+                    <div className="lbl">{C['spec_'+s.key] || s.key}</div>
+                    <div className={'val'+(i===0||i===1?' accent':'')}>{s.val}{s.unit?' '+s.unit:''}</div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="pd-features">
+                <div className="pd-features-title">{C.keyFeatures}</div>
+                <ul>
+                  {product.features[t.lang].map((f,i) => (
+                    <li key={i}><Icon name="check" size={16}/><span>{f}</span></li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="pd-tags">
+                {product.tags[t.lang].map((tag,i) => <span key={i}>{tag}</span>)}
+              </div>
+
+              <div className="pd-cta-box">
+                <div className="pd-cta-box-title">
+                  {t.lang==='vi'?'Quan tâm sản phẩm này?'
+                    :t.lang==='zh'?'对该产品感兴趣?'
+                    :'Interested in this product?'}
+                </div>
+                <div className="pd-cta-box-row">
+                  <a className="pd-cta-btn primary" href={'index.html#contact?code='+product.code}>
+                    <Icon name="mail" size={16}/> {C.requestQuote}
+                  </a>
+                  <a className="pd-cta-btn secondary" href={'tel:'+C.phone[0].replace(/[^+\d]/g,'')}>
+                    <Icon name="phone" size={16}/> {C.phone[0]}
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* DETAILED DESCRIPTION */}
+      <section className="pd-section alt">
+        <div className="vac-wrap">
+          <div className="pd-section-head">
+            <div className="ix"><Icon name="badge" size={20}/></div>
+            <div>
+              <div className="num">— 01 · {C.overview}</div>
+              <h2>{C.descTitle}</h2>
+            </div>
+          </div>
+          <div className="pd-longdesc">
+            <div>
+              <div style={{fontSize:11,fontWeight:700,letterSpacing:'.16em',
+                   textTransform:'uppercase',color:'var(--brand-accent,#F08023)',marginBottom:10}}>
+                {productName}
+              </div>
+              <div style={{fontSize:14,opacity:.6,lineHeight:1.6}}>
+                {C.code}: <b style={{color:'var(--brand-primary,#0F3D7A)',
+                  fontFamily:'ui-monospace,Menlo,monospace'}}>{product.code}</b>
+                <br/>{C.category}: <b>{categoryName}</b>
+                <br/>{C.moq}: <b>{product.moq[t.lang]}</b>
+                <br/>{C.leadTime}: <b>{product.leadTime[t.lang]}</b>
+              </div>
+            </div>
+            <p>{product.longDesc[t.lang]}</p>
+          </div>
+        </div>
+      </section>
+
+      {/* TECHNICAL SPECS */}
+      <section className="pd-section">
+        <div className="vac-wrap">
+          <div className="pd-section-head">
+            <div className="ix"><Icon name="grid" size={20}/></div>
+            <div>
+              <div className="num">— 02 · {C.technicalSpecs}</div>
+              <h2>{C.technicalSpecs}</h2>
+            </div>
+          </div>
+          <div className="pd-spec-card">
+            <div className="pd-spec-row h">
+              <div>{t.lang==='vi'?'Chỉ tiêu':t.lang==='zh'?'指标':'Property'}</div>
+              <div>{t.lang==='vi'?'Giá trị':t.lang==='zh'?'数值':'Value'}</div>
+              <div>{t.lang==='vi'?'Đơn vị':t.lang==='zh'?'单位':'Unit'}</div>
+            </div>
+            {product.specs.map((s,i) => (
+              <div key={i} className="pd-spec-row">
+                <div className="label">{C['spec_'+s.key] || s.key}</div>
+                <div className="val">{s.val}</div>
+                <div className="unit">{s.unit || '—'}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* SIZES */}
+      <section className="pd-section alt">
+        <div className="vac-wrap">
+          <div className="pd-section-head">
+            <div className="ix"><Icon name="box" size={20}/></div>
+            <div>
+              <div className="num">— 03 · {isPowder ? C.sizes : C.dimensions}</div>
+              <h2>{isPowder ? (t.lang==='vi'?'Cỡ hạt khả dụng':t.lang==='zh'?'可用粒径':'Available particle sizes')
+                            : (t.lang==='vi'?'Kích thước & quy cách':t.lang==='zh'?'尺寸和规格':'Sizes & formats')}</h2>
+            </div>
+          </div>
+          {isPowder ? (
+            <div className="pd-sizes-grid">
+              {product.sizes.map(s => {
+                const dotSize = 36 + (s - 5) * 3.6;
+                return (
+                  <div key={s} className="pd-size-cell">
+                    <div className="pd-size-dot" style={{width:dotSize,height:dotSize}}>{s}</div>
+                    <div className="pd-size-label">{s} {product.sizesUnit}</div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="pd-sizes-chips">
+              {product.sizes.map(s => <span key={s}>{s}</span>)}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* APPLICATIONS */}
+      <section className="pd-section">
+        <div className="vac-wrap">
+          <div className="pd-section-head">
+            <div className="ix"><Icon name="spark" size={20}/></div>
+            <div>
+              <div className="num">— 04 · {C.applications}</div>
+              <h2>{t.lang==='vi'?'Ứng dụng tiêu biểu':t.lang==='zh'?'典型应用':'Typical applications'}</h2>
+            </div>
+          </div>
+          <div className="pd-apps-grid">
+            {product.applications.map((app,i) => (
+              <div key={i} className="pd-app">
+                <div className="pd-app-i"><Icon name={app.icon} size={26}/></div>
+                <h4>{app[t.lang]}</h4>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* PACKAGING */}
+      <section className="pd-section alt">
+        <div className="vac-wrap">
+          <div className="pd-section-head">
+            <div className="ix"><Icon name="box" size={20}/></div>
+            <div>
+              <div className="num">— 05 · {C.packaging}</div>
+              <h2>{t.lang==='vi'?'Quy cách đóng gói':t.lang==='zh'?'包装规格':'Packaging options'}</h2>
+            </div>
+          </div>
+          <div className="pd-pack-grid">
+            {product.packaging.map((pk,i) => (
+              <div key={i} className="pd-pack-card">
+                <div className="pd-pack-icon"><Icon name="box" size={20}/></div>
+                <span>{pk[t.lang]}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* RELATED PRODUCTS */}
+      <section className="pd-section">
+        <div className="vac-wrap">
+          <div className="pd-section-head">
+            <div className="ix"><Icon name="grid" size={20}/></div>
+            <div>
+              <div className="num">— 06 · {C.relatedProducts}</div>
+              <h2>{C.relatedProducts}</h2>
+            </div>
+          </div>
+          <div className="pd-related-grid">
+            {related.map(r => (
+              <a key={r.code} href={'product.html?code='+r.code} className="pd-related-card">
+                <div className="pd-related-img">
+                  <img src={r.images[0]} alt=""/>
+                </div>
+                <div className="pd-related-body">
+                  <div className="meta">{r.code} · {r.meta[t.lang]}</div>
+                  <h4>{r.name[t.lang]}</h4>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* QUOTE CTA */}
+      <section className="pd-section">
+        <div className="vac-wrap">
+          <div className="pd-quote">
+            <div>
+              <div style={{fontSize:11,fontWeight:700,letterSpacing:'.16em',
+                   textTransform:'uppercase',color:'var(--brand-accent,#F08023)',marginBottom:14}}>
+                {t.lang==='vi'?'Yêu cầu báo giá':t.lang==='zh'?'请求报价':'Request a quote'}
+              </div>
+              <h2>{t.lang==='vi'?`Cần báo giá ${product.code} cho lô hàng tiếp theo?`
+                    :t.lang==='zh'?`需要 ${product.code} 的下次发货报价?`
+                    :`Need a ${product.code} quote for your next shipment?`}</h2>
+              <p style={{marginTop:14}}>{t.lang==='vi'
+                ?'Gửi yêu cầu kèm số lượng và cảng đến — chúng tôi phản hồi trong 24h làm việc với spec sheet, COA và FOB pricing.'
+                :t.lang==='zh'
+                ?'发送数量和目的港信息 — 我们将在24个工作小时内回复,附规格表、COA和FOB价格。'
+                :'Send quantity and destination port — we reply within 24 business hours with spec sheet, COA and FOB pricing.'}</p>
+            </div>
+            <div className="pd-quote-r">
+              <a className="pd-cta-btn primary" href={'index.html#contact?code='+product.code}>
+                <Icon name="arrow" size={15}/> {C.sendInquiry}
+              </a>
+              <a className="pd-cta-btn secondary" href={'mailto:'+C.email+'?subject=Inquiry: '+product.code}>
+                <Icon name="mail" size={15}/> {C.email}
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <VAFooter tweaks={tweaks}/>
+    </div>
+  );
+}
+
+function App() {
+  const [t, setT] = React.useState({ lang:'vi', dark:false, font:'Inter' });
+  const setTweak = (k, v) => setT(s => ({ ...s, [k]: v }));
+  const tweaks = { ...t, set: setTweak };
+
+  // Read URL param ?code=P-XX
+  const params = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
+  const code = (params.get('code') || 'P-01').toUpperCase();
+
+  return <ProductDetailPage tweaks={tweaks} code={code}/>;
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

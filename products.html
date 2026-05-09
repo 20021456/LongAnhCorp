@@ -752,7 +752,8 @@ function App() {
 
               <div className="pr-grid">
                 {group.products.map((p, i) => (
-                  <article key={i} className="pr-card">
+                  <a key={i} className="pr-card" href={'product.html?code='+p.code}
+                     style={{textDecoration:'none',color:'inherit'}}>
                     <div className="pr-card-img">
                       <img src={p.img} alt={p.name}/>
                       <div className="pr-card-badge">{p.code}</div>
@@ -781,7 +782,7 @@ function App() {
                         </div>
                       </div>
                     </div>
-                  </article>
+                  </a>
                 ))}
               </div>
             </div>
