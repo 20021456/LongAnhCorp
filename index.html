@@ -461,7 +461,7 @@
 
   const COPY = {
     vi: {
-      nav: ['Trang chủ', 'Giới thiệu', 'Sản phẩm', 'Tuyển dụng', 'Liên hệ'],
+      nav: ['Trang chủ', 'Giới thiệu', 'Sản phẩm', 'Tin tức', 'Tuyển dụng', 'Liên hệ'],
       company: 'Công ty TNHH KS Long Anh',
       short: 'KS LONG ANH',
       tagline: 'Bột đá Canxi Cacbonat & Đá tự nhiên Việt Nam',
@@ -537,7 +537,7 @@
       footnote: '© 2026 Công ty TNHH KS Long Anh · Mã số DN 2901xxxxx'
     },
     en: {
-      nav: ['Home', 'About', 'Products', 'Career', 'Contact'],
+      nav: ['Home', 'About', 'Products', 'News', 'Career', 'Contact'],
       company: 'Long Anh Mineral Co., Ltd',
       short: 'LONG ANH',
       tagline: 'Vietnamese Calcium Carbonate & Natural Stone',
@@ -612,7 +612,7 @@
       footnote: '© 2026 Long Anh Mineral Co., Ltd · Reg. No. 2901xxxxx'
     },
     zh: {
-      nav: ['首页', '关于我们', '产品', '招聘', '联系'],
+      nav: ['首页', '关于我们', '产品', '新闻', '招聘', '联系'],
       company: '龙英矿业有限公司',
       short: '龙英矿业',
       tagline: '越南碳酸钙粉与天然石材',
@@ -1231,8 +1231,8 @@
     const C = COPY[t.lang];
     const [active, setActive] = React.useState('home');
     const navHrefs = standalone ?
-      ['index.html', 'about.html', 'products.html', 'career.html', '#contact'] :
-      ['#home', '#about', '#products', '#career', '#contact'];
+      ['index.html', 'about.html', 'products.html', 'news.html', 'career.html', '#contact'] :
+      ['#home', '#about', '#products', 'news.html', '#career', '#contact'];
 
     const cssVars = {
       '--brand-primary': t.primary,
@@ -1270,7 +1270,7 @@
             </a>
             <nav className="va-nav">
               {C.nav.map((n, i) => {
-                const id = ['home', 'about', 'products', 'career', 'contact'][i];
+                const id = ['home', 'about', 'products', 'news', 'career', 'contact'][i];
                 const href = navHrefs[i];
                 if (id === 'products') {
                   return (
@@ -1772,7 +1772,7 @@
               <div>
                 <h5>{t.lang === 'zh' ? '公司' : t.lang === 'en' ? 'Company' : 'Công ty'}</h5>
                 {C.nav.map((n, i) => {
-                  const hrefs = ['index.html','about.html','products.html','career.html','#contact'];
+                  const hrefs = ['index.html','about.html','products.html','news.html','career.html','#contact'];
                   return <a key={i} href={hrefs[i]}>{n}</a>;
                 })}
               </div>

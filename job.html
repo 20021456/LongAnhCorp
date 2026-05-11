@@ -21,7 +21,7 @@
 // ─── Translations ───────────────────────────────────────────────────────────
 const COPY = {
   vi: {
-    nav: ['Trang chủ', 'Giới thiệu', 'Sản phẩm', 'Tuyển dụng', 'Liên hệ'],
+    nav: ['Trang chủ', 'Giới thiệu', 'Sản phẩm', 'Tin tức', 'Tuyển dụng', 'Liên hệ'],
     tagline: 'Bột đá Canxi Cacbonat & Đá tự nhiên Việt Nam',
     phone: ['(+84) 912 779 799', '(+84-2383) 982 555'],
     email: 'info@longanhcorp.com',
@@ -42,7 +42,7 @@ const COPY = {
     applyText: 'Vui lòng gửi CV và thư giới thiệu (tiếng Việt hoặc tiếng Anh) đến email HR. Tiêu đề email: [Mã vị trí] - Họ tên - Vị trí ứng tuyển. Chúng tôi sẽ phản hồi trong vòng 3 ngày làm việc.',
   },
   en: {
-    nav: ['Home', 'About', 'Products', 'Career', 'Contact'],
+    nav: ['Home', 'About', 'Products', 'News', 'Career', 'Contact'],
     tagline: 'Vietnamese Calcium Carbonate & Natural Stone',
     phone: ['(+84) 912 779 799', '(+84-2383) 982 555'],
     email: 'info@longanhcorp.com',
@@ -63,7 +63,7 @@ const COPY = {
     applyText: 'Please send your CV and cover letter (Vietnamese or English) to our HR email. Email subject: [Job code] - Full name - Position. We will respond within 3 business days.',
   },
   zh: {
-    nav: ['首页', '关于我们', '产品', '招聘', '联系'],
+    nav: ['首页', '关于我们', '产品', '新闻', '招聘', '联系'],
     tagline: '越南碳酸钙粉与天然石材',
     phone: ['(+84) 912 779 799', '(+84-2383) 982 555'],
     email: 'info@longanhcorp.com',
@@ -971,8 +971,8 @@ const CHROME_CSS = `
   @media (max-width:980px){.vac-nav{display:none}.vac-ft-grid{grid-template-columns:1fr 1fr}}
 `;
 
-const NAV_HREFS = ['index.html','about.html','products.html','career.html','index.html#contact'];
-const NAV_SLUGS = ['home','about','products','career','contact'];
+const NAV_HREFS = ['index.html','about.html','products.html','news.html','career.html','index.html#contact'];
+const NAV_SLUGS = ['home','about','products','news','career','contact'];
 
 function VAHeader({ tweaks, current = 'career' }) {
   const t = tweaks; const C = COPY[t.lang];

@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tin tức — KS Long Anh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fraunces:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0;padding:0;min-height:100%;background:#FAFBFD;}
+  body{font-family:'Inter',system-ui,sans-serif;}
+  *{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+// ─── Translations ───────────────────────────────────────────────────────────
+const COPY = {
+  vi: {
+    nav: ['Trang chủ', 'Giới thiệu', 'Sản phẩm', 'Tin tức', 'Tuyển dụng', 'Liên hệ'],
+    tagline: 'Bột đá Canxi Cacbonat & Đá tự nhiên Việt Nam',
+    phone: ['(+84) 912 779 799', '(+84-2383) 982 555'],
+    email: 'info@longanhcorp.com',
+    footnote: '© 2026 Công ty TNHH KS Long Anh · Mã số DN 2901xxxxx',
+    home: 'Trang chủ', news: 'Tin tức',
+    pageEyebrow: 'Tin tức & Sự kiện',
+    pageTitle: 'Cập nhật mới nhất từ Long Anh',
+    pageSub: 'Tin tức, sự kiện, hợp đồng xuất khẩu và những cột mốc phát triển của Long Anh trên thị trường khoáng sản trong nước và quốc tế.',
+    featured: 'Tin nổi bật', readMore: 'Đọc thêm', viewAll: 'Xem tất cả tin tức',
+    filterAll: 'Tất cả', categories: {
+      'business':'Kinh doanh', 'product':'Sản phẩm', 'event':'Sự kiện',
+      'csr':'CSR', 'tech':'Công nghệ', 'milestone':'Cột mốc'
+    },
+    minRead: 'phút đọc', publishedOn: 'Đăng ngày',
+    newsletterTitle: 'Đăng ký nhận tin Long Anh',
+    newsletterBody: 'Tin tức ngành, báo cáo thị trường và bảng giá xuất khẩu hàng tháng — gửi trực tiếp đến hộp thư của bạn.',
+    emailPlaceholder: 'Email của bạn',
+    subscribe: 'Đăng ký nhận tin',
+    privacyNote: 'Chúng tôi không spam. Hủy đăng ký bất cứ lúc nào.',
+  },
+  en: {
+    nav: ['Home', 'About', 'Products', 'News', 'Career', 'Contact'],
+    tagline: 'Vietnamese Calcium Carbonate & Natural Stone',
+    phone: ['(+84) 912 779 799', '(+84-2383) 982 555'],
+    email: 'info@longanhcorp.com',
+    footnote: '© 2026 Long Anh Mineral Co., Ltd · Reg. No. 2901xxxxx',
+    home: 'Home', news: 'News',
+    pageEyebrow: 'News & Events',
+    pageTitle: 'Latest updates from Long Anh',
+    pageSub: 'News, events, export contracts and growth milestones of Long Anh in domestic and international mineral markets.',
+    featured: 'Featured', readMore: 'Read more', viewAll: 'View all news',
+    filterAll: 'All', categories: {
+      'business':'Business', 'product':'Product', 'event':'Event',
+      'csr':'CSR', 'tech':'Technology', 'milestone':'Milestone'
+    },
+    minRead: 'min read', publishedOn: 'Published',
+    newsletterTitle: 'Subscribe to Long Anh newsletter',
+    newsletterBody: 'Industry news, market reports and monthly export pricing — delivered straight to your inbox.',
+    emailPlaceholder: 'Your email',
+    subscribe: 'Subscribe',
+    privacyNote: 'No spam. Unsubscribe anytime.',
+  },
+  zh: {
+    nav: ['首页', '关于我们', '产品', '新闻', '招聘', '联系'],
+    tagline: '越南碳酸钙粉与天然石材',
+    phone: ['(+84) 912 779 799', '(+84-2383) 982 555'],
+    email: 'info@longanhcorp.com',
+    footnote: '© 2026 龙英矿业有限公司 · 注册号 2901xxxxx',
+    home: '首页', news: '新闻',
+    pageEyebrow: '新闻与活动',
+    pageTitle: '龙英最新动态',
+    pageSub: '龙英在国内外矿产市场的新闻、活动、出口合同和发展里程碑。',
+    featured: '热门', readMore: '阅读更多', viewAll: '查看所有新闻',
+    filterAll: '全部', categories: {
+      'business':'商务', 'product':'产品', 'event':'活动',
+      'csr':'企业责任', 'tech':'技术', 'milestone':'里程碑'
+    },
+    minRead: '分钟阅读', publishedOn: '发布于',
+    newsletterTitle: '订阅龙英新闻',
+    newsletterBody: '行业新闻、市场报告和月度出口报价 — 直接发送到您的邮箱。',
+    emailPlaceholder: '您的邮箱',
+    subscribe: '订阅',
+    privacyNote: '不发送垃圾邮件。随时可取消订阅。',
+  },
+};
+
+// ─── News articles database ─────────────────────────────────────────────────
+const NEWS = [
+  {
+    id:1, cat:'business', date:'2026-05-06', readMin:4,
+    img:'assets/kho-hang-xuat-khau.webp',
+    title:{
+      vi:'Long Anh ký hợp đồng xuất khẩu 12,000 tấn bột đá CaCO₃ sang Ấn Độ',
+      en:'Long Anh signs 12,000-ton CaCO₃ export contract with India',
+      zh:'龙英与印度签订12,000吨碳酸钙粉出口合同',
+    },
+    excerpt:{
+      vi:'Hợp đồng kéo dài 18 tháng với 3 đối tác công nghiệp lớn tại Mumbai và Delhi, đánh dấu cột mốc mới cho thị trường Nam Á của Long Anh.',
+      en:'18-month contract with 3 major industrial partners in Mumbai and Delhi marks a new milestone for Long Anh in the South Asia market.',
+      zh:'与孟买和德里的3个主要工业合作伙伴签订18个月合同,标志着龙英在南亚市场的新里程碑。',
+    },
+  },
+  {
+    id:2, cat:'milestone', date:'2026-05-02', readMin:3,
+    img:'assets/nha-may-bot-sieu-min-3.webp',
+    title:{
+      vi:'Khánh thành dây chuyền nghiền bột siêu mịn số 4 tại Quỳ Hợp',
+      en:'Long Anh opens 4th ultra-fine grinding line at Quy Hop',
+      zh:'龙英归合超细研磨生产线#4开工',
+    },
+    excerpt:{
+      vi:'Dây chuyền số 4 nâng tổng công suất nhà máy lên 350,000 tấn/năm, áp dụng công nghệ Đức tiên tiến nhất cho cỡ hạt 3 µm.',
+      en:'Line #4 raises total plant capacity to 350,000 tons/year, using the latest German technology for 3 µm particle sizes.',
+      zh:'4号线将工厂总产能提升至35万吨/年,采用最新德国技术生产3微米粒径。',
+    },
+  },
+  {
+    id:3, cat:'tech', date:'2026-04-28', readMin:5,
+    img:'assets/kiem-dinh.jpg',
+    title:{
+      vi:'Đạt chứng nhận ISO 9001:2015 cho toàn bộ 5 nhà máy',
+      en:'ISO 9001:2015 certified across all 5 plants',
+      zh:'全部5家工厂获得ISO 9001:2015认证',
+    },
+    excerpt:{
+      vi:'BSI Việt Nam cấp chứng nhận ISO 9001:2015 mở rộng cho tất cả nhà máy của Long Anh sau 18 tháng triển khai hệ thống quản lý chất lượng.',
+      en:'BSI Vietnam grants extended ISO 9001:2015 certification to all Long Anh plants after 18 months of quality management implementation.',
+      zh:'BSI越南在18个月质量管理实施后,为所有龙英工厂颁发扩展的ISO 9001:2015认证。',
+    },
+  },
+  {
+    id:4, cat:'product', date:'2026-04-25', readMin:3,
+    img:'assets/da-slab-sieu-trang.webp',
+    title:{
+      vi:'Báo giá tháng 5: Đá Slab 1.6×2.4m và bảng giá xuất khẩu CaCO₃',
+      en:'May pricing: Slab 1.6×2.4m and export CaCO₃ price list',
+      zh:'5月报价:1.6×2.4米大板和出口碳酸钙价目表',
+    },
+    excerpt:{
+      vi:'Cập nhật giá FOB tháng 5/2026 cho đá Slab tấm lớn và bột đá CaCO₃ uncoated/coated với 7 cỡ hạt từ 3 đến 20 µm.',
+      en:'May 2026 FOB pricing update for large-format Slab and uncoated/coated CaCO₃ powder in 7 particle sizes from 3 to 20 µm.',
+      zh:'2026年5月大板和未涂层/涂层碳酸钙粉的FOB报价更新,3至20微米共7种粒径。',
+    },
+  },
+  {
+    id:5, cat:'event', date:'2026-04-15', readMin:4,
+    img:'assets/co-so-ha-tang.jpg',
+    title:{
+      vi:'Long Anh tham gia triển lãm Vietbuild Hà Nội 2026',
+      en:'Long Anh exhibits at Vietbuild Hanoi 2026',
+      zh:'龙英参加2026年河内国际建筑展',
+    },
+    excerpt:{
+      vi:'Gian hàng B-204 trưng bày toàn bộ dòng sản phẩm bột đá và đá tự nhiên, kèm chương trình demo trực tiếp công nghệ phủ Stearic Acid.',
+      en:'Booth B-204 showcases the full powder and natural stone range, with live demo of stearic-acid coating technology.',
+      zh:'B-204展位展示完整的粉末和天然石材系列,并现场演示硬脂酸涂层技术。',
+    },
+  },
+  {
+    id:6, cat:'business', date:'2026-04-08', readMin:4,
+    img:'assets/nha-may-bot-sieu-min.webp',
+    title:{
+      vi:'Mở rộng thị trường Trung Đông: 3 hợp đồng mới tại UAE và Ai Cập',
+      en:'Middle East expansion: 3 new contracts in UAE and Egypt',
+      zh:'中东扩张:阿联酋和埃及的3个新合同',
+    },
+    excerpt:{
+      vi:'Tổng giá trị hợp đồng đạt 4,2 triệu USD, đưa Trung Đông trở thành khu vực xuất khẩu lớn thứ 3 của Long Anh sau Đông Á và Nam Á.',
+      en:'Total contract value reaches $4.2M, making the Middle East Long Anh\'s 3rd-largest export region after East and South Asia.',
+      zh:'合同总价值达420万美元,使中东成为龙英第三大出口区域,仅次于东亚和南亚。',
+    },
+  },
+  {
+    id:7, cat:'milestone', date:'2026-03-22', readMin:6,
+    img:'assets/kho-hang.webp',
+    title:{
+      vi:'Lễ kỷ niệm 20 năm thành lập KS Long Anh (2006-2026)',
+      en:'KS Long Anh celebrates 20th anniversary (2006-2026)',
+      zh:'龙英矿业20周年庆典 (2006-2026)',
+    },
+    excerpt:{
+      vi:'Từ một mỏ đá vôi trắng đến nhà sản xuất bột đá hàng đầu Bắc Trung Bộ với 350,000 tấn/năm và 12 thị trường xuất khẩu — hành trình 20 năm.',
+      en:'From a single white limestone quarry to North-Central Vietnam\'s leading powder manufacturer with 350,000 t/y and 12 export markets — a 20-year journey.',
+      zh:'从一个白石灰岩矿场到越南北中部领先的粉末制造商,年产能35万吨,12个出口市场 — 20年历程。',
+    },
+  },
+  {
+    id:8, cat:'csr', date:'2026-03-10', readMin:3,
+    img:'assets/kho-da-nguyen-lieu.webp',
+    title:{
+      vi:'Long Anh tài trợ chương trình học bổng cho học sinh Quỳ Hợp',
+      en:'Long Anh sponsors scholarship program for Quy Hop students',
+      zh:'龙英赞助归合学生奖学金项目',
+    },
+    excerpt:{
+      vi:'Quỹ học bổng 500 triệu đồng dành cho 50 học sinh xuất sắc tại 5 trường cấp 2 và cấp 3 trên địa bàn huyện Quỳ Hợp năm học 2026-2027.',
+      en:'500 million VND scholarship fund for 50 outstanding students at 5 secondary schools in Quy Hop district for the 2026-2027 academic year.',
+      zh:'5亿越南盾奖学金基金,用于2026-2027学年归合县5所中学的50名优秀学生。',
+    },
+  },
+];
+
+// ─── Icons ──────────────────────────────────────────────────────────────────
+const Icon = ({ name, size = 18 }) => {
+  const p = {
+    arrow: <path d="M5 12h14M13 6l6 6-6 6"/>,
+    chevron: <path d="M9 6l6 6-6 6"/>,
+    mail: <><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></>,
+    clock: <><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></>,
+    cal: <><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></>,
+    sun: <><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"/></>,
+    moon: <path d="M21 13a8 8 0 11-10-10 7 7 0 0010 10z"/>,
+  };
+  return (<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">{p[name]}</svg>);
+};
+
+const Logo = ({ size = 30 }) => (
+  <span style={{display:'inline-flex',alignItems:'center'}}>
+    <span style={{width:size,height:size,display:'inline-flex'}}>
+      <img src="assets/long-anh-logo.png" alt="Long Anh" style={{width:'100%',height:'100%',objectFit:'contain'}}/>
+    </span>
+  </span>
+);
+
+// ─── Chrome (header + footer) ───────────────────────────────────────────────
+const CHROME_CSS = `
+  .vac *{box-sizing:border-box;}
+  .vac{font-family:var(--va-font,'Inter'),system-ui,sans-serif;color:var(--va-text);background:var(--va-bg);
+    --va-bg:#FAFBFD;--va-bg-alt:#F1F4F9;--va-text:#0E1726;
+    --va-line:rgba(15,61,122,.10);--va-card:#fff;
+    --brand-primary:#0F3D7A;--brand-accent:#F08023;}
+  .vac.dark{--va-bg:#0A1424;--va-bg-alt:#0E1A2E;--va-text:#E6EBF3;
+    --va-line:rgba(255,255,255,.08);--va-card:#0F1B30;}
+  .vac-wrap{max-width:100%;margin:0;padding:0 clamp(24px, 4vw, 80px);}
+  .vac-strip{background:#0A2B57;color:#CFE0F2;font-size:12px;}
+  .vac.dark .vac-strip{background:#06101F;}
+  .vac-strip-in{display:flex;justify-content:space-between;align-items:center;height:36px;}
+  .vac-strip a{color:inherit;text-decoration:none;opacity:.85;}
+  .vac-strip a:hover{opacity:1;color:#fff;}
+  .vac-strip-r{display:flex;gap:18px;align-items:center;}
+  .vac-hd{position:sticky;top:0;z-index:50;background:var(--va-bg);
+    border-bottom:1px solid var(--va-line);backdrop-filter:saturate(140%) blur(8px);}
+  .vac-hd-in{display:flex;align-items:center;justify-content:space-between;height:74px;gap:24px;}
+  .vac-brand{display:flex;align-items:center;gap:14px;text-decoration:none;color:inherit;}
+  .vac-brand-mark{width:48px;height:48px;}
+  .vac-brand-name{display:flex;flex-direction:column;line-height:1;}
+  .vac-brand-name b{font-size:15px;font-weight:700;letter-spacing:.02em;color:#0F3D7A;}
+  .vac.dark .vac-brand-name b{color:#5B9BD5;}
+  .vac-brand-name span{font-size:10.5px;color:var(--va-text);opacity:.55;letter-spacing:.06em;text-transform:uppercase;margin-top:4px;}
+  .vac-nav{display:flex;gap:24px;align-items:center;}
+  .vac-nav a{color:var(--va-text);text-decoration:none;font-size:14px;font-weight:500;
+    opacity:.78;padding:6px 0;position:relative;}
+  .vac-nav a:hover{opacity:1;color:var(--brand-accent,#F08023);}
+  .vac-nav a.is-active{opacity:1;color:var(--brand-accent,#F08023);}
+  .vac-nav a.is-active::after{content:'';position:absolute;left:0;right:0;bottom:-22px;height:2px;background:var(--brand-accent,#F08023);}
+  .vac-nav-item{position:relative;padding:6px 0;}
+  .vac-nav-dropdown{position:absolute;top:calc(100% + 14px);left:50%;
+    transform:translateX(-50%) translateY(-6px);background:var(--va-card);
+    border:1px solid var(--va-line);border-radius:12px;padding:8px;min-width:280px;
+    opacity:0;visibility:hidden;transition:opacity .2s, transform .2s, visibility .2s;
+    box-shadow:0 12px 32px -8px rgba(15,61,122,.22);z-index:100;}
+  .vac-nav-item::before{content:'';position:absolute;top:100%;left:50%;width:140%;
+    height:18px;transform:translateX(-50%);}
+  .vac-nav-item:hover .vac-nav-dropdown{opacity:1;visibility:visible;
+    transform:translateX(-50%) translateY(0);}
+  .vac-nav-dropdown a{display:block;padding:12px 16px;border-radius:8px;font-size:14px;opacity:1;}
+  .vac-nav-dropdown a::after{display:none;}
+  .vac-nav-dropdown a:hover{background:var(--va-bg-alt);color:var(--brand-accent,#F08023);}
+  .vac-nav-dropdown a > b{display:block;font-weight:600;margin-bottom:4px;font-size:14px;line-height:1.2;}
+  .vac-nav-dropdown a > span{display:block;font-size:11.5px;opacity:.6;font-weight:400;}
+  .vac-cta-row{display:flex;gap:10px;align-items:center;}
+  .vac-lang{display:flex;gap:2px;padding:3px;border:1px solid var(--va-line);border-radius:8px;}
+  .vac-lang button{font:inherit;padding:4px 10px;background:transparent;color:var(--va-text);
+    border:0;border-radius:5px;cursor:pointer;font-size:12px;font-weight:600;opacity:.6;}
+  .vac-lang button.on{background:#0F3D7A;color:#fff;opacity:1;}
+  .vac.dark .vac-lang button.on{background:#5B9BD5;color:#0A1424;}
+  .vac-iconbtn{width:34px;height:34px;border-radius:8px;border:1px solid var(--va-line);
+    background:transparent;color:var(--va-text);cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:.7;}
+  .vac-iconbtn:hover{opacity:1;border-color:var(--brand-accent,#F08023);color:var(--brand-accent,#F08023);}
+  .vac-ft{background:#06101F;color:#9CB0CC;padding:54px 0 32px;font-size:13px;
+    font-family:var(--va-font,'Inter'),system-ui,sans-serif;}
+  .vac-ft-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:42px;
+    padding-bottom:32px;border-bottom:1px solid rgba(255,255,255,.08);}
+  .vac-ft h5{color:#fff;font-size:13px;font-weight:600;margin:0 0 14px;}
+  .vac-ft a{color:inherit;text-decoration:none;opacity:.75;display:block;padding:4px 0;}
+  .vac-ft a:hover{color:#F08023;opacity:1;}
+  .vac-ft-social{display:flex;gap:10px;margin-top:18px;}
+  .vac-ft-social a{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;
+    justify-content:center;padding:0;background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.1);color:#9CB0CC;transition:.25s;opacity:1;}
+  .vac-ft-social a:hover{background:#F08023;color:#fff;border-color:transparent;transform:translateY(-2px);}
+  .vac-ft-social svg{width:16px;height:16px;}
+  .vac-ft-bottom{display:flex;justify-content:space-between;align-items:center;
+    padding-top:24px;opacity:.6;font-size:12px;}
+  @media (max-width:980px){.vac-nav{display:none}.vac-ft-grid{grid-template-columns:1fr 1fr}}
+`;
+
+const NAV_HREFS = ['index.html','about.html','products.html','news.html','career.html','index.html#contact'];
+const NAV_SLUGS = ['home','about','products','news','career','contact'];
+
+function VAHeader({ tweaks, current = 'news' }) {
+  const t = tweaks; const C = COPY[t.lang];
+  return (
+    <>
+      <div className="vac-strip">
+        <div className="vac-wrap vac-strip-in">
+          <span>{t.lang==='vi'?'Hotline kinh doanh:':t.lang==='zh'?'销售热线:':'Sales hotline:'} <b style={{color:'#fff'}}>{C.phone[0]}</b></span>
+          <div className="vac-strip-r">
+            <a href={'mailto:'+C.email}><Icon name="mail" size={13}/> {C.email}</a>
+            <span style={{opacity:.4}}>·</span>
+            <a href="#">ISO 9001 : 2015</a>
+          </div>
+        </div>
+      </div>
+      <header className="vac-hd">
+        <div className="vac-wrap vac-hd-in">
+          <a className="vac-brand" href="index.html">
+            <span className="vac-brand-mark"><Logo size={48}/></span>
+            <span className="vac-brand-name">
+              <b>{t.lang==='zh'?'龙英矿业':t.lang==='en'?'LONG ANH MINERAL':'KS LONG ANH'}</b>
+              <span>{C.tagline}</span>
+            </span>
+          </a>
+          <nav className="vac-nav">
+            {C.nav.map((n,i)=>{
+              if (NAV_SLUGS[i] === 'products') {
+                return (
+                  <div key={i} className="vac-nav-item">
+                    <a href={NAV_HREFS[i]} className={current===NAV_SLUGS[i]?'is-active':''}>{n}</a>
+                    <div className="vac-nav-dropdown">
+                      <a href="products.html#powder">
+                        <b>{t.lang==='zh'?'碳酸钙粉':t.lang==='en'?'CaCO₃ Powder':'Bột đá CaCO₃'}</b>
+                        <span>Coated · Uncoated · 3–20 µm</span>
+                      </a>
+                      <a href="products.html#stone">
+                        <b>{t.lang==='zh'?'天然石材饰面':t.lang==='en'?'Natural cladding stone':'Đá ốp lát tự nhiên'}</b>
+                        <span>{t.lang==='zh'?'大板 · 定制石材 · 装饰石材':t.lang==='en'?'Slab · Cut tile · Decorative':'Slab · Đá xẻ · Đá trang trí'}</span>
+                      </a>
+                    </div>
+                  </div>
+                );
+              }
+              if (NAV_SLUGS[i] === 'career') {
+                return (
+                  <div key={i} className="vac-nav-item">
+                    <a href={NAV_HREFS[i]} className={current===NAV_SLUGS[i]?'is-active':''}>{n}</a>
+                    <div className="vac-nav-dropdown">
+                      <a href="career.html#dept=san-xuat">
+                        <b>{t.lang==='zh'?'生产':t.lang==='en'?'Manufacturing':'Sản xuất'}</b>
+                        <span>{t.lang==='zh'?'工厂运营 · 设备维护':t.lang==='en'?'Plant ops · Equipment maintenance':'Vận hành nhà máy · Bảo trì thiết bị'}</span>
+                      </a>
+                      <a href="career.html#dept=kinh-doanh">
+                        <b>{t.lang==='zh'?'销售':t.lang==='en'?'Sales':'Kinh doanh'}</b>
+                        <span>{t.lang==='zh'?'出口销售 · 国内销售':t.lang==='en'?'Export sales · Domestic sales':'Xuất khẩu · Bán hàng nội địa'}</span>
+                      </a>
+                      <a href="career.html#dept=ky-thuat">
+                        <b>{t.lang==='zh'?'工程':t.lang==='en'?'Engineering':'Kỹ thuật'}</b>
+                        <span>{t.lang==='zh'?'工艺改进 · PLC':t.lang==='en'?'Process · PLC':'Cải tiến quy trình · PLC'}</span>
+                      </a>
+                      <a href="career.html#dept=chat-luong">
+                        <b>{t.lang==='zh'?'质量':t.lang==='en'?'Quality':'Chất lượng'}</b>
+                        <span>{t.lang==='zh'?'QC实验室 · ISO':t.lang==='en'?'QC lab · ISO':'Kỹ thuật QC · ISO'}</span>
+                      </a>
+                      <a href="career.html#dept=hanh-chinh">
+                        <b>{t.lang==='zh'?'行政':t.lang==='en'?'Admin':'Hành chính'}</b>
+                        <span>{t.lang==='zh'?'人力资源 · 会计':t.lang==='en'?'HR · Accounting':'Nhân sự · Kế toán'}</span>
+                      </a>
+                    </div>
+                  </div>
+                );
+              }
+              return <a key={i} href={NAV_HREFS[i]} className={current===NAV_SLUGS[i]?'is-active':''}>{n}</a>;
+            })}
+          </nav>
+          <div className="vac-cta-row">
+            <div className="vac-lang">
+              <button className={t.lang==='vi'?'on':''} onClick={()=>tweaks.set('lang','vi')}>VI</button>
+              <button className={t.lang==='en'?'on':''} onClick={()=>tweaks.set('lang','en')}>EN</button>
+              <button className={t.lang==='zh'?'on':''} onClick={()=>tweaks.set('lang','zh')}>中</button>
+            </div>
+            <button className="vac-iconbtn" onClick={()=>tweaks.set('dark',!t.dark)}>
+              <Icon name={t.dark?'sun':'moon'} size={15}/>
+            </button>
+          </div>
+        </div>
+      </header>
+    </>
+  );
+}
+
+function VAFooter({ tweaks }) {
+  const t = tweaks; const C = COPY[t.lang];
+  return (
+    <footer className="vac-ft">
+      <div className="vac-wrap">
+        <div className="vac-ft-grid">
+          <div>
+            <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:14}}>
+              <Logo size={42}/>
+              <b style={{color:'#fff',fontSize:14,letterSpacing:'.04em'}}>
+                {t.lang==='zh'?'龙英矿业':t.lang==='en'?'LONG ANH MINERAL':'KS LONG ANH'}
+              </b>
+            </div>
+            <p style={{lineHeight:1.6,opacity:.65,margin:0}}>
+              {t.lang==='zh'?'越南北中部领先的碳酸钙粉和天然石材制造商。'
+                :t.lang==='en'?'A leading manufacturer of calcium carbonate powder and natural stone in North-Central Vietnam.'
+                :'Nhà sản xuất bột đá Canxi Cacbonat và đá tự nhiên hàng đầu Bắc Trung Bộ.'}
+            </p>
+            <div className="vac-ft-social">
+              <a href="https://www.facebook.com/longanhcorp" target="_blank" rel="noopener" aria-label="Facebook">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.198 21.5h4v-8.01h3.604l.396-3.98h-4V7.5a1 1 0 0 1 1-1h3v-4h-3a5 5 0 0 0-5 5v2.01h-2l-.396 3.98h2.396v8.01z"/></svg>
+              </a>
+              <a href="https://www.linkedin.com/company/longanhcorp" target="_blank" rel="noopener" aria-label="LinkedIn">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43c-1.14 0-2.07-.93-2.07-2.07s.93-2.07 2.07-2.07 2.07.93 2.07 2.07-.93 2.07-2.07 2.07zm1.78 13.02H3.55V9h3.57v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.55C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg>
+              </a>
+              <a href="https://twitter.com/longanhcorp" target="_blank" rel="noopener" aria-label="X / Twitter">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.45-6.231zm-1.161 17.52h1.833L7.084 4.126H5.117l11.966 15.644z"/></svg>
+              </a>
+              <a href="https://zalo.me/longanhcorp" target="_blank" rel="noopener" aria-label="Zalo">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 5.94 2 10.8c0 2.78 1.47 5.26 3.77 6.88l-.84 2.97c-.07.24.18.44.4.32l3.16-1.78c1.07.32 2.22.49 3.41.49h.1c5.52 0 10-3.94 10-8.8S17.52 2 12 2z"/></svg>
+              </a>
+            </div>
+          </div>
+          <div>
+            <h5>{t.lang==='zh'?'新闻':t.lang==='en'?'News':'Tin tức'}</h5>
+            {NEWS.slice(0,5).map((n,i)=>(
+              <a key={i} href={'news.html#article-'+n.id} style={{fontSize:12,lineHeight:1.4}}>
+                {n.title[t.lang].slice(0,52) + (n.title[t.lang].length>52?'…':'')}
+              </a>
+            ))}
+          </div>
+          <div>
+            <h5>{t.lang==='zh'?'公司':t.lang==='en'?'Company':'Công ty'}</h5>
+            {C.nav.map((n,i)=><a key={i} href={NAV_HREFS[i]}>{n}</a>)}
+          </div>
+          <div>
+            <h5>{t.lang==='zh'?'联系':t.lang==='en'?'Contact':'Liên hệ'}</h5>
+            <a>{C.phone[0]}</a><a>{C.phone[1]}</a><a>{C.email}</a>
+          </div>
+        </div>
+        <div className="vac-ft-bottom">
+          <span>{C.footnote}</span>
+          <span>Made in Nghệ An · Vietnam</span>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+// ─── News page ──────────────────────────────────────────────────────────────
+const NW_CSS = `
+  .nw{font-family:var(--va-font,'Inter'),system-ui,sans-serif;color:var(--va-text);background:var(--va-bg);}
+  .nw h1,.nw h2,.nw h3,.nw h4{margin:0;font-weight:700;letter-spacing:-.025em;line-height:1.15;}
+  .nw p{margin:0;}
+
+  .nw-bcrumb{padding:18px 0 0;font-size:12.5px;
+    font-family:ui-monospace,Menlo,monospace;letter-spacing:.04em;display:flex;
+    gap:10px;align-items:center;color:var(--va-text);opacity:.65;flex-wrap:wrap;}
+  .nw-bcrumb a{color:inherit;text-decoration:none;}
+  .nw-bcrumb a:hover{color:var(--brand-accent,#F08023);opacity:1;}
+  .nw-bcrumb .now{color:var(--brand-accent,#F08023);opacity:1;}
+  .nw-bcrumb svg{width:12px;height:12px;opacity:.5;}
+
+  /* Page header */
+  .nw-pageheader{padding:48px 0 60px;border-bottom:1px solid var(--va-line);background:var(--va-bg-alt);}
+  .nw-eyebrow{font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--brand-accent,#F08023);margin-bottom:14px;}
+  .nw-pageheader h1{font-size:clamp(32px,4vw,52px);margin-bottom:18px;line-height:1.1;max-width:880px;}
+  .nw-pageheader p{font-size:16px;line-height:1.65;opacity:.72;max-width:680px;}
+
+  /* Filters */
+  .nw-filters{padding:24px 0;background:var(--va-bg);border-bottom:1px solid var(--va-line);
+    position:sticky;top:74px;z-index:40;}
+  .nw-filters-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+  .nw-filter-btn{font:inherit;font-size:13px;font-weight:600;padding:8px 16px;
+    border-radius:99px;border:1px solid var(--va-line);background:transparent;
+    color:var(--va-text);cursor:pointer;opacity:.7;transition:.2s;}
+  .nw-filter-btn:hover{opacity:1;border-color:var(--brand-accent,#F08023);
+    color:var(--brand-accent,#F08023);}
+  .nw-filter-btn.on{background:var(--brand-primary,#0F3D7A);color:#fff;opacity:1;
+    border-color:var(--brand-primary,#0F3D7A);}
+  .nw.dark .nw-filter-btn.on{background:#5B9BD5;color:#0A1424;border-color:#5B9BD5;}
+
+  /* Section padding */
+  .nw-section{padding:64px 0;}
+  .nw-section.alt{background:var(--va-bg-alt);}
+
+  /* Featured article (first, large) */
+  .nw-featured{display:grid;grid-template-columns:1.2fr 1fr;gap:48px;align-items:center;
+    background:var(--va-card);border:1px solid var(--va-line);border-radius:18px;
+    overflow:hidden;margin-bottom:48px;transition:transform .35s, box-shadow .35s;
+    text-decoration:none;color:inherit;}
+  .nw-featured:hover{transform:translateY(-6px);
+    box-shadow:0 28px 56px -28px rgba(15,61,122,.25);}
+  .nw-featured-img{aspect-ratio:4/3;overflow:hidden;background:var(--va-bg-alt);}
+  .nw-featured-img img{width:100%;height:100%;object-fit:cover;
+    transition:transform .8s cubic-bezier(.2,.7,.3,1);}
+  .nw-featured:hover .nw-featured-img img{transform:scale(1.05);}
+  .nw-featured-body{padding:36px 40px 36px 0;}
+  .nw-featured-meta{display:flex;align-items:center;gap:14px;margin-bottom:14px;
+    font-size:12px;font-family:ui-monospace,Menlo,monospace;}
+  .nw-featured-meta .cat{padding:5px 12px;border-radius:99px;
+    background:rgba(240,128,35,0.12);color:var(--brand-accent,#F08023);
+    font-weight:700;letter-spacing:.08em;text-transform:uppercase;}
+  .nw-featured-meta .feat-tag{padding:5px 12px;border-radius:99px;
+    background:rgba(15,61,122,0.1);color:var(--brand-primary,#0F3D7A);
+    font-weight:600;letter-spacing:.06em;text-transform:uppercase;}
+  .nw.dark .nw-featured-meta .feat-tag{color:#5B9BD5;background:rgba(91,155,213,0.15);}
+  .nw-featured-meta .date{opacity:.6;}
+  .nw-featured h2{font-size:clamp(22px,2.6vw,32px);margin-bottom:14px;line-height:1.25;}
+  .nw-featured p{font-size:15px;line-height:1.7;opacity:.74;margin-bottom:20px;}
+  .nw-readmore{display:inline-flex;align-items:center;gap:8px;
+    color:var(--brand-accent,#F08023);font-size:13px;font-weight:700;
+    text-transform:uppercase;letter-spacing:.08em;}
+
+  /* News grid */
+  .nw-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:28px;}
+  .nw-card{background:var(--va-card);border:1px solid var(--va-line);border-radius:14px;
+    overflow:hidden;cursor:pointer;display:flex;flex-direction:column;
+    transition:transform .35s cubic-bezier(.2,.7,.3,1), box-shadow .35s, border-color .25s;
+    text-decoration:none;color:inherit;}
+  .nw-card:hover{transform:translateY(-8px);
+    box-shadow:0 24px 48px -24px rgba(15,61,122,.25);border-color:transparent;}
+  .nw-card-img{aspect-ratio:16/10;overflow:hidden;background:var(--va-bg-alt);position:relative;}
+  .nw-card-img img{width:100%;height:100%;object-fit:cover;
+    transition:transform .6s cubic-bezier(.2,.7,.3,1);}
+  .nw-card:hover .nw-card-img img{transform:scale(1.06);}
+  .nw-card-cat{position:absolute;top:12px;left:12px;padding:5px 11px;border-radius:99px;
+    background:rgba(255,255,255,0.94);color:var(--brand-primary,#0F3D7A);
+    font-family:ui-monospace,Menlo,monospace;font-size:10px;font-weight:700;
+    letter-spacing:.08em;text-transform:uppercase;backdrop-filter:blur(6px);}
+  .nw-card-body{padding:22px 24px;flex:1;display:flex;flex-direction:column;}
+  .nw-card-meta{font-family:ui-monospace,Menlo,monospace;font-size:11px;opacity:.55;
+    margin-bottom:12px;display:flex;gap:14px;align-items:center;}
+  .nw-card-meta .sep{opacity:.4;}
+  .nw-card h3{font-size:17px;line-height:1.35;margin-bottom:12px;font-weight:700;}
+  .nw-card p{font-size:13.5px;line-height:1.6;opacity:.7;flex:1;}
+  .nw-card-foot{margin-top:18px;padding-top:14px;border-top:1px solid var(--va-line);
+    display:flex;align-items:center;justify-content:space-between;font-size:12px;font-weight:600;}
+  .nw-card-foot .arrow{color:var(--brand-accent,#F08023);display:flex;align-items:center;gap:5px;
+    transition:transform .25s;}
+  .nw-card:hover .nw-card-foot .arrow{transform:translateX(4px);}
+
+  /* Newsletter CTA */
+  .nw-newsletter{background:linear-gradient(135deg,#0F3D7A 0%,#0A2B57 100%);
+    color:#fff;border-radius:18px;padding:56px;display:grid;
+    grid-template-columns:1.3fr 1fr;gap:48px;align-items:center;
+    position:relative;overflow:hidden;isolation:isolate;}
+  .nw-newsletter::before{content:'';position:absolute;top:-100px;right:-100px;
+    width:400px;height:400px;border-radius:50%;
+    background:radial-gradient(circle, rgba(240,128,35,0.18) 0%, transparent 65%);}
+  .nw-newsletter h2{font-size:clamp(24px,2.6vw,32px);color:#fff;margin-bottom:14px;}
+  .nw-newsletter p{font-size:14.5px;opacity:.82;line-height:1.65;}
+  .nw-newsletter .nw-eyebrow{color:var(--brand-accent,#F08023);margin-bottom:14px;}
+  .nw-newsletter-form{display:flex;flex-direction:column;gap:12px;}
+  .nw-newsletter-form input{padding:14px 18px;border-radius:10px;border:0;
+    background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.16);
+    color:#fff;font:inherit;font-size:14px;outline:none;
+    backdrop-filter:blur(6px);}
+  .nw-newsletter-form input::placeholder{color:rgba(255,255,255,0.5);}
+  .nw-newsletter-form input:focus{border-color:var(--brand-accent,#F08023);
+    background:rgba(255,255,255,0.15);}
+  .nw-newsletter-form button{padding:14px 22px;border-radius:10px;
+    background:var(--brand-accent,#F08023);color:#fff;border:0;font:inherit;
+    font-size:14px;font-weight:700;cursor:pointer;transition:.2s;
+    box-shadow:0 12px 24px -8px rgba(240,128,35,.5);
+    display:flex;align-items:center;justify-content:center;gap:8px;}
+  .nw-newsletter-form button:hover{background:#D26713;transform:translateY(-2px);}
+  .nw-privacy{font-size:11.5px;opacity:.55;margin-top:6px;}
+
+  @media (max-width:980px){
+    .nw-featured{grid-template-columns:1fr;}
+    .nw-featured-body{padding:28px;}
+    .nw-newsletter{grid-template-columns:1fr;padding:36px 28px;}
+  }
+`;
+
+function fmtDate(iso, lang) {
+  const [y,m,d] = iso.split('-');
+  if (lang === 'en') {
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return `${months[parseInt(m)-1]} ${parseInt(d)}, ${y}`;
+  }
+  if (lang === 'zh') return `${y}年${parseInt(m)}月${parseInt(d)}日`;
+  return `${d}/${m}/${y}`;
+}
+
+function NewsPage({ tweaks }) {
+  const t = tweaks;
+  const C = COPY[t.lang];
+  const [activeCat, setActiveCat] = React.useState('all');
+
+  const cssVars = { '--va-font':t.font, '--va-display':t.font };
+  const filtered = activeCat === 'all' ? NEWS : NEWS.filter(n => n.cat === activeCat);
+  const featured = filtered[0];
+  const rest = filtered.slice(1);
+
+  // Get unique categories from NEWS
+  const cats = ['all', ...Array.from(new Set(NEWS.map(n => n.cat)))];
+
+  return (
+    <div className={'vac nw '+(t.dark?'dark':'')} style={cssVars}>
+      <style>{CHROME_CSS}</style>
+      <style>{NW_CSS}</style>
+      <VAHeader tweaks={tweaks} current="news"/>
+
+      {/* PAGE HEADER */}
+      <section className="nw-pageheader">
+        <div className="vac-wrap">
+          <nav className="nw-bcrumb">
+            <a href="index.html">{C.home}</a>
+            <Icon name="chevron" size={12}/>
+            <span className="now">{C.news}</span>
+          </nav>
+          <div style={{marginTop:24}}>
+            <div className="nw-eyebrow">{C.pageEyebrow}</div>
+            <h1>{C.pageTitle}</h1>
+            <p>{C.pageSub}</p>
+          </div>
+        </div>
+      </section>
+
+      {/* FILTERS */}
+      <div className="nw-filters">
+        <div className="vac-wrap nw-filters-row">
+          {cats.map(c => (
+            <button key={c}
+              className={'nw-filter-btn'+(activeCat===c?' on':'')}
+              onClick={()=>setActiveCat(c)}>
+              {c === 'all' ? C.filterAll : C.categories[c]}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* ARTICLES */}
+      <section className="nw-section">
+        <div className="vac-wrap">
+          {featured && (
+            <a className="nw-featured" href={'news.html#article-'+featured.id}>
+              <div className="nw-featured-img">
+                <img src={featured.img} alt=""/>
+              </div>
+              <div className="nw-featured-body">
+                <div className="nw-featured-meta">
+                  <span className="feat-tag">★ {C.featured}</span>
+                  <span className="cat">{C.categories[featured.cat]}</span>
+                  <span className="date">{fmtDate(featured.date, t.lang)}</span>
+                  <span className="sep">·</span>
+                  <span className="date">{featured.readMin} {C.minRead}</span>
+                </div>
+                <h2>{featured.title[t.lang]}</h2>
+                <p>{featured.excerpt[t.lang]}</p>
+                <span className="nw-readmore">
+                  {C.readMore} <Icon name="arrow" size={14}/>
+                </span>
+              </div>
+            </a>
+          )}
+
+          <div className="nw-grid">
+            {rest.map(n => (
+              <a key={n.id} className="nw-card" href={'news.html#article-'+n.id}>
+                <div className="nw-card-img">
+                  <img src={n.img} alt=""/>
+                  <span className="nw-card-cat">{C.categories[n.cat]}</span>
+                </div>
+                <div className="nw-card-body">
+                  <div className="nw-card-meta">
+                    <span><Icon name="cal" size={11} style={{verticalAlign:'middle',marginRight:4}}/>
+                      {fmtDate(n.date, t.lang)}</span>
+                    <span className="sep">·</span>
+                    <span><Icon name="clock" size={11} style={{verticalAlign:'middle',marginRight:4}}/>
+                      {n.readMin} {C.minRead}</span>
+                  </div>
+                  <h3>{n.title[t.lang]}</h3>
+                  <p>{n.excerpt[t.lang]}</p>
+                  <div className="nw-card-foot">
+                    <span style={{opacity:.5}}>#{String(n.id).padStart(3,'0')}</span>
+                    <span className="arrow">{C.readMore} <Icon name="arrow" size={13}/></span>
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* NEWSLETTER CTA */}
+      <section className="nw-section alt">
+        <div className="vac-wrap">
+          <div className="nw-newsletter">
+            <div style={{position:'relative',zIndex:1}}>
+              <div className="nw-eyebrow">{t.lang==='vi'?'Bản tin':t.lang==='zh'?'通讯':'Newsletter'}</div>
+              <h2>{C.newsletterTitle}</h2>
+              <p>{C.newsletterBody}</p>
+            </div>
+            <form className="nw-newsletter-form" style={{position:'relative',zIndex:1}}
+              onSubmit={(e)=>{e.preventDefault(); alert(t.lang==='vi'?'Cảm ơn bạn đã đăng ký!':t.lang==='zh'?'感谢您的订阅!':'Thanks for subscribing!');}}>
+              <input type="email" placeholder={C.emailPlaceholder} required/>
+              <button type="submit">
+                <Icon name="mail" size={15}/> {C.subscribe}
+              </button>
+              <div className="nw-privacy">{C.privacyNote}</div>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <VAFooter tweaks={tweaks}/>
+    </div>
+  );
+}
+
+function App() {
+  const [t, setT] = React.useState({ lang:'vi', dark:false, font:'Inter' });
+  const setTweak = (k, v) => setT(s => ({ ...s, [k]: v }));
+  const tweaks = { ...t, set: setTweak };
+  return <NewsPage tweaks={tweaks}/>;
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
