@@ -743,14 +743,6 @@
           background: `repeating-linear-gradient(135deg, rgba(0,0,0,.03) 0 14px, rgba(0,0,0,.06) 14px 28px), ${dark ? '#0F1B30' : '#E9EEF5'}`
         }} />
       }
-      <span style={{
-        position: 'absolute', top: 12, left: 14,
-        fontFamily: 'ui-monospace, Menlo, monospace', fontSize: 10,
-        letterSpacing: '.08em', textTransform: 'uppercase',
-        color: 'rgba(255,255,255,.95)', textShadow: '0 1px 4px rgba(0,0,0,.4)',
-        background: 'rgba(15,61,122,.65)', padding: '4px 8px', borderRadius: 4,
-        backdropFilter: 'blur(4px)'
-      }}>{product.code}</span>
     </div>;
 
   const LA_CAROUSEL_CSS = `
@@ -846,7 +838,6 @@
           }</div>
         </div>
         <div className="la-cc-body">
-          <div className="la-cc-meta">{p.meta}</div>
           <h3>{p.name}</h3>
           <p>{p.desc}</p>
           <div className="la-cc-tags">
