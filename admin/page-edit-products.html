@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sửa: Sản phẩm · Long Anh Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="admin-shell.jsx"></script>
+<script type="text/babel" src="page-edit-shell.jsx"></script>
+<script type="text/babel">
+  const style = document.createElement('style');
+  style.textContent = ADMIN_GLOBAL_CSS + PAGE_EDIT_CSS;
+  document.head.appendChild(style);
+
+  function PageEditProducts() {
+    const [lang, setLang] = React.useState('vi');
+    const [status, setStatus] = React.useState('pub');
+
+    /* Đồng bộ CONTENT.md mục 4.2 */
+    const STATS = [
+      { val: '05',      label: 'Dòng sản phẩm chính' },
+      { val: '98%+',    label: 'Độ trắng CaCO₃' },
+      { val: '3–20µm',  label: 'Cỡ hạt' },
+      { val: '12',      label: 'Thị trường xuất khẩu' },
+    ];
+
+    /* 5 SKUs — CONTENT.md mục 5 */
+    const SKUS = [
+      { code: 'P-01', name: 'Bột đá CaCO₃ không phủ',          cat: 'Powder', moq: '25 tấn', unit: 'VND/tấn' },
+      { code: 'P-02', name: 'Bột đá CaCO₃ phủ Stearic Acid',   cat: 'Powder', moq: '25 tấn', unit: 'VND/tấn' },
+      { code: 'P-03', name: 'Đá Slab 1.6×2.4m',                 cat: 'Stone',  moq: '50 tấm', unit: 'VND/tấm' },
+      { code: 'P-04', name: 'Đá xẻ quy cách',                   cat: 'Stone',  moq: '100 m²', unit: 'VND/m²' },
+      { code: 'P-05', name: 'Đá trang trí',                     cat: 'Stone',  moq: '50 m²',  unit: 'VND/m²' },
+    ];
+
+    const SPEC_ROWS = [
+      ['Độ trắng',  '≥ 98',  '96–98', '%'],
+      ['CaCO₃',     '≥ 98.5','97–98.5','%'],
+      ['Độ ẩm',     '≤ 0.3', '≤ 0.5', '%'],
+      ['Cỡ hạt D50','3–20',  '5–25',  'µm'],
+      ['Tỉ trọng',  '2.7',   '2.7',   'g/cm³'],
+    ];
+
+    return (
+      <PeEditorShell
+        active="pages"
+        crumb={[
+          { label: 'Trang chủ', href: 'index.html' },
+          { label: 'Trang', href: 'pages.html' },
+          { label: 'Sản phẩm' },
+        ]}
+        title="Sản phẩm"
+        slug="/san-pham"
+        status={status} setStatus={setStatus}
+        previewHref="../products.html"
+        lang={lang} setLang={setLang}>
+
+        {/* 01 — Page header */}
+        <PeSection num="01" icon="layers" title="Page header"
+                   sub="Tiêu đề và mô tả ngắn ở đầu trang">
+          <div className="pe-stack">
+            <AdField label="Tiêu đề chính" req>
+              <input className="ad-input" defaultValue="Hai dòng sản phẩm. Năm tiêu chuẩn." />
+            </AdField>
+            <AdField label="Mô tả ngắn">
+              <textarea className="ad-textarea" defaultValue="Từ bột đá CaCO₃ siêu mịn cho compound nhựa, đến đá tự nhiên cỡ lớn cho công trình cao cấp — tất cả đều đến từ một mỏ duy nhất." />
+            </AdField>
+          </div>
+        </PeSection>
+
+        {/* 02 — Stats strip */}
+        <PeSection num="02" icon="trend" title="Stats — Dải 4 số"
+                   sub="Hiển thị ngay dưới page header">
+          <div className="pe-row four">
+            {STATS.map((s, i) => (
+              <div key={i} style={{ background: '#fff', border: '1px solid var(--ad-line)',
+                                    borderRadius: 8, padding: 12, display: 'flex',
+                                    flexDirection: 'column', gap: 8 }}>
+                <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--ad-text-mute)' }}>STAT {i + 1}</span>
+                <input className="ad-input" defaultValue={s.val} style={{ fontWeight: 700, fontSize: 18 }} />
+                <input className="ad-input" defaultValue={s.label} style={{ fontSize: 12 }} />
+              </div>
+            ))}
+          </div>
+        </PeSection>
+
+        {/* 03 — Category tiles */}
+        <PeSection num="03" icon="grid" title="2 Tile danh mục lớn"
+                   sub="Bột đá CaCO₃ và Đá ốp lát tự nhiên">
+          <div className="pe-card-grid">
+            {[
+              { num: '01', title: 'Bột đá CaCO₃',
+                desc: 'Coated · Uncoated · 3–20 µm — phụ gia cho nhựa, sơn, giấy, thức ăn chăn nuôi.',
+                img: '../assets/bot-caco3-sieu-min.webp', anchor: '#cat-powder' },
+              { num: '02', title: 'Đá ốp lát tự nhiên',
+                desc: 'Slab · Đá xẻ · Đá trang trí — cho công trình và không gian sống cao cấp.',
+                img: '../assets/da-slab-sieu-trang.webp', anchor: '#cat-stone' },
+            ].map((t, i) => (
+              <div key={i} className="pe-card-edit">
+                <div className="head">
+                  <span className="pill">TILE {t.num}</span>
+                  <div className="name">{t.title}</div>
+                  <button title="Kéo"><AdIcon name="drag" size={14} /></button>
+                </div>
+                <div className="miniimg"><img src={t.img} alt={t.title} /></div>
+                <AdField label="Tiêu đề"><input className="ad-input" defaultValue={t.title} /></AdField>
+                <AdField label="Mô tả"><textarea className="ad-textarea" defaultValue={t.desc} style={{ minHeight: 60 }} /></AdField>
+                <AdField label="Anchor neo"><input className="ad-input" defaultValue={t.anchor} /></AdField>
+              </div>
+            ))}
+          </div>
+        </PeSection>
+
+        {/* 04 — 5 SKUs list */}
+        <PeSection num="04" icon="rock" title="Danh sách 5 sản phẩm (SKU)"
+                   sub="P-01 đến P-05 — sửa chi tiết tại product-edit.html">
+          <div className="pe-stack">
+            <div className="pe-list">
+              {SKUS.map((p, i) => (
+                <div key={p.code} className="pe-list-item">
+                  <span className="num">{p.code}</span>
+                  <div style={{ display: 'grid', gridTemplateColumns: '2fr 0.8fr 0.8fr 0.8fr', gap: 8 }}>
+                    <input className="ad-input" defaultValue={p.name} />
+                    <select className="ad-select" defaultValue={p.cat}>
+                      <option>Powder</option>
+                      <option>Stone</option>
+                    </select>
+                    <input className="ad-input" defaultValue={p.moq} placeholder="MOQ" />
+                    <input className="ad-input" defaultValue={p.unit} placeholder="Đơn vị giá" />
+                  </div>
+                  <div className="actions">
+                    <a className="ad-btn ghost sm" href="product-edit.html" title="Sửa chi tiết">
+                      <AdIcon name="edit" size={13} />
+                    </a>
+                    <button title="Kéo"><AdIcon name="drag" size={13} /></button>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <a href="products.html" className="ad-btn ghost sm" style={{ width: 'fit-content' }}>
+              <AdIcon name="edit" size={12} /> Quản lý sản phẩm chi tiết
+            </a>
+          </div>
+        </PeSection>
+
+        {/* 05 — Particle size visualizer */}
+        <PeSection num="05" icon="activity" title="Particle size visualizer"
+                   sub="Dải các cỡ hạt khả dụng cho bột CaCO₃" defaultOpen={false}>
+          <div className="pe-stack">
+            <div className="pe-row">
+              <AdField label="Eyebrow"><input className="ad-input" defaultValue="Cỡ hạt khả dụng" /></AdField>
+              <AdField label="Tiêu đề"><input className="ad-input" defaultValue="Từ siêu mịn đến tiêu chuẩn — chọn cỡ hạt phù hợp ứng dụng" /></AdField>
+            </div>
+            <div className="pe-row">
+              <AdField label="Bột không phủ — các cỡ (µm)">
+                <input className="ad-input" defaultValue="3, 8, 10, 12, 15, 17, 18, 20" />
+              </AdField>
+              <AdField label="Bột phủ Stearic — các cỡ (µm)">
+                <input className="ad-input" defaultValue="3, 10, 12, 15, 17, 18, 20" />
+              </AdField>
+            </div>
+            <AdField label="Tỉ lệ Stearic Acid">
+              <input className="ad-input" defaultValue="1.0–1.5%" />
+            </AdField>
+          </div>
+        </PeSection>
+
+        {/* 06 — Spec table */}
+        <PeSection num="06" icon="list" title="Bảng thông số kỹ thuật"
+                   sub="Chỉ tiêu chất lượng — Bột đá CaCO₃" defaultOpen={false}>
+          <div className="pe-stack">
+            <AdField label="Tiêu đề bảng"><input className="ad-input" defaultValue="Chỉ tiêu chất lượng — Bột đá CaCO₃" /></AdField>
+            <div className="pe-list">
+              {SPEC_ROWS.map((r, i) => (
+                <div key={i} className="pe-list-item">
+                  <span className="num">{i + 1}</span>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 0.6fr', gap: 8 }}>
+                    <input className="ad-input" defaultValue={r[0]} placeholder="Chỉ tiêu" />
+                    <input className="ad-input" defaultValue={r[1]} placeholder="Phủ Stearic" />
+                    <input className="ad-input" defaultValue={r[2]} placeholder="Không phủ" />
+                    <input className="ad-input" defaultValue={r[3]} placeholder="Đơn vị" />
+                  </div>
+                  <div className="actions">
+                    <button title="Xóa"><AdIcon name="trash" size={13} /></button>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <button className="ad-btn" style={{ width: 'fit-content' }}>
+              <AdIcon name="plus" size={13} /> Thêm dòng
+            </button>
+            <AdField label="Chip chứng nhận dưới bảng">
+              <PeTags tags={['ISO 9001:2015', 'REACH', 'SGS']} />
+            </AdField>
+          </div>
+        </PeSection>
+
+        {/* 07 — Quote CTA */}
+        <PeSection num="07" icon="mail" title="CTA — Báo giá FOB"
+                   sub="Banner kêu gọi liên hệ ở cuối trang">
+          <div className="pe-stack">
+            <AdField label="Tiêu đề"><input className="ad-input" defaultValue="Cần báo giá FOB cho lô hàng tiếp theo?" /></AdField>
+            <AdField label="Mô tả">
+              <textarea className="ad-textarea" defaultValue="Gửi yêu cầu kèm cỡ hạt, số lượng và cảng đến — chúng tôi phản hồi trong 24h làm việc." />
+            </AdField>
+            <div className="pe-row">
+              <AdField label="Nút chính - chữ"><input className="ad-input" defaultValue="Yêu cầu báo giá" /></AdField>
+              <AdField label="Nút chính - link"><input className="ad-input" defaultValue="/index.html#contact" /></AdField>
+            </div>
+          </div>
+        </PeSection>
+
+        {/* 08 — SEO */}
+        <PeSeoSection
+          num="08"
+          metaTitle="Sản phẩm KS Long Anh — Bột đá CaCO₃ & Đá tự nhiên"
+          metaDesc="5 dòng sản phẩm: bột CaCO₃ phủ/không phủ Stearic 3-20µm, đá Slab 1.6×2.4m, đá xẻ và đá trang trí. Độ trắng > 98%, CaCO₃ > 98.5%."
+          keywords={['sản phẩm Long Anh', 'bột đá CaCO3', 'đá Slab', 'đá xẻ', 'bột phủ Stearic 3µm', 'KS Long Anh']}
+          ogImage="../assets/bot-caco3-sieu-min.webp"
+          googleSlug="sản phẩm" />
+
+      </PeEditorShell>
+    );
+  }
+
+  ReactDOM.createRoot(document.getElementById('root')).render(<PageEditProducts />);
+</script>
+</body>
+</html>

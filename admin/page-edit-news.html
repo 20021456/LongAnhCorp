@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sửa: Tin tức · Long Anh Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="admin-shell.jsx"></script>
+<script type="text/babel" src="page-edit-shell.jsx"></script>
+<script type="text/babel">
+  const style = document.createElement('style');
+  style.textContent = ADMIN_GLOBAL_CSS + PAGE_EDIT_CSS;
+  document.head.appendChild(style);
+
+  function PageEditNews() {
+    const [lang, setLang] = React.useState('vi');
+    const [status, setStatus] = React.useState('pub');
+
+    /* Categories — phải khớp với /news.html (6 cat) */
+    const CATS = [
+      { key: 'business',  label: 'Kinh doanh',  count: 3 },
+      { key: 'milestone', label: 'Cột mốc',     count: 2 },
+      { key: 'product',   label: 'Sản phẩm',    count: 2 },
+      { key: 'tech',      label: 'Công nghệ',   count: 2 },
+      { key: 'event',     label: 'Sự kiện',     count: 2 },
+      { key: 'csr',       label: 'CSR',         count: 1 },
+    ];
+
+    /* Featured (5 tin nổi bật xuất hiện top trang) — mặc định lấy theo lượt xem */
+    const FEATURED = [
+      { id: 1, title: 'Long Anh ký hợp đồng xuất khẩu 12,000 tấn bột đá CaCO₃ sang Ấn Độ', views: 4280 },
+      { id: 7, title: 'Lễ kỷ niệm 20 năm thành lập KS Long Anh (2006-2026)', views: 3540 },
+      { id: 2, title: 'Khánh thành dây chuyền nghiền bột siêu mịn số 4 tại Quỳ Hợp', views: 2156 },
+      { id: 11, title: 'Đầu tư 80 tỷ đồng nâng cấp dây chuyền phủ Stearic Acid thế hệ mới', views: 2105 },
+      { id: 3, title: 'Đạt chứng nhận ISO 9001:2015 cho toàn bộ 5 nhà máy', views: 1820 },
+    ];
+
+    return (
+      <PeEditorShell
+        active="pages"
+        crumb={[
+          { label: 'Trang chủ', href: 'index.html' },
+          { label: 'Trang', href: 'pages.html' },
+          { label: 'Tin tức' },
+        ]}
+        title="Tin tức"
+        slug="/tin-tuc"
+        status={status} setStatus={setStatus}
+        previewHref="../news.html"
+        lang={lang} setLang={setLang}>
+
+        {/* 01 — Page header / Hero */}
+        <PeSection num="01" icon="layers" title="Hero — Banner đầu trang"
+                   sub="Eyebrow, tiêu đề lớn và thanh tìm kiếm bài viết">
+          <div className="pe-stack">
+            <div className="pe-row">
+              <AdField label="Eyebrow"><input className="ad-input" defaultValue="// Newsroom · KS Long Anh" /></AdField>
+              <AdField label="Tiêu đề chính" req>
+                <input className="ad-input" defaultValue="Tin tức & Cập nhật ngành khoáng sản" />
+              </AdField>
+            </div>
+            <AdField label="Mô tả ngắn">
+              <textarea className="ad-textarea" defaultValue="Theo dõi hoạt động kinh doanh, sản phẩm mới, cập nhật công nghệ và phân tích thị trường xuất khẩu bột đá CaCO₃ của Long Anh." />
+            </AdField>
+            <div className="pe-row">
+              <AdField label="Placeholder ô tìm kiếm"><input className="ad-input" defaultValue="Tìm bài viết theo tiêu đề, danh mục…" /></AdField>
+              <AdField label="Hiển thị thanh tìm kiếm hero">
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, paddingTop: 6 }}>
+                  <AdSwitch on={true} onChange={() => {}} />
+                  <span style={{ fontSize: 12.5, color: 'var(--ad-text-mute)' }}>Bật</span>
+                </div>
+              </AdField>
+            </div>
+          </div>
+        </PeSection>
+
+        {/* 02 — Categories */}
+        <PeSection num="02" icon="folder" title="Danh mục bài viết"
+                   sub="6 chuyên mục dùng làm filter và section dưới trang">
+          <div className="pe-stack">
+            <div className="pe-list">
+              {CATS.map((c, i) => (
+                <div key={c.key} className="pe-list-item">
+                  <span className="num">{String(i + 1).padStart(2, '0')}</span>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 0.5fr', gap: 8, alignItems: 'center' }}>
+                    <input className="ad-input" defaultValue={c.label} placeholder="Tên hiển thị" />
+                    <input className="ad-input" defaultValue={c.key} placeholder="Slug (URL)" />
+                    <span style={{ fontSize: 12, color: 'var(--ad-text-mute)' }}>{c.count} bài</span>
+                  </div>
+                  <div className="actions">
+                    <button title="Kéo"><AdIcon name="drag" size={13} /></button>
+                    <button title="Xóa"><AdIcon name="trash" size={13} /></button>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <button className="ad-btn" style={{ width: 'fit-content' }}>
+              <AdIcon name="plus" size={13} /> Thêm danh mục
+            </button>
+          </div>
+        </PeSection>
+
+        {/* 03 — Featured */}
+        <PeSection num="03" icon="star" title="Tin nổi bật (Trending)"
+                   sub="5 bài hiển thị to ở đầu trang">
+          <div className="pe-stack">
+            <AdField label="Cách chọn">
+              <select className="ad-select">
+                <option>Tự động — Top 5 bài theo lượt xem 30 ngày</option>
+                <option>Thủ công — chọn từng bài</option>
+                <option>Bài có cờ "Nổi bật"</option>
+              </select>
+            </AdField>
+            <div style={{ background: '#fff', border: '1px solid var(--ad-line)',
+                          borderRadius: 8, padding: 12 }}>
+              <div style={{ fontSize: 12, color: 'var(--ad-text-mute)', marginBottom: 8 }}>
+                Bài đang ghim ({FEATURED.length})
+              </div>
+              <div className="pe-stack">
+                {FEATURED.map((f, i) => (
+                  <div key={f.id} style={{ display: 'flex', alignItems: 'center', gap: 10,
+                                            padding: '8px 10px', background: 'var(--ad-line-soft)',
+                                            borderRadius: 6, fontSize: 12.5 }}>
+                    <span style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 11,
+                                   color: 'var(--ad-primary)', fontWeight: 600,
+                                   background: '#fff', padding: '2px 6px', borderRadius: 4 }}>
+                      #{i + 1}
+                    </span>
+                    <div style={{ flex: 1, minWidth: 0, overflow: 'hidden',
+                                  textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {f.title}
+                    </div>
+                    <span style={{ color: 'var(--ad-text-mute)', fontSize: 11.5 }}>
+                      {f.views.toLocaleString()} xem
+                    </span>
+                    <button style={{ border: 0, background: 'transparent', cursor: 'pointer',
+                                     color: 'var(--ad-text-mute)' }}>
+                      <AdIcon name="x" size={12} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <button className="ad-btn ghost sm" style={{ width: 'fit-content' }}>
+              <AdIcon name="plus" size={12} /> Thêm bài vào featured
+            </button>
+          </div>
+        </PeSection>
+
+        {/* 04 — List + Sidebar config */}
+        <PeSection num="04" icon="list" title="Danh sách bài viết & Sidebar"
+                   sub="Bố cục chính + cột phải">
+          <div className="pe-stack">
+            <div className="pe-row">
+              <AdField label="Số bài/trang"><input className="ad-input" defaultValue="9" /></AdField>
+              <AdField label="Sắp xếp mặc định">
+                <select className="ad-select">
+                  <option>Mới nhất trước</option>
+                  <option>Cũ nhất trước</option>
+                  <option>Lượt xem cao nhất</option>
+                  <option>Nhiều bình luận nhất</option>
+                </select>
+              </AdField>
+            </div>
+            <AdField label="Layout danh sách chính">
+              <div style={{ display: 'flex', gap: 8 }}>
+                {[
+                  ['Grid 3 cột', true],
+                  ['Grid 2 cột', false],
+                  ['List dọc với ảnh trái', false],
+                ].map(([l, on], i) => (
+                  <label key={l} style={{ display: 'flex', alignItems: 'center', gap: 6,
+                                          padding: '8px 12px', border: '1px solid var(--ad-line)',
+                                          borderRadius: 6, fontSize: 13, cursor: 'pointer',
+                                          background: on ? 'var(--ad-primary-soft)' : '#fff',
+                                          color: on ? 'var(--ad-primary)' : 'inherit' }}>
+                    <input type="radio" name="news-layout" defaultChecked={on} /> {l}
+                  </label>
+                ))}
+              </div>
+            </AdField>
+            <div style={{ borderTop: '1px solid var(--ad-line-soft)', paddingTop: 12 }}>
+              <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--ad-text-mute)',
+                            letterSpacing: '.05em', textTransform: 'uppercase', marginBottom: 12 }}>
+                Sidebar (cột phải)
+              </div>
+              <div className="pe-stack">
+                {[
+                  ['Khối "Tiêu điểm" (Hot Topics) — top 5 theo lượt xem', true],
+                  ['Khối "Tin mới" / "Đọc nhiều" (tabs)', true],
+                  ['Khối "Đăng ký nhận tin"', true],
+                  ['Banner Quảng cáo CTA "Yêu cầu báo giá"', false],
+                ].map(([l, on], i) => (
+                  <label key={i} style={{ display: 'flex', alignItems: 'center',
+                                          justifyContent: 'space-between', fontSize: 13 }}>
+                    <span>{l}</span>
+                    <AdSwitch on={on} onChange={() => {}} />
+                  </label>
+                ))}
+              </div>
+            </div>
+          </div>
+        </PeSection>
+
+        {/* 05 — News by category sections */}
+        <PeSection num="05" icon="grid" title="Section 'Tin theo chủ đề'"
+                   sub="Mỗi danh mục có 1 row riêng hiển thị 3-4 bài mới nhất" defaultOpen={false}>
+          <div className="pe-stack">
+            <div className="pe-row">
+              <AdField label="Eyebrow"><input className="ad-input" defaultValue="// Chuyên mục" /></AdField>
+              <AdField label="Tiêu đề"><input className="ad-input" defaultValue="Tin theo chủ đề" /></AdField>
+            </div>
+            <AdField label="Số danh mục hiển thị bên dưới featured">
+              <select className="ad-select">
+                <option>Top 2 danh mục có nhiều bài nhất</option>
+                <option>Top 3 danh mục</option>
+                <option>Tất cả danh mục</option>
+              </select>
+            </AdField>
+            <AdField label="Số bài hiển thị mỗi danh mục">
+              <input className="ad-input" defaultValue="4" type="number" min="2" max="8" />
+            </AdField>
+          </div>
+        </PeSection>
+
+        {/* 06 — Newsletter CTA */}
+        <PeSection num="06" icon="mail" title="CTA — Đăng ký nhận tin"
+                   sub="Block email signup ở cuối danh sách" defaultOpen={false}>
+          <div className="pe-stack">
+            <AdField label="Tiêu đề"><input className="ad-input" defaultValue="Đăng ký nhận tin Long Anh" /></AdField>
+            <AdField label="Mô tả">
+              <textarea className="ad-textarea" defaultValue="Tin tức ngành, báo cáo thị trường và bảng giá xuất khẩu hàng tháng — gửi trực tiếp đến hộp thư của bạn." />
+            </AdField>
+            <div className="pe-row">
+              <AdField label="Placeholder ô email"><input className="ad-input" defaultValue="Email của bạn" /></AdField>
+              <AdField label="Chữ trên nút"><input className="ad-input" defaultValue="Đăng ký nhận tin" /></AdField>
+            </div>
+            <AdField label="Ghi chú dưới form">
+              <input className="ad-input" defaultValue="Chúng tôi không spam. Hủy đăng ký bất cứ lúc nào." />
+            </AdField>
+            <AdField label="Mailing list (Mailchimp / Brevo / nội bộ)">
+              <input className="ad-input" defaultValue="long-anh-newsletter" />
+            </AdField>
+          </div>
+        </PeSection>
+
+        {/* 07 — SEO */}
+        <PeSeoSection
+          num="07"
+          metaTitle="Tin tức Long Anh — Cập nhật ngành khoáng sản & xuất khẩu CaCO₃"
+          metaDesc="Theo dõi hoạt động KS Long Anh: hợp đồng xuất khẩu, dây chuyền mới, chứng nhận ISO 9001, sự kiện và phân tích thị trường bột đá Việt Nam."
+          keywords={['tin tức Long Anh', 'KS Long Anh', 'ngành khoáng sản', 'xuất khẩu CaCO3', 'tin tức bột đá', 'Quỳ Hợp Nghệ An']}
+          ogImage="../assets/kho-hang-xuat-khau.webp"
+          googleSlug="tin tức" />
+
+      </PeEditorShell>
+    );
+  }
+
+  ReactDOM.createRoot(document.getElementById('root')).render(<PageEditNews />);
+</script>
+</body>
+</html>

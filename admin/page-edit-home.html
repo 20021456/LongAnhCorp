@@ -7,654 +7,326 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
 </head>
 <body>
 <div id="root"></div>
 <script type="text/babel" src="admin-shell.jsx"></script>
+<script type="text/babel" src="page-edit-shell.jsx"></script>
 <script type="text/babel">
   const style = document.createElement('style');
-  style.textContent = ADMIN_GLOBAL_CSS + `
-    .pe-savebar { position:sticky; top:56px; z-index:10; background:var(--ad-surface);
-          border-bottom:1px solid var(--ad-line); margin:0 -32px 24px; padding:14px 32px;
-          display:flex; align-items:center; gap:14px; }
-    .pe-savebar .back { color:var(--ad-text-soft); display:flex; align-items:center; gap:6px;
-          font-size:13px; font-weight:500; }
-    .pe-savebar .back:hover { color:var(--ad-text); }
-    .pe-savebar .title { display:flex; align-items:center; gap:10px; font-weight:600; font-size:15px; }
-    .pe-savebar .auto { display:flex; align-items:center; gap:6px; font-size:12px;
-          color:var(--ad-text-mute); margin-left:auto; }
-    .pe-savebar .auto::before { content:''; width:7px; height:7px; border-radius:50%;
-          background:var(--ad-success); }
-
-    .pe-langtabs { display:flex; gap:0; border-bottom:1px solid var(--ad-line); margin-bottom:24px; }
-    .pe-langtab { padding:10px 18px; font-size:13.5px; font-weight:500; cursor:pointer;
-          color:var(--ad-text-soft); border-bottom:2px solid transparent; margin-bottom:-1px;
-          display:flex; align-items:center; gap:8px; }
-    .pe-langtab.on { color:var(--ad-primary); border-color:var(--ad-primary); font-weight:600; }
-    .pe-langtab .flag { font-size:14px; }
-
-    .pe-grid { display:grid; grid-template-columns: 1fr 320px; gap:24px; align-items:flex-start; }
-    .pe-main { min-width:0; display:flex; flex-direction:column; gap:16px; }
-    .pe-side { display:flex; flex-direction:column; gap:16px; position:sticky; top:130px; }
-
-    .pe-section { background:#fff; border:1px solid var(--ad-line);
-          border-radius:10px; overflow:hidden; }
-    .pe-shead { display:flex; align-items:center; gap:12px; padding:14px 18px;
-          border-bottom:1px solid var(--ad-line-soft); cursor:pointer; user-select:none; }
-    .pe-shead:hover { background:#FBFBFC; }
-    .pe-shead .num { font-family:'JetBrains Mono',ui-monospace,monospace; font-size:11px;
-          padding:3px 7px; background:var(--ad-line-soft); border-radius:4px;
-          color:var(--ad-text-soft); font-weight:600; }
-    .pe-shead .ico { width:32px; height:32px; border-radius:7px;
-          background:var(--ad-primary-soft); color:var(--ad-primary);
-          display:flex; align-items:center; justify-content:center; flex:none; }
-    .pe-shead .titles { flex:1; min-width:0; }
-    .pe-shead h3 { margin:0; font-size:14.5px; font-weight:600; }
-    .pe-shead p { margin:1px 0 0; font-size:12.5px; color:var(--ad-text-mute); }
-    .pe-shead .chev { color:var(--ad-text-mute); transition:.18s; }
-    .pe-section.open .pe-shead .chev { transform:rotate(90deg); }
-    .pe-sbody { padding:20px 22px; border-top:1px solid var(--ad-line-soft);
-          background:#FCFCFD; }
-    .pe-section:not(.open) .pe-sbody { display:none; }
-    .pe-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
-    .pe-row.three { grid-template-columns:repeat(3, 1fr); }
-    .pe-row.four { grid-template-columns:repeat(4, 1fr); }
-    .pe-stack { display:flex; flex-direction:column; gap:14px; }
-
-    .pe-imgrow { display:grid; grid-template-columns:200px 1fr; gap:16px; align-items:start; }
-    .pe-imgrow .imgwrap { position:relative; border-radius:8px; overflow:hidden;
-          aspect-ratio: 4 / 3; background:var(--ad-line-soft);
-          border:1.5px dashed var(--ad-line); cursor:pointer; }
-    .pe-imgrow .imgwrap img { width:100%; height:100%; object-fit:cover; display:block; }
-    .pe-imgrow .imgwrap:hover .imgover { opacity:1; }
-    .pe-imgrow .imgover { position:absolute; inset:0; background:rgba(15,23,42,.55);
-          display:flex; align-items:center; justify-content:center; gap:8px;
-          opacity:0; transition:.15s; }
-    .pe-imgrow .imgsize { position:absolute; bottom:6px; left:6px; right:6px;
-          font-size:10.5px; color:#fff; background:rgba(0,0,0,.55); padding:2px 7px;
-          border-radius:4px; text-align:center; font-family:'JetBrains Mono',monospace; }
-
-    .pe-card-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
-    .pe-card-edit { background:#fff; border:1px solid var(--ad-line); border-radius:8px;
-          padding:14px; display:flex; flex-direction:column; gap:12px; }
-    .pe-card-edit .head { display:flex; align-items:center; gap:8px; padding-bottom:10px;
-          border-bottom:1px solid var(--ad-line-soft); }
-    .pe-card-edit .head .pill { font-family:'JetBrains Mono',monospace; font-size:10.5px;
-          padding:2px 7px; background:var(--ad-primary-soft); color:var(--ad-primary);
-          border-radius:99px; font-weight:600; }
-    .pe-card-edit .head .name { font-weight:600; font-size:13px; flex:1; }
-    .pe-card-edit .head button { border:0; background:transparent; cursor:pointer;
-          color:var(--ad-text-mute); padding:4px; }
-    .pe-card-edit .head button:hover { color:var(--ad-text); }
-    .pe-card-edit .miniimg { aspect-ratio:16 / 9; border-radius:6px; overflow:hidden;
-          background:var(--ad-line-soft); cursor:pointer; position:relative; }
-    .pe-card-edit .miniimg img { width:100%; height:100%; object-fit:cover; }
-
-    .pe-add-card { background:transparent; border:1.5px dashed var(--ad-line);
-          border-radius:8px; padding:14px; display:flex; flex-direction:column;
-          align-items:center; justify-content:center; gap:6px; color:var(--ad-text-mute);
-          font-size:13px; cursor:pointer; min-height:140px; }
-    .pe-add-card:hover { border-color:var(--ad-primary); color:var(--ad-primary);
-          background:var(--ad-primary-soft); }
-
-    .pe-strip { display:grid; grid-template-columns:repeat(4, 1fr); gap:10px; }
-    .pe-strip-item { aspect-ratio:1; border-radius:6px; overflow:hidden;
-          background:var(--ad-line-soft); cursor:pointer; position:relative; }
-    .pe-strip-item img { width:100%; height:100%; object-fit:cover; }
-    .pe-strip-item .drag { position:absolute; top:4px; left:4px; background:rgba(0,0,0,.55);
-          color:#fff; border-radius:4px; padding:2px; opacity:0; transition:.15s; }
-    .pe-strip-item:hover .drag { opacity:1; }
-
-    .pe-status { display:flex; flex-direction:column; gap:8px; }
-    .pe-status label { display:flex; align-items:center; gap:10px; padding:8px 10px;
-          border:1px solid var(--ad-line); border-radius:6px; cursor:pointer; font-size:13px; }
-    .pe-status label:hover { background:var(--ad-line-soft); }
-    .pe-status label.on { border-color:var(--ad-primary); background:var(--ad-primary-soft); }
-    .pe-status label .radio { width:14px; height:14px; border-radius:50%;
-          border:1.5px solid var(--ad-line); flex:none; }
-    .pe-status label.on .radio { border-color:var(--ad-primary); border-width:4px;
-          background:#fff; }
-
-    .pe-versions .v { display:flex; gap:10px; padding:10px 12px;
-          border-bottom:1px solid var(--ad-line-soft); align-items:center; font-size:12.5px; }
-    .pe-versions .v:last-child { border-bottom:0; }
-    .pe-versions .v .when { color:var(--ad-text-mute); font-size:11.5px; }
-    .pe-versions .v .num { font-family:'JetBrains Mono',monospace; font-weight:600;
-          color:var(--ad-primary); flex:none; }
-    .pe-versions .v button { border:0; background:transparent; color:var(--ad-text-mute);
-          cursor:pointer; padding:4px; }
-    .pe-versions .v button:hover { color:var(--ad-text); }
-
-    .pe-tags input { border:0; outline:none; flex:1; min-width:80px; padding:4px;
-          background:transparent; font-size:12.5px; }
-  `;
+  style.textContent = ADMIN_GLOBAL_CSS + PAGE_EDIT_CSS;
   document.head.appendChild(style);
-
-  /* Section component (collapsible) */
-  function PeSection({ num, icon, title, sub, defaultOpen, children }) {
-    const [open, setOpen] = React.useState(defaultOpen ?? true);
-    return (
-      <div className={`pe-section ${open ? 'open' : ''}`}>
-        <div className="pe-shead" onClick={() => setOpen(!open)}>
-          <span className="num">{num}</span>
-          <div className="ico"><AdIcon name={icon} size={16} /></div>
-          <div className="titles">
-            <h3>{title}</h3>
-            {sub && <p>{sub}</p>}
-          </div>
-          <span className="chev"><AdIcon name="chevron" size={16} /></span>
-        </div>
-        <div className="pe-sbody">{children}</div>
-      </div>
-    );
-  }
-
-  /* Image upload row */
-  function PeImg({ src, label, hint, size }) {
-    return (
-      <div className="imgwrap">
-        {src && <img src={src} alt={label} />}
-        {!src && (
-          <div style={{
-            position: 'absolute', inset: 0, display: 'flex',
-            flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-            color: 'var(--ad-text-mute)', fontSize: 12, gap: 5,
-          }}>
-            <AdIcon name="upload" size={18} />{hint || 'Chọn ảnh'}
-          </div>
-        )}
-        <div className="imgover">
-          <button className="ad-btn sm"><AdIcon name="refresh" size={12} /> Đổi</button>
-          <button className="ad-btn sm"><AdIcon name="edit" size={12} /> Crop</button>
-        </div>
-        {size && <div className="imgsize">{size}</div>}
-      </div>
-    );
-  }
-
-  /* Tag input */
-  function PeTags({ tags = [] }) {
-    return (
-      <div className="ad-tags">
-        {tags.map((t, i) => (
-          <span key={i} className="ad-tag">
-            {t}<button><AdIcon name="x" size={11} /></button>
-          </span>
-        ))}
-        <input placeholder="Thêm tag…" />
-      </div>
-    );
-  }
 
   function PageEditHome() {
     const [lang, setLang] = React.useState('vi');
     const [status, setStatus] = React.useState('pub');
 
-    const Header = (
-      <>
-        <a href="../a-industrial-modern.html" target="_blank" className="ad-btn">
-          <AdIcon name="eye" size={13} /> Xem website
-        </a>
-        <button className="ad-btn">
-          <AdIcon name="save" size={13} /> Lưu nháp
-        </button>
-        <button className="ad-btn primary">
-          <AdIcon name="check" size={13} /> Lưu & Xuất bản
-        </button>
-      </>
-    );
+    /* Capability cards — đồng bộ với CONTENT.md mục 2.4 */
+    const CAPS = [
+      { num: '01', name: 'Năng lực sản xuất', img: '../assets/nha-may-bot-sieu-min-3.webp',
+        body: '05 nhà máy với tổng diện tích 12ha, dây chuyền hiện đại — công suất đạt trên 350,000 tấn/năm.' },
+      { num: '02', name: 'Nguồn nguyên liệu', img: '../assets/da-nguyen-lieu-cao-cap2.webp',
+        body: 'Đá vôi trắng nguyên sinh từ Quỳ Hợp – Nghệ An, độ trắng > 98% và CaCO₃ > 98.5% — kiểm soát từ gốc.' },
+      { num: '03', name: 'Cơ sở hạ tầng', img: '../assets/co-so-ha-tang.jpg',
+        body: 'Hệ thống dây chuyền nghiền và phủ Stearic Acid theo công nghệ Châu Âu, vận hành đồng bộ và ổn định.' },
+      { num: '04', name: 'Kiểm định chất lượng', img: '../assets/kiem-dinh.jpg',
+        body: 'Phòng QC kiểm tra từng lô — độ trắng, CaCO₃, độ ẩm, cỡ hạt — kèm COA và MSDS theo tiêu chuẩn ISO 9001:2015.' },
+      { num: '05', name: 'Đóng gói sản phẩm', img: '../assets/bao-bi-sieu-trang.jpg',
+        body: 'Đáp ứng mọi quy cách: PP 25kg/50kg, jumbo 250kg/500kg/1000kg và bulk theo yêu cầu khách hàng.' },
+    ];
+
+    /* Export feature cards (mục 2.6 — 4 ô trên map) */
+    const EXPORT_FEATURES = [
+      { title: 'Chất lượng cao cấp',     body: 'Độ trắng 98%+, CaCO₃ 98.5%+' },
+      { title: 'Tầm phủ toàn cầu',       body: '12 quốc gia · 8+ thị trường' },
+      { title: 'Logistics tin cậy',      body: 'FOB cảng Cửa Lò & Hải Phòng' },
+      { title: 'Niềm tin khách hàng',    body: '10+ năm đối tác dài hạn' },
+    ];
 
     return (
-      <AdPage active="pages"
+      <PeEditorShell
+        active="pages"
         crumb={[
           { label: 'Trang chủ', href: 'index.html' },
           { label: 'Trang', href: 'pages.html' },
           { label: 'Trang chủ' },
-        ]}>
+        ]}
+        title="Trang chủ"
+        slug="/"
+        status={status} setStatus={setStatus}
+        previewHref="../index.html"
+        lang={lang} setLang={setLang}>
 
-        {/* Sticky save bar */}
-        <div className="pe-savebar">
-          <a href="pages.html" className="back">
-            <AdIcon name="arrowLeft" size={14} /> Quay lại
-          </a>
-          <div className="title">
-            <AdIcon name="file" size={16} />
-            Trang chủ <code style={{
-              fontFamily: 'JetBrains Mono,monospace', fontSize: 12,
-              color: 'var(--ad-text-soft)', background: 'var(--ad-line-soft)',
-              padding: '2px 7px', borderRadius: 4, fontWeight: 500,
-            }}>/</code>
-            <AdBadge status="pub" />
-          </div>
-          <span className="auto">Đã tự lưu nháp · 14:32</span>
-          <a href="../a-industrial-modern.html" target="_blank" className="ad-btn sm">
-            <AdIcon name="eye" size={12} /> Xem
-          </a>
-          <button className="ad-btn sm">
-            <AdIcon name="save" size={12} /> Lưu nháp
-          </button>
-          <button className="ad-btn primary sm">
-            <AdIcon name="check" size={12} /> Xuất bản
-          </button>
-        </div>
-
-        {/* Lang tabs */}
-        <div className="pe-langtabs">
-          <div className={`pe-langtab ${lang === 'vi' ? 'on' : ''}`} onClick={() => setLang('vi')}>
-            <span className="flag">🇻🇳</span> Tiếng Việt
-          </div>
-          <div className={`pe-langtab ${lang === 'en' ? 'on' : ''}`} onClick={() => setLang('en')}>
-            <span className="flag">🇬🇧</span> English
-          </div>
-          <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 8,
-                        fontSize: 12, color: 'var(--ad-text-mute)', paddingBottom: 8 }}>
-            <AdIcon name="refresh" size={12} /> 2 ngôn ngữ đồng bộ
-          </div>
-        </div>
-
-        <div className="pe-grid">
-          <div className="pe-main">
-
-            {/* SECTION 1: HERO */}
-            <PeSection num="01" icon="layers" title="Hero — Banner đầu trang"
-                       sub="Tiêu đề, mô tả, CTA và ảnh sản phẩm chính">
-              <div className="pe-stack">
-                <div className="pe-row">
-                  <AdField label="Eyebrow (chữ nhỏ phía trên)">
-                    <input className="ad-input" defaultValue="// Long Anh Group · 15 năm" />
-                  </AdField>
-                  <AdField label="Slogan / phụ đề tiếng Việt">
-                    <input className="ad-input" defaultValue="Khoáng đá nguyên sinh — Chất lượng từ gốc" />
-                  </AdField>
-                </div>
-                <div className="pe-row">
-                  <AdField label="Tiêu đề chính (dòng 1)" req>
-                    <input className="ad-input" defaultValue="Bột đá cao cấp" />
-                  </AdField>
-                  <AdField label="Tiêu đề chính (dòng 2)" req>
-                    <input className="ad-input" defaultValue="cho công nghiệp Việt." />
-                  </AdField>
-                </div>
-                <AdField label="Mô tả ngắn dưới tiêu đề">
-                  <textarea className="ad-textarea" defaultValue="Long Anh sản xuất bột đá CaCO₃ siêu mịn, đá slab và đá xẻ — phục vụ ngành nhựa, sơn, cao su, giấy, gạch men và xây dựng trên 30 quốc gia." />
-                </AdField>
-                <div className="pe-row">
-                  <AdField label="Nút chính - Chữ">
-                    <input className="ad-input" defaultValue="Xem sản phẩm" />
-                  </AdField>
-                  <AdField label="Nút chính - Liên kết">
-                    <input className="ad-input" defaultValue="/products.html" />
-                  </AdField>
-                </div>
-                <div className="pe-row">
-                  <AdField label="Nút phụ - Chữ">
-                    <input className="ad-input" defaultValue="Liên hệ báo giá" />
-                  </AdField>
-                  <AdField label="Nút phụ - Liên kết">
-                    <input className="ad-input" defaultValue="#contact" />
-                  </AdField>
-                </div>
-
-                <div style={{ borderTop: '1px solid var(--ad-line-soft)', paddingTop: 16 }}>
-                  <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--ad-text-mute)',
-                                letterSpacing: '.05em', textTransform: 'uppercase', marginBottom: 10 }}>
-                    Ảnh sản phẩm hero
-                  </div>
-                  <div className="pe-imgrow">
-                    <PeImg src="../assets/hero-sw.png" label="Ảnh hero" size="2048×1521 · PNG" />
-                    <div className="pe-stack">
-                      <AdField label="Mô tả ảnh (alt text)" help="Quan trọng cho SEO và screen readers">
-                        <input className="ad-input" defaultValue="Bao bột đá CaCO₃ Long Anh siêu trắng" />
-                      </AdField>
-                      <div style={{ display: 'flex', gap: 8 }}>
-                        <button className="ad-btn"><AdIcon name="upload" size={13} /> Đổi ảnh</button>
-                        <button className="ad-btn"><AdIcon name="image" size={13} /> Chọn từ thư viện</button>
-                      </div>
-                      <div style={{ fontSize: 12, color: 'var(--ad-text-mute)' }}>
-                        Khuyến nghị: PNG nền trong suốt · tối thiểu 1200×900px · &lt; 500KB
-                      </div>
-                    </div>
-                  </div>
-                </div>
+        {/* 01 — HERO */}
+        <PeSection num="01" icon="layers" title="Hero — Banner đầu trang"
+                   sub="Eyebrow, tiêu đề 2 dòng, mô tả, 2 nút CTA và ảnh hero">
+          <div className="pe-stack">
+            <AdField label="Eyebrow (chữ cam nhỏ phía trên)">
+              <input className="ad-input" defaultValue="Khoáng sản công nghiệp · Xuất khẩu quốc tế" />
+            </AdField>
+            <div className="pe-row">
+              <AdField label="Tiêu đề dòng 1 (đen)" req>
+                <input className="ad-input" defaultValue="Khoáng đá nguyên sinh" />
+              </AdField>
+              <AdField label="Tiêu đề dòng 2 (cam)" req>
+                <input className="ad-input" defaultValue="từ trái tim Nghệ An" />
+              </AdField>
+            </div>
+            <AdField label="Mô tả ngắn dưới tiêu đề">
+              <textarea className="ad-textarea" defaultValue="Long Anh chuyên sản xuất bột đá CaCO₃ phủ và không phủ Stearic Acid, đá Slab, đá xẻ quy cách và đá trang trí — phục vụ ngành nhựa, sơn, giấy, xây dựng và xuất khẩu trên toàn cầu." />
+            </AdField>
+            <div className="pe-row">
+              <AdField label="Nút chính (cam) - Chữ"><input className="ad-input" defaultValue="Xem sản phẩm" /></AdField>
+              <AdField label="Nút chính - Liên kết"><input className="ad-input" defaultValue="/products.html" /></AdField>
+            </div>
+            <div className="pe-row">
+              <AdField label="Nút phụ (viền) - Chữ"><input className="ad-input" defaultValue="Yêu cầu báo giá" /></AdField>
+              <AdField label="Nút phụ - Liên kết"><input className="ad-input" defaultValue="#contact" /></AdField>
+            </div>
+            <div style={{ borderTop: '1px solid var(--ad-line-soft)', paddingTop: 16 }}>
+              <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--ad-text-mute)',
+                            letterSpacing: '.05em', textTransform: 'uppercase', marginBottom: 10 }}>
+                Ảnh hero
               </div>
-            </PeSection>
-
-            {/* SECTION 2: STATS */}
-            <PeSection num="02" icon="trend" title="Stats — Dải số liệu"
-                       sub="4 con số nổi bật ngay dưới hero">
-              <div className="pe-row four">
-                {[
-                  { val: '15+', label: 'Năm kinh nghiệm' },
-                  { val: '350K', label: 'Tấn/năm' },
-                  { val: '30+', label: 'Quốc gia xuất khẩu' },
-                  { val: '500+', label: 'Khách hàng' },
-                ].map((s, i) => (
-                  <div key={i} style={{
-                    background: '#fff', border: '1px solid var(--ad-line)',
-                    borderRadius: 8, padding: 12, display: 'flex',
-                    flexDirection: 'column', gap: 8,
-                  }}>
-                    <span style={{ fontSize: 11, fontWeight: 600,
-                                   color: 'var(--ad-text-mute)' }}>STAT {i + 1}</span>
-                    <input className="ad-input" defaultValue={s.val}
-                           style={{ fontWeight: 700, fontSize: 18 }} />
-                    <input className="ad-input" defaultValue={s.label}
-                           style={{ fontSize: 12 }} />
-                  </div>
-                ))}
-              </div>
-            </PeSection>
-
-            {/* SECTION 3: ABOUT - 4 cards */}
-            <PeSection num="03" icon="grid" title="Về Long Anh — Lưới 4 ô"
-                       sub="Năng lực sản xuất, Nguồn nguyên liệu, Cơ sở hạ tầng, Kiểm định, Đóng gói">
-              <div className="pe-stack">
-                <div className="pe-row">
-                  <AdField label="Eyebrow">
-                    <input className="ad-input" defaultValue="// Về chúng tôi · 02" />
+              <div className="pe-imgrow">
+                <PeImg src="../assets/hero-sw.png" label="Ảnh hero" size="2048×1521 · PNG" />
+                <div className="pe-stack">
+                  <AdField label="Mô tả ảnh (alt text)" help="Quan trọng cho SEO và screen readers">
+                    <input className="ad-input" defaultValue="Bao bột đá CaCO₃ Long Anh siêu trắng" />
                   </AdField>
-                  <AdField label="Tiêu đề section">
-                    <input className="ad-input" defaultValue="Hành trình 15 năm cùng ngành công nghiệp Việt." />
-                  </AdField>
-                </div>
-
-                <div className="pe-card-grid">
-                  {[
-                    { num: '01', name: 'Năng lực sản xuất', img: '../assets/nha-may-bot-sieu-min-3.webp',
-                      body: '05 nhà máy với tổng diện tích 12ha, dây chuyền hiện đại — công suất đạt trên 350,000 tấn/năm.' },
-                    { num: '02', name: 'Nguồn nguyên liệu', img: '../assets/da-nguyen-lieu-cao-cap2.webp',
-                      body: 'Đá vôi trắng nguyên sinh từ Quỳ Hợp – Nghệ An, độ trắng > 96% và CaCO₃ > 98.5%.' },
-                    { num: '03', name: 'Cơ sở hạ tầng', img: '../assets/co-so-ha-tang.jpg',
-                      body: 'Hệ thống dây chuyền nghiền và phủ Stearic Acid theo công nghệ Châu Âu.' },
-                    { num: '04', name: 'Kiểm định chất lượng', img: '../assets/kiem-dinh.jpg',
-                      body: 'Phòng QC kiểm tra từng lô — độ trắng, CaCO₃, độ ẩm, cỡ hạt — kèm COA và MSDS.' },
-                    { num: '05', name: 'Đóng gói sản phẩm', img: '../assets/bao-bi-sieu-trang.jpg',
-                      body: 'PP 25kg/50kg, jumbo 250kg/500kg/1000kg và bulk theo yêu cầu khách hàng.' },
-                  ].map((c, i) => (
-                    <div key={i} className="pe-card-edit">
-                      <div className="head">
-                        <span className="pill">CARD {c.num}</span>
-                        <div className="name">{c.name}</div>
-                        <button title="Kéo để sắp xếp"><AdIcon name="drag" size={14} /></button>
-                        <button title="Xóa"><AdIcon name="trash" size={13} /></button>
-                      </div>
-                      <div className="miniimg">
-                        <img src={c.img} alt={c.name} />
-                      </div>
-                      <AdField label="Tên card">
-                        <input className="ad-input" defaultValue={c.name} />
-                      </AdField>
-                      <AdField label="Mô tả">
-                        <textarea className="ad-textarea" defaultValue={c.body} style={{ minHeight: 60 }} />
-                      </AdField>
-                    </div>
-                  ))}
-                  <button className="pe-add-card">
-                    <AdIcon name="plus" size={20} />
-                    Thêm card mới
-                  </button>
-                </div>
-              </div>
-            </PeSection>
-
-            {/* SECTION 4: WAREHOUSE STRIP */}
-            <PeSection num="04" icon="image" title="Dải ảnh kho hàng & Logistics"
-                       sub="4 ảnh full-bleed, kéo để sắp xếp">
-              <div className="pe-stack">
-                <div className="pe-row">
-                  <AdField label="Eyebrow">
-                    <input className="ad-input" defaultValue="// Kho bãi & Logistics" />
-                  </AdField>
-                  <AdField label="Tiêu đề">
-                    <input className="ad-input" defaultValue="Hệ thống kho hiện đại — sẵn sàng giao hàng toàn cầu" />
-                  </AdField>
-                </div>
-                <div className="pe-strip">
-                  {[
-                    '../assets/kho-hang.webp',
-                    '../assets/kho-hang-2.webp',
-                    '../assets/kho-da-nguyen-lieu.webp',
-                    '../assets/kho-hang-xuat-khau.webp',
-                  ].map((src, i) => (
-                    <div key={i} className="pe-strip-item">
-                      <img src={src} alt={`Kho ${i + 1}`} />
-                      <div className="drag"><AdIcon name="drag" size={12} /></div>
-                    </div>
-                  ))}
-                </div>
-                <button className="ad-btn" style={{ width: 'fit-content' }}>
-                  <AdIcon name="upload" size={13} /> Thêm ảnh
-                </button>
-              </div>
-            </PeSection>
-
-            {/* SECTION 5: PRODUCTS */}
-            <PeSection num="05" icon="rock" title="Sản phẩm tiêu biểu"
-                       sub="Lưới sản phẩm hiển thị trên trang chủ" defaultOpen={false}>
-              <div className="pe-stack">
-                <div className="pe-row">
-                  <AdField label="Eyebrow">
-                    <input className="ad-input" defaultValue="// Sản phẩm · 03" />
-                  </AdField>
-                  <AdField label="Tiêu đề">
-                    <input className="ad-input" defaultValue="Danh mục sản phẩm chủ lực" />
-                  </AdField>
-                </div>
-                <AdField label="Cách hiển thị">
-                  <select className="ad-select">
-                    <option>Tự động — 6 sản phẩm mới nhất</option>
-                    <option>Thủ công — Chọn sản phẩm cụ thể</option>
-                    <option>Theo danh mục</option>
-                  </select>
-                </AdField>
-                <div style={{ background: '#fff', border: '1px solid var(--ad-line)',
-                              borderRadius: 8, padding: 12 }}>
-                  <div style={{ fontSize: 12, color: 'var(--ad-text-mute)', marginBottom: 8 }}>
-                    Sản phẩm đang hiển thị (6)
+                  <div style={{ display: 'flex', gap: 8 }}>
+                    <button className="ad-btn"><AdIcon name="upload" size={13} /> Đổi ảnh</button>
+                    <button className="ad-btn"><AdIcon name="image" size={13} /> Thư viện</button>
                   </div>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                    {['Bột đá phủ Stearic Acid', 'Bột đá tráng phủ', 'Bột đá tráng không phủ',
-                      'Đá Slab siêu trắng', 'Đá xẻ quy cách', 'Đá trang trí'].map(p => (
-                      <span key={p} className="ad-tag">
-                        {p}<button><AdIcon name="x" size={11} /></button>
-                      </span>
-                    ))}
-                    <button className="ad-btn ghost sm"><AdIcon name="plus" size={12} /> Thêm</button>
+                  <div style={{ fontSize: 12, color: 'var(--ad-text-mute)' }}>
+                    Khuyến nghị: PNG nền trong suốt · tối thiểu 1200×900px · &lt; 500KB
                   </div>
-                </div>
-              </div>
-            </PeSection>
-
-            {/* SECTION 6: APPLICATIONS */}
-            <PeSection num="06" icon="layers" title="Ứng dụng sản phẩm"
-                       sub="Các ngành công nghiệp sử dụng bột đá Long Anh" defaultOpen={false}>
-              <div className="pe-stack">
-                <AdField label="Tiêu đề">
-                  <input className="ad-input" defaultValue="Có mặt trong mọi sản phẩm bạn dùng mỗi ngày." />
-                </AdField>
-                <div className="pe-row three">
-                  {['Nhựa & Polymer', 'Sơn & phủ', 'Cao su', 'Giấy', 'Gạch men', 'Xây dựng']
-                    .map((a, i) => (
-                    <div key={i} style={{ background: '#fff', border: '1px solid var(--ad-line)',
-                                          borderRadius: 6, padding: 10, display: 'flex',
-                                          alignItems: 'center', gap: 8 }}>
-                      <input type="checkbox" defaultChecked />
-                      <input className="ad-input" defaultValue={a} style={{ height: 28, fontSize: 13 }} />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </PeSection>
-
-            {/* SECTION 7: CONTACT */}
-            <PeSection num="07" icon="mail" title="Form liên hệ"
-                       sub="Block CTA + form liên hệ ở cuối trang" defaultOpen={false}>
-              <div className="pe-stack">
-                <div className="pe-row">
-                  <AdField label="Tiêu đề">
-                    <input className="ad-input" defaultValue="Cần báo giá hoặc tư vấn kỹ thuật?" />
-                  </AdField>
-                  <AdField label="Email nhận liên hệ">
-                    <input className="ad-input" defaultValue="sales@long-anh.com" />
-                  </AdField>
-                </div>
-                <AdField label="Mô tả">
-                  <textarea className="ad-textarea" defaultValue="Đội ngũ kỹ thuật sẽ phản hồi trong vòng 4 giờ làm việc." />
-                </AdField>
-              </div>
-            </PeSection>
-
-            {/* SECTION 8: SEO */}
-            <PeSection num="08" icon="seo" title="SEO & Mạng xã hội"
-                       sub="Hiển thị trên Google, Facebook, Zalo" defaultOpen={false}>
-              <div className="pe-stack">
-                <AdField label="Meta title" req
-                         help="50-60 ký tự là tối ưu · hiện 42/60">
-                  <input className="ad-input" defaultValue="Long Anh — Bột đá CaCO₃ cao cấp Việt Nam" />
-                </AdField>
-                <AdField label="Meta description"
-                         help="150-160 ký tự là tối ưu · hiện 138/160">
-                  <textarea className="ad-textarea"
-                            defaultValue="Nhà sản xuất bột đá CaCO₃ siêu mịn, đá slab và đá xẻ hàng đầu Việt Nam. 15 năm kinh nghiệm, xuất khẩu 30+ quốc gia." />
-                </AdField>
-                <AdField label="Từ khóa">
-                  <PeTags tags={['bột đá', 'CaCO3', 'caco3 việt nam', 'Long Anh', 'đá nghệ an']} />
-                </AdField>
-                <AdField label="Ảnh chia sẻ (Open Graph)" help="Khi share lên Facebook/Zalo · 1200×630px">
-                  <div style={{ display: 'grid', gridTemplateColumns: '160px 1fr', gap: 12 }}>
-                    <div className="pe-imgrow">
-                      <PeImg src="../assets/nha-may-bot-sieu-min-3.webp" size="1920×1080" />
-                    </div>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                      <button className="ad-btn" style={{ width: 'fit-content' }}>
-                        <AdIcon name="upload" size={13} /> Đổi ảnh
-                      </button>
-                      <div style={{ fontSize: 12, color: 'var(--ad-text-mute)' }}>
-                        Nếu để trống, hệ thống dùng ảnh hero của trang.
-                      </div>
-                    </div>
-                  </div>
-                </AdField>
-
-                {/* Google preview */}
-                <div style={{ background: '#fff', border: '1px solid var(--ad-line)',
-                              borderRadius: 8, padding: 14, marginTop: 4 }}>
-                  <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--ad-text-mute)',
-                                letterSpacing: '.05em', textTransform: 'uppercase', marginBottom: 8 }}>
-                    Xem trước trên Google
-                  </div>
-                  <div style={{ fontSize: 13, color: '#202124', marginBottom: 2 }}>
-                    long-anh.com › <span style={{ color: '#5F6368' }}>trang chủ</span>
-                  </div>
-                  <div style={{ fontSize: 18, color: '#1A0DAB', marginBottom: 4,
-                                fontFamily: 'arial, sans-serif' }}>
-                    Long Anh — Bột đá CaCO₃ cao cấp Việt Nam
-                  </div>
-                  <div style={{ fontSize: 13, color: '#4D5156', lineHeight: 1.55 }}>
-                    Nhà sản xuất bột đá CaCO₃ siêu mịn, đá slab và đá xẻ hàng đầu Việt Nam.
-                    15 năm kinh nghiệm, xuất khẩu 30+ quốc gia.
-                  </div>
-                </div>
-              </div>
-            </PeSection>
-
-          </div>
-
-          {/* SIDE COLUMN */}
-          <aside className="pe-side">
-            <div className="ad-card">
-              <div className="ad-card-head"><h3>Trạng thái</h3></div>
-              <div style={{ padding: 14 }}>
-                <div className="pe-status">
-                  {[
-                    ['draft', 'Nháp', 'Chỉ admin thấy được'],
-                    ['pub', 'Đã xuất bản', 'Hiển thị trên website'],
-                    ['sched', 'Hẹn giờ', 'Tự động xuất bản theo lịch'],
-                    ['hide', 'Đã ẩn', 'Không hiển thị, giữ dữ liệu'],
-                  ].map(([k, l, hint]) => (
-                    <label key={k} className={status === k ? 'on' : ''}
-                           onClick={() => setStatus(k)}>
-                      <span className="radio" />
-                      <div>
-                        <div style={{ fontWeight: 500 }}>{l}</div>
-                        <div style={{ fontSize: 11.5, color: 'var(--ad-text-mute)' }}>{hint}</div>
-                      </div>
-                    </label>
-                  ))}
                 </div>
               </div>
             </div>
+          </div>
+        </PeSection>
 
-            <div className="ad-card">
-              <div className="ad-card-head"><h3>Đường dẫn (Slug)</h3></div>
-              <div style={{ padding: 14, display: 'flex', flexDirection: 'column', gap: 10 }}>
-                <div style={{ display: 'flex', gap: 6 }}>
-                  <input className="ad-input" defaultValue="/" />
-                  <button className="ad-btn sm" title="Tạo lại từ tiêu đề">
-                    <AdIcon name="refresh" size={13} />
-                  </button>
-                </div>
-                <div style={{ fontSize: 12, color: 'var(--ad-text-mute)' }}>
-                  long-anh.com<b>/</b>
-                </div>
+        {/* 02 — STATS */}
+        <PeSection num="02" icon="trend" title="Stats — Dải 4 con số"
+                   sub="Năm kinh nghiệm, công suất, quốc gia xuất khẩu, số mỏ">
+          <div className="pe-row four">
+            {[
+              { val: '20+',     label: 'Năm kinh nghiệm' },
+              { val: '350,000', label: 'Tấn / năm công suất' },
+              { val: '12',      label: 'Quốc gia xuất khẩu' },
+              { val: '5',       label: 'Mỏ đá vận hành' },
+            ].map((s, i) => (
+              <div key={i} style={{ background: '#fff', border: '1px solid var(--ad-line)',
+                                    borderRadius: 8, padding: 12, display: 'flex',
+                                    flexDirection: 'column', gap: 8 }}>
+                <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--ad-text-mute)' }}>STAT {i + 1}</span>
+                <input className="ad-input" defaultValue={s.val} style={{ fontWeight: 700, fontSize: 18 }} />
+                <input className="ad-input" defaultValue={s.label} style={{ fontSize: 12 }} />
               </div>
-            </div>
+            ))}
+          </div>
+        </PeSection>
 
-            <div className="ad-card">
-              <div className="ad-card-head"><h3>Lịch sử thay đổi</h3></div>
-              <div className="pe-versions">
-                {[
-                  { num: 'v12', when: '2 giờ trước · AN', cur: true },
-                  { num: 'v11', when: '1 ngày trước · LH' },
-                  { num: 'v10', when: '3 ngày trước · AN' },
-                  { num: 'v9', when: '1 tuần trước · LH' },
-                ].map((v, i) => (
-                  <div key={i} className="v">
-                    <span className="num">{v.num}</span>
-                    <div style={{ flex: 1 }}>
-                      <div className="when">{v.when}</div>
-                    </div>
-                    {v.cur ? (
-                      <span className="ad-badge pub" style={{ fontSize: 10 }}>
-                        <span className="dot" />Hiện tại
-                      </span>
-                    ) : (
-                      <button title="Khôi phục"><AdIcon name="refresh" size={13} /></button>
-                    )}
-                  </div>
+        {/* 03 — Products carousel */}
+        <PeSection num="03" icon="rock" title="Sản phẩm — Năm dòng chính"
+                   sub="Carousel sản phẩm dưới hero">
+          <div className="pe-stack">
+            <div className="pe-row">
+              <AdField label="Eyebrow"><input className="ad-input" defaultValue="Danh mục sản phẩm" /></AdField>
+              <AdField label="Tiêu đề"><input className="ad-input" defaultValue="Năm dòng sản phẩm chính" /></AdField>
+            </div>
+            <AdField label="Phụ đề">
+              <textarea className="ad-textarea" defaultValue="Tối ưu cho từng ứng dụng — từ filler nhựa siêu mịn đến đá trang trí kích thước lớn." />
+            </AdField>
+            <AdField label="Cách hiển thị">
+              <select className="ad-select">
+                <option>Tự động — 5 dòng sản phẩm chính</option>
+                <option>Thủ công — chọn sản phẩm cụ thể</option>
+              </select>
+            </AdField>
+            <div style={{ background: '#fff', border: '1px solid var(--ad-line)',
+                          borderRadius: 8, padding: 12 }}>
+              <div style={{ fontSize: 12, color: 'var(--ad-text-mute)', marginBottom: 8 }}>
+                5 sản phẩm đang hiển thị
+              </div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                {['P-01 · Bột CaCO₃ không phủ', 'P-02 · Bột CaCO₃ phủ Stearic',
+                  'P-03 · Đá Slab', 'P-04 · Đá xẻ quy cách', 'P-05 · Đá trang trí'].map(p => (
+                  <span key={p} className="ad-tag">
+                    {p}<button><AdIcon name="x" size={11} /></button>
+                  </span>
                 ))}
               </div>
             </div>
+          </div>
+        </PeSection>
 
-            <div className="ad-card">
-              <div className="ad-card-head">
-                <h3>Cài đặt nâng cao</h3>
-              </div>
-              <div style={{ padding: 14, display: 'flex', flexDirection: 'column', gap: 12, fontSize: 13 }}>
-                <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <span>Hiển thị trong sitemap</span>
-                  <AdSwitch on={true} onChange={() => {}} />
-                </label>
-                <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <span>Cho phép Google index</span>
-                  <AdSwitch on={true} onChange={() => {}} />
-                </label>
-                <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <span>Yêu cầu đăng nhập</span>
-                  <AdSwitch on={false} onChange={() => {}} />
-                </label>
-              </div>
+        {/* 04 — ABOUT 5 cards */}
+        <PeSection num="04" icon="grid" title="Về Long Anh — Lưới 5 ô năng lực"
+                   sub="Năng lực sản xuất · Nguồn nguyên liệu · Hạ tầng · QC · Đóng gói">
+          <div className="pe-stack">
+            <div className="pe-row">
+              <AdField label="Eyebrow"><input className="ad-input" defaultValue="Về chúng tôi" /></AdField>
+              <AdField label="Tiêu đề"><input className="ad-input" defaultValue="Khai thác bền vững. Chế biến chính xác. Giao hàng đúng hẹn." /></AdField>
             </div>
-          </aside>
-        </div>
+            <AdField label="Đoạn intro">
+              <textarea className="ad-textarea" defaultValue="Khởi nguồn từ vùng đá vôi trắng Quỳ Hợp – Nghệ An, Long Anh sở hữu mỏ nguyên liệu chất lượng cao với độ trắng vượt 98% và hàm lượng CaCO₃ trên 98,5%." />
+            </AdField>
 
-        {/* Toast */}
-        <div className="ad-toast success">
-          <AdIcon name="check" size={14} /> Đã lưu nháp tự động
-        </div>
-      </AdPage>
+            <div className="pe-card-grid">
+              {CAPS.map((c, i) => (
+                <div key={i} className="pe-card-edit">
+                  <div className="head">
+                    <span className="pill">CARD {c.num}</span>
+                    <div className="name">{c.name}</div>
+                    <button title="Kéo"><AdIcon name="drag" size={14} /></button>
+                    <button title="Xóa"><AdIcon name="trash" size={13} /></button>
+                  </div>
+                  <div className="miniimg">
+                    <img src={c.img} alt={c.name} />
+                  </div>
+                  <AdField label="Tên card">
+                    <input className="ad-input" defaultValue={c.name} />
+                  </AdField>
+                  <AdField label="Mô tả">
+                    <textarea className="ad-textarea" defaultValue={c.body} style={{ minHeight: 60 }} />
+                  </AdField>
+                </div>
+              ))}
+              <button className="pe-add-card">
+                <AdIcon name="plus" size={20} />
+                Thêm card mới
+              </button>
+            </div>
+          </div>
+        </PeSection>
+
+        {/* 05 — Certs */}
+        <PeSection num="05" icon="shield" title="Chứng nhận quốc tế — 4 thẻ"
+                   sub="ISO 9001 · REACH · SGS · MSDS">
+          <div className="pe-stack">
+            <div className="pe-row">
+              <AdField label="Eyebrow"><input className="ad-input" defaultValue="Chứng chỉ" /></AdField>
+              <AdField label="Tiêu đề"><input className="ad-input" defaultValue="Đạt chuẩn chất lượng quốc tế." /></AdField>
+            </div>
+            <AdField label="Phụ đề">
+              <textarea className="ad-textarea" defaultValue="Mỗi lô sản phẩm đều được kiểm tra QC theo ISO 9001, kèm COA và MSDS — đáp ứng yêu cầu khắt khe nhất từ thị trường Hàn Quốc, Nhật Bản, Ấn Độ và Trung Đông." />
+            </AdField>
+            <div className="pe-list">
+              {[
+                ['ISO 9001:2015', 'Hệ thống quản lý chất lượng',                '../assets/cert-iso-9001.svg'],
+                ['REACH',         'Tuân thủ hóa chất Châu Âu',                  '../assets/cert-reach.svg'],
+                ['SGS',           'Kiểm định độc lập độ trắng & cỡ hạt',        '../assets/cert-sgs.svg'],
+                ['MSDS',          'Phiếu an toàn hóa chất sản phẩm',            '../assets/cert-msds.svg'],
+              ].map((r, i) => (
+                <div key={i} className="pe-list-item">
+                  <span className="num">0{i + 1}</span>
+                  <div style={{ display: 'grid', gridTemplateColumns: '0.6fr 1.5fr 1fr', gap: 8 }}>
+                    <input className="ad-input" defaultValue={r[0]} placeholder="Tên cert" />
+                    <input className="ad-input" defaultValue={r[1]} placeholder="Mô tả" />
+                    <input className="ad-input" defaultValue={r[2]} placeholder="Đường dẫn logo" />
+                  </div>
+                  <div className="actions">
+                    <button title="Xóa"><AdIcon name="trash" size={13} /></button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </PeSection>
+
+        {/* 06 — Export capability + map */}
+        <PeSection num="06" icon="globe" title="Năng lực xuất khẩu — Map + 4 feature cards"
+                   sub={'Section "Sẵn sàng cho thị trường quốc tế"'}>
+          <div className="pe-stack">
+            <div className="pe-row">
+              <AdField label="Eyebrow"><input className="ad-input" defaultValue="Năng lực xuất khẩu" /></AdField>
+              <AdField label="Tiêu đề"><input className="ad-input" defaultValue="Sẵn sàng cho thị trường quốc tế" /></AdField>
+            </div>
+            <AdField label="Phụ đề">
+              <textarea className="ad-textarea" defaultValue="Hệ thống đóng gói đa dạng từ bao 25 kg, jumbo bag 1 tấn đến container rời. Giao hàng FOB cảng Cửa Lò & Hải Phòng." />
+            </AdField>
+
+            <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--ad-text-mute)',
+                          letterSpacing: '.05em', textTransform: 'uppercase' }}>
+              4 thẻ tính năng trên map
+            </div>
+            <div className="pe-row">
+              {EXPORT_FEATURES.slice(0, 2).map((f, i) => (
+                <div key={i} style={{ background: '#fff', border: '1px solid var(--ad-line)',
+                                      borderRadius: 8, padding: 12, display: 'flex',
+                                      flexDirection: 'column', gap: 8 }}>
+                  <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--ad-text-mute)' }}>
+                    EF 0{i + 1}
+                  </span>
+                  <input className="ad-input" defaultValue={f.title} />
+                  <input className="ad-input" defaultValue={f.body} style={{ fontSize: 12 }} />
+                </div>
+              ))}
+            </div>
+            <div className="pe-row">
+              {EXPORT_FEATURES.slice(2, 4).map((f, i) => (
+                <div key={i} style={{ background: '#fff', border: '1px solid var(--ad-line)',
+                                      borderRadius: 8, padding: 12, display: 'flex',
+                                      flexDirection: 'column', gap: 8 }}>
+                  <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--ad-text-mute)' }}>
+                    EF 0{i + 3}
+                  </span>
+                  <input className="ad-input" defaultValue={f.title} />
+                  <input className="ad-input" defaultValue={f.body} style={{ fontSize: 12 }} />
+                </div>
+              ))}
+            </div>
+
+            <AdField label="Danh sách thị trường (markers trên map)">
+              <PeTags tags={['Hàn Quốc', 'Nhật Bản', 'Ấn Độ', 'Bangladesh',
+                              'Indonesia', 'UAE', 'Ai Cập', 'Thổ Nhĩ Kỳ']} />
+            </AdField>
+            <AdField label="Caption dưới map">
+              <input className="ad-input"
+                     defaultValue="Từ nhà máy của chúng tôi đến cảng của bạn — giao hàng chất lượng, xây dựng niềm tin." />
+            </AdField>
+          </div>
+        </PeSection>
+
+        {/* 07 — Contact form */}
+        <PeSection num="07" icon="mail" title="Liên hệ — Form cuối trang"
+                   sub="Block CTA + form liên hệ" defaultOpen={false}>
+          <div className="pe-stack">
+            <div className="pe-row">
+              <AdField label="Eyebrow"><input className="ad-input" defaultValue="Liên hệ" /></AdField>
+              <AdField label="Tiêu đề"><input className="ad-input" defaultValue="Hãy bắt đầu từ một câu hỏi." /></AdField>
+            </div>
+            <AdField label="Phụ đề">
+              <textarea className="ad-textarea" defaultValue="Đội ngũ kinh doanh phản hồi trong vòng 24h làm việc — kèm bảng spec, COA và báo giá FOB." />
+            </AdField>
+            <div className="pe-row">
+              <AdField label="Email nhận liên hệ" req>
+                <input className="ad-input" defaultValue="info@longanhcorp.com" />
+              </AdField>
+              <AdField label="Hotline hiển thị">
+                <input className="ad-input" defaultValue="(+84) 912 779 799" />
+              </AdField>
+            </div>
+            <AdField label="Địa chỉ trụ sở">
+              <input className="ad-input"
+                     defaultValue="Số D1-22, Đường 2K, Khu Đô Thị Cửa Tiền, P. Vinh Tân, TP. Vinh, Nghệ An" />
+            </AdField>
+          </div>
+        </PeSection>
+
+        {/* 08 — SEO */}
+        <PeSeoSection
+          num="08"
+          metaTitle="KS Long Anh — Bột đá CaCO₃ & Đá tự nhiên Việt Nam"
+          metaDesc="Long Anh sản xuất bột đá CaCO₃ phủ/không phủ Stearic Acid, đá Slab, đá xẻ và đá trang trí từ mỏ Quỳ Hợp — Nghệ An. Xuất khẩu 12 quốc gia."
+          keywords={['bột đá', 'CaCO3', 'KS Long Anh', 'caco3 việt nam', 'đá Slab', 'Quỳ Hợp Nghệ An', 'bột đá phủ Stearic']}
+          ogImage="../assets/nha-may-bot-sieu-min-3.webp"
+          googleSlug="trang chủ" />
+
+      </PeEditorShell>
     );
   }
 
