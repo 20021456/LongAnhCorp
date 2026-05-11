@@ -2,6 +2,90 @@
 // Sidebar + topbar + design system + shared atoms
 // Tone: neutral gray + brand navy accent (#0F3D7A) + orange status (#F08023)
 
+/* ---- Auth & permissions (mock, client-side only) ----
+   Two demo accounts. "allow" is either 'all' or an array of sidebar item ids. */
+const AD_USERS = {
+  admin: {
+    password: '123123',
+    name: 'Admin Long Anh',
+    initials: 'AN',
+    role: 'Quản trị viên',
+    allow: 'all',
+  },
+  quydom: {
+    password: '123123',
+    name: 'Quý Đỗm',
+    initials: 'QD',
+    role: 'Biên tập viên',
+    allow: ['news', 'products', 'contacts', 'subscribers'],
+  },
+};
+
+function adGetUser() {
+  try { return JSON.parse(localStorage.getItem('ad_user') || 'null'); }
+  catch (e) { return null; }
+}
+function adSetUser(u) { localStorage.setItem('ad_user', JSON.stringify(u)); }
+function adLogout() { localStorage.removeItem('ad_user'); location.href = 'login.html'; }
+
+function adCanAccess(itemId) {
+  const u = adGetUser();
+  if (!u) return false;
+  if (u.allow === 'all') return true;
+  return Array.isArray(u.allow) && u.allow.includes(itemId);
+}
+
+/* Each sidebar item id → file it links to. Used for the default-landing redirect. */
+const AD_ID_TO_HREF = {
+  dashboard: 'index.html', pages: 'pages.html', news: 'news.html',
+  products: 'products.html', categories: '#', gallery: 'media.html',
+  team: '#', testimonials: '#', faq: '#',
+  settings: 'settings.html', menu: '#', i18n: '#', seo: '#',
+  contacts: 'contacts.html', subscribers: '#',
+  roles: 'roles.html',
+};
+
+function adDefaultLanding(u) {
+  if (!u) return 'login.html';
+  if (u.allow === 'all') return 'index.html';
+  if (Array.isArray(u.allow)) {
+    for (const id of u.allow) {
+      const href = AD_ID_TO_HREF[id];
+      if (href && href !== '#') return href;
+    }
+  }
+  return 'index.html';
+}
+
+/* Map current filename → sidebar item id. null = page not protected. */
+function adCurrentPageId() {
+  const path = (location.pathname.split('/').pop() || '').toLowerCase();
+  if (path === '' || path === 'index.html')   return 'dashboard';
+  if (path === 'pages.html')                   return 'pages';
+  if (path.startsWith('page-edit-'))           return 'pages';
+  if (path === 'products.html')                return 'products';
+  if (path === 'product-edit.html')            return 'products';
+  if (path === 'news.html')                    return 'news';
+  if (path === 'contacts.html')                return 'contacts';
+  if (path === 'media.html')                   return 'gallery';
+  if (path === 'roles.html')                   return 'roles';
+  if (path === 'settings.html')                return 'settings';
+  return null;
+}
+
+/* Guard: redirect to login if not authed, or to landing if not allowed. */
+(function adGuard() {
+  const path = (location.pathname.split('/').pop() || '').toLowerCase();
+  if (path === 'login.html') return;
+  const u = adGetUser();
+  if (!u) { location.replace('login.html'); return; }
+  const id = adCurrentPageId();
+  if (id && !adCanAccess(id)) {
+    sessionStorage.setItem('ad_flash', 'Bạn không có quyền truy cập trang đó.');
+    location.replace(adDefaultLanding(u));
+  }
+})();
+
 const ADMIN_BRAND = {
   primary: '#0F3D7A',
   primaryDark: '#0A2B57',
@@ -114,6 +198,24 @@ const ADMIN_GLOBAL_CSS = `
   .ad-top-avatar { width:32px; height:32px; border-radius:50%; background:var(--ad-primary);
         color:#fff; display:flex; align-items:center; justify-content:center;
         font-weight:600; font-size:12px; cursor:pointer; margin-left:6px; }
+  .ad-user-wrap { position:relative; margin-left:6px; }
+  .ad-user-menu { position:absolute; right:0; top:42px; width:240px; background:#fff;
+        border:1px solid var(--ad-line); border-radius:8px;
+        box-shadow:var(--ad-shadow-md); z-index:30; overflow:hidden; }
+  .ad-user-menu .head { padding:14px; border-bottom:1px solid var(--ad-line-soft);
+        display:flex; align-items:center; gap:10px; }
+  .ad-user-menu .head .avatar { width:36px; height:36px; border-radius:50%;
+        background:var(--ad-primary); color:#fff; display:flex; align-items:center;
+        justify-content:center; font-weight:600; font-size:13px; flex:none; }
+  .ad-user-menu .head .name { font-weight:600; font-size:13.5px; line-height:1.3; }
+  .ad-user-menu .head .role { font-size:11.5px; color:var(--ad-text-mute); margin-top:1px; }
+  .ad-user-menu .item { display:flex; align-items:center; gap:10px;
+        padding:9px 14px; font-size:13px; color:var(--ad-text-soft);
+        cursor:pointer; background:transparent; border:0; width:100%; text-align:left; }
+  .ad-user-menu .item:hover { background:var(--ad-line-soft); color:var(--ad-text); }
+  .ad-user-menu .item.danger { color:var(--ad-danger); }
+  .ad-user-menu .item.danger:hover { background:var(--ad-danger-soft); }
+  .ad-user-menu .sep { height:1px; background:var(--ad-line-soft); margin:4px 0; }
 
   /* Body */
   .ad-body { flex:1; padding:24px 32px 48px; max-width:1400px; width:100%; }
@@ -327,6 +429,21 @@ function AdSidebar({ active = 'dashboard' }) {
     { type: 'sec', label: 'Hệ thống' },
     { type: 'item', id: 'roles', label: 'Phân quyền', icon: 'shield', href: 'roles.html' },
   ];
+
+  // Filter by current user's permission. Hide a section header when no item in it is visible.
+  const visible = [];
+  items.forEach((it, i) => {
+    if (it.type === 'sec') {
+      let hasVisible = false;
+      for (let j = i + 1; j < items.length && items[j].type !== 'sec'; j++) {
+        if (adCanAccess(items[j].id)) { hasVisible = true; break; }
+      }
+      if (hasVisible) visible.push(it);
+    } else if (adCanAccess(it.id)) {
+      visible.push(it);
+    }
+  });
+
   return (
     <aside className="ad-side">
       <div className="ad-side-brand">
@@ -334,7 +451,7 @@ function AdSidebar({ active = 'dashboard' }) {
         <div className="name">Long Anh<small>Admin</small></div>
       </div>
       <nav className="ad-side-nav">
-        {items.map((it, i) => it.type === 'sec' ? (
+        {visible.map((it, i) => it.type === 'sec' ? (
           <div key={i} className="ad-side-section">{it.label}</div>
         ) : (
           <a key={i} href={it.href} className={`ad-side-item ${active === it.id ? 'active' : ''}`}>
@@ -354,6 +471,16 @@ function AdSidebar({ active = 'dashboard' }) {
 /* ---- Topbar ---- */
 function AdTopbar() {
   const [lang, setLang] = React.useState('vi');
+  const [menu, setMenu] = React.useState(false);
+  const user = adGetUser() || { name: 'Khách', initials: '?', role: 'Chưa đăng nhập' };
+
+  React.useEffect(() => {
+    if (!menu) return;
+    const close = (e) => { if (!e.target.closest('.ad-user-wrap')) setMenu(false); };
+    document.addEventListener('mousedown', close);
+    return () => document.removeEventListener('mousedown', close);
+  }, [menu]);
+
   return (
     <header className="ad-top">
       <div className="ad-search">
@@ -373,7 +500,33 @@ function AdTopbar() {
         <button className="ad-top-btn" title="Trợ giúp">
           <AdIcon name="help" size={17} />
         </button>
-        <div className="ad-top-avatar" title="Anh Nam">AN</div>
+        <div className="ad-user-wrap">
+          <div className="ad-top-avatar" title={user.name}
+               onClick={() => setMenu(m => !m)}>
+            {user.initials}
+          </div>
+          {menu && (
+            <div className="ad-user-menu">
+              <div className="head">
+                <div className="avatar">{user.initials}</div>
+                <div>
+                  <div className="name">{user.name}</div>
+                  <div className="role">{user.role}</div>
+                </div>
+              </div>
+              <button className="item" onClick={() => setMenu(false)}>
+                <AdIcon name="users" size={14} /> Hồ sơ cá nhân
+              </button>
+              <button className="item" onClick={() => setMenu(false)}>
+                <AdIcon name="settings" size={14} /> Tuỳ chọn tài khoản
+              </button>
+              <div className="sep" />
+              <button className="item danger" onClick={adLogout}>
+                <AdIcon name="arrowLeft" size={14} /> Đăng xuất
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </header>
   );
@@ -489,4 +642,27 @@ Object.assign(window, {
   ADMIN_BRAND, ADMIN_GLOBAL_CSS,
   AdIcon, AdSidebar, AdTopbar, AdPage,
   AdField, AdBadge, AdSwitch, AdImageSlot,
+  AD_USERS, adGetUser, adSetUser, adLogout, adCanAccess, adDefaultLanding,
 });
+
+/* Flash message after a forbidden-page redirect. Renders a one-shot toast in body. */
+(function adRenderFlash() {
+  const msg = sessionStorage.getItem('ad_flash');
+  if (!msg) return;
+  sessionStorage.removeItem('ad_flash');
+  const show = () => {
+    const t = document.createElement('div');
+    t.className = 'ad-toast warn';
+    t.style.cssText = 'position:fixed;bottom:24px;right:24px;background:#fff;' +
+      'border:1px solid var(--ad-line);border-left:3px solid var(--ad-warn);' +
+      'border-radius:8px;padding:12px 16px;box-shadow:var(--ad-shadow-md);' +
+      'font-size:13px;color:var(--ad-text);z-index:1000;display:flex;' +
+      'align-items:center;gap:8px;';
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(() => { t.style.opacity = '0'; t.style.transition = '.4s'; }, 3200);
+    setTimeout(() => t.remove(), 3800);
+  };
+  if (document.body) show();
+  else document.addEventListener('DOMContentLoaded', show);
+})();

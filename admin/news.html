@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Tin tức · Long Anh Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="admin-shell.jsx"></script>
+<script type="text/babel">
+  const style = document.createElement('style');
+  style.textContent = ADMIN_GLOBAL_CSS;
+  document.head.appendChild(style);
+
+  const POSTS = [
+    { id: 1, title: 'Long Anh đạt chứng nhận REACH cho thị trường EU',
+      cat: 'Tin công ty', author: 'AN', date: '08/05/2026', views: 1240, status: 'pub' },
+    { id: 2, title: 'Khánh thành nhà máy bột siêu mịn số 5 tại Quỳ Hợp',
+      cat: 'Sự kiện', author: 'LH', date: '02/05/2026', views: 856, status: 'pub' },
+    { id: 3, title: 'Báo cáo xuất khẩu Q1/2026 — tăng 28% so với cùng kỳ',
+      cat: 'Thị trường', author: 'AN', date: '15/04/2026', views: 2103, status: 'pub' },
+    { id: 4, title: 'Tham gia hội chợ Plastex Vietnam 2026',
+      cat: 'Sự kiện', author: 'LH', date: '20/03/2026', views: 542, status: 'pub' },
+    { id: 5, title: 'Cập nhật chính sách FOB Q2 — thông báo khách hàng',
+      cat: 'Tin công ty', author: 'AN', date: '12/03/2026', views: 1834, status: 'draft' },
+  ];
+
+  function NewsList() {
+    const Header = (
+      <>
+        <button className="ad-btn">
+          <AdIcon name="download" size={14} /> Xuất CSV
+        </button>
+        <button className="ad-btn primary">
+          <AdIcon name="plus" size={14} /> Bài viết mới
+        </button>
+      </>
+    );
+
+    return (
+      <AdPage active="news"
+        crumb={[{ label: 'Trang chủ', href: 'index.html' }, { label: 'Tin tức' }]}
+        title="Tin tức"
+        sub={`${POSTS.length} bài viết · ${POSTS.filter(p => p.status === 'pub').length} đã xuất bản · ${POSTS.filter(p => p.status === 'draft').length} nháp`}
+        actions={Header}>
+
+        <div className="ad-table-wrap">
+          <div className="ad-toolbar">
+            <div style={{ position: 'relative', width: 280 }}>
+              <input className="ad-input" style={{ paddingLeft: 32 }}
+                     placeholder="Tìm theo tiêu đề, tác giả…" />
+              <span style={{ position: 'absolute', left: 10, top: '50%',
+                             transform: 'translateY(-50%)', color: 'var(--ad-text-mute)' }}>
+                <AdIcon name="search" size={14} />
+              </span>
+            </div>
+            <select className="ad-select" style={{ width: 160 }}>
+              <option>Tất cả danh mục</option>
+              <option>Tin công ty</option>
+              <option>Sự kiện</option>
+              <option>Thị trường</option>
+              <option>Sản phẩm mới</option>
+            </select>
+            <div className="grow" />
+            <button className="ad-btn ghost sm">
+              <AdIcon name="filter" size={13} /> Lọc thêm
+            </button>
+          </div>
+
+          <table className="ad-table">
+            <thead>
+              <tr>
+                <th style={{ width: 36 }}><input type="checkbox" /></th>
+                <th>Tiêu đề</th>
+                <th style={{ width: 140 }}>Danh mục</th>
+                <th style={{ width: 110 }}>Tác giả</th>
+                <th style={{ width: 110 }}>Ngày đăng</th>
+                <th style={{ width: 90 }}>Lượt xem</th>
+                <th style={{ width: 130 }}>Trạng thái</th>
+                <th style={{ width: 140 }}></th>
+              </tr>
+            </thead>
+            <tbody>
+              {POSTS.map(p => (
+                <tr key={p.id}>
+                  <td><input type="checkbox" /></td>
+                  <td>
+                    <div style={{ fontWeight: 600, marginBottom: 2 }}>{p.title}</div>
+                    <div style={{ fontSize: 11.5, color: 'var(--ad-text-mute)' }}>
+                      ID: {p.id} · /tin-tuc/bai-{p.id}
+                    </div>
+                  </td>
+                  <td>
+                    <span className="ad-tag" style={{ fontSize: 11.5 }}>{p.cat}</span>
+                  </td>
+                  <td>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <div style={{
+                        width: 22, height: 22, borderRadius: '50%',
+                        background: 'var(--ad-primary)', color: '#fff',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        fontWeight: 600, fontSize: 9.5,
+                      }}>{p.author}</div>
+                    </div>
+                  </td>
+                  <td style={{ fontSize: 12.5, color: 'var(--ad-text-soft)' }}>{p.date}</td>
+                  <td style={{ fontSize: 12.5, color: 'var(--ad-text-soft)' }}>{p.views.toLocaleString()}</td>
+                  <td><AdBadge status={p.status} /></td>
+                  <td>
+                    <div className="row-actions" style={{ justifyContent: 'flex-end' }}>
+                      <button className="ad-btn ghost sm" title="Sửa"><AdIcon name="edit" size={13} /></button>
+                      <button className="ad-btn ghost sm" title="Xem"><AdIcon name="eye" size={13} /></button>
+                      <button className="ad-btn ghost sm" title="Nhân bản"><AdIcon name="copy" size={13} /></button>
+                      <button className="ad-btn ghost sm" title="Thêm"><AdIcon name="more" size={13} /></button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          <div className="ad-pag">
+            <div>Hiển thị 1 – {POSTS.length} của {POSTS.length} bài</div>
+            <div className="ad-pag-pages">
+              <button>‹</button>
+              <button className="on">1</button>
+              <button>›</button>
+            </div>
+          </div>
+        </div>
+      </AdPage>
+    );
+  }
+
+  ReactDOM.createRoot(document.getElementById('root')).render(<NewsList />);
+</script>
+</body>
+</html>

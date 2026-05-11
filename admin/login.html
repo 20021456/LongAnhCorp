@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Đăng nhập · Long Anh Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="admin-shell.jsx"></script>
+<script type="text/babel">
+  const style = document.createElement('style');
+  style.textContent = ADMIN_GLOBAL_CSS + `
+    body { background: linear-gradient(135deg, #0F3D7A 0%, #0A2B57 60%, #061d3f 100%);
+      min-height: 100vh; }
+    .lg-wrap { min-height: 100vh; display: grid;
+      grid-template-columns: 1.05fr 1fr; gap: 0; }
+    @media (max-width: 880px) { .lg-wrap { grid-template-columns: 1fr; } }
+
+    .lg-pitch { color: #fff; padding: 56px 64px; display: flex;
+      flex-direction: column; justify-content: space-between; min-height: 100vh; }
+    .lg-pitch .brand { display: flex; align-items: center; gap: 12px; }
+    .lg-pitch .brand img { width: 40px; height: 40px; object-fit: contain;
+      background: #fff; border-radius: 8px; padding: 4px; }
+    .lg-pitch .brand .name { font-weight: 700; font-size: 16px; letter-spacing: -.01em; }
+    .lg-pitch .brand .name small { display: block; font-weight: 500; font-size: 11px;
+      color: rgba(255,255,255,.6); letter-spacing: .08em; text-transform: uppercase;
+      margin-top: 2px; }
+    .lg-pitch h1 { font-size: 38px; font-weight: 700; line-height: 1.15;
+      letter-spacing: -.02em; margin: 0 0 18px; }
+    .lg-pitch p { font-size: 15px; line-height: 1.6; color: rgba(255,255,255,.78);
+      margin: 0; max-width: 460px; }
+    .lg-pitch .stats { display: grid; grid-template-columns: repeat(3, auto);
+      gap: 36px; margin-top: 28px; }
+    .lg-pitch .stat b { display: block; font-size: 22px; font-weight: 700;
+      letter-spacing: -.015em; }
+    .lg-pitch .stat span { font-size: 12px; color: rgba(255,255,255,.6); }
+    .lg-pitch .foot { font-size: 12px; color: rgba(255,255,255,.5); }
+    @media (max-width: 880px) { .lg-pitch { display: none; } }
+
+    .lg-form-side { background: #F7F7F8; display: flex; align-items: center;
+      justify-content: center; padding: 48px 32px; min-height: 100vh; }
+    .lg-card { width: 100%; max-width: 400px; background: #fff;
+      border: 1px solid var(--ad-line); border-radius: 12px;
+      box-shadow: 0 12px 48px -8px rgba(15, 61, 122, .18);
+      padding: 36px 36px 32px; }
+    .lg-card .eyebrow { font-size: 11px; font-weight: 600;
+      letter-spacing: .12em; text-transform: uppercase;
+      color: var(--ad-primary); margin-bottom: 10px; }
+    .lg-card h2 { font-size: 22px; font-weight: 700; letter-spacing: -.015em;
+      margin: 0 0 6px; }
+    .lg-card .sub { font-size: 13.5px; color: var(--ad-text-soft); margin: 0 0 26px; }
+
+    .lg-form { display: flex; flex-direction: column; gap: 14px; }
+    .lg-form .pw-wrap { position: relative; }
+    .lg-form .pw-wrap .ad-input { padding-right: 38px; }
+    .lg-form .pw-wrap button.eye {
+      position: absolute; right: 4px; top: 50%; transform: translateY(-50%);
+      width: 30px; height: 30px; border: 0; background: transparent;
+      color: var(--ad-text-mute); cursor: pointer; display: flex;
+      align-items: center; justify-content: center; border-radius: 4px; }
+    .lg-form .pw-wrap button.eye:hover { color: var(--ad-text); background: var(--ad-line-soft); }
+
+    .lg-err { background: var(--ad-danger-soft); color: var(--ad-danger);
+      font-size: 12.5px; padding: 9px 12px; border-radius: 6px;
+      display: flex; align-items: center; gap: 8px; }
+
+    .lg-options { display: flex; align-items: center; justify-content: space-between;
+      font-size: 12.5px; color: var(--ad-text-soft); }
+    .lg-options label { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+    .lg-options a { color: var(--ad-primary); font-weight: 500; }
+    .lg-options a:hover { text-decoration: underline; }
+
+    .lg-form .ad-btn.primary { width: 100%; height: 42px; font-size: 14px;
+      justify-content: center; }
+
+    .lg-demo { margin-top: 24px; padding-top: 22px; border-top: 1px dashed var(--ad-line);
+      font-size: 12.5px; }
+    .lg-demo .demo-head { font-weight: 600; color: var(--ad-text-soft);
+      letter-spacing: .04em; margin-bottom: 10px; font-size: 11px;
+      text-transform: uppercase; display: flex; align-items: center; gap: 6px; }
+    .lg-demo .demo-row { display: grid; grid-template-columns: 1fr auto;
+      gap: 10px; align-items: center; padding: 10px 12px;
+      background: var(--ad-line-soft); border-radius: 6px;
+      margin-bottom: 8px; }
+    .lg-demo .demo-row:last-child { margin-bottom: 0; }
+    .lg-demo code { font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 11.5px; color: var(--ad-text); }
+    .lg-demo .demo-name { font-weight: 600; color: var(--ad-text); font-size: 12.5px;
+      margin-bottom: 2px; }
+    .lg-demo .demo-role { font-size: 11px; color: var(--ad-text-mute); }
+    .lg-demo .use { font-size: 11.5px; color: var(--ad-primary); border: 0;
+      background: transparent; cursor: pointer; font-weight: 500; padding: 4px 8px;
+      border-radius: 4px; }
+    .lg-demo .use:hover { background: var(--ad-primary-soft); }
+  `;
+  document.head.appendChild(style);
+
+  function LoginPage() {
+    // If already logged in, bounce to landing.
+    React.useEffect(() => {
+      const u = adGetUser();
+      if (u) location.replace(adDefaultLanding(u));
+    }, []);
+
+    const [username, setUsername] = React.useState('');
+    const [password, setPassword] = React.useState('');
+    const [showPw,   setShowPw]   = React.useState(false);
+    const [err,      setErr]      = React.useState('');
+    const [busy,     setBusy]     = React.useState(false);
+
+    function fillDemo(u) {
+      setUsername(u);
+      setPassword('123123');
+      setErr('');
+    }
+
+    function submit(e) {
+      e.preventDefault();
+      setErr('');
+      const u = AD_USERS[username.trim().toLowerCase()];
+      if (!u || u.password !== password) {
+        setErr('Tài khoản hoặc mật khẩu không đúng.');
+        return;
+      }
+      setBusy(true);
+      adSetUser({
+        username: username.trim().toLowerCase(),
+        name: u.name, initials: u.initials, role: u.role, allow: u.allow,
+      });
+      setTimeout(() => { location.href = adDefaultLanding(adGetUser()); }, 250);
+    }
+
+    return (
+      <div className="lg-wrap">
+        <div className="lg-pitch">
+          <div className="brand">
+            <img src="../assets/long-anh-logo.png" alt="Long Anh" />
+            <div className="name">Long Anh<small>Admin Panel</small></div>
+          </div>
+          <div>
+            <h1>Quản lý nội dung —<br/>nhanh, an toàn, có phân quyền.</h1>
+            <p>Cập nhật trang, sản phẩm, tin tức và xử lý liên hệ khách hàng từ một bảng điều khiển duy nhất. Mỗi tài khoản chỉ thấy đúng những phần mình phụ trách.</p>
+            <div className="stats">
+              <div className="stat"><b>5</b><span>Nhà máy quản lý</span></div>
+              <div className="stat"><b>30+</b><span>Thị trường xuất khẩu</span></div>
+              <div className="stat"><b>v1.0</b><span>Demo build</span></div>
+            </div>
+          </div>
+          <div className="foot">© 2026 Long Anh Group · Internal use only</div>
+        </div>
+
+        <div className="lg-form-side">
+          <div className="lg-card">
+            <div className="eyebrow">// Đăng nhập</div>
+            <h2>Chào mừng quay lại</h2>
+            <p className="sub">Nhập tài khoản admin nội bộ để tiếp tục.</p>
+
+            <form className="lg-form" onSubmit={submit}>
+              <AdField label="Tài khoản" req>
+                <input className="ad-input" type="text" autoFocus autoComplete="username"
+                       value={username} onChange={(e) => setUsername(e.target.value)}
+                       placeholder="admin hoặc quydom" />
+              </AdField>
+              <AdField label="Mật khẩu" req>
+                <div className="pw-wrap">
+                  <input className="ad-input" type={showPw ? 'text' : 'password'}
+                         autoComplete="current-password"
+                         value={password} onChange={(e) => setPassword(e.target.value)}
+                         placeholder="••••••" />
+                  <button type="button" className="eye"
+                          onClick={() => setShowPw(s => !s)}
+                          title={showPw ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}>
+                    <AdIcon name="eye" size={14} />
+                  </button>
+                </div>
+              </AdField>
+
+              {err && (
+                <div className="lg-err">
+                  <AdIcon name="x" size={13} /> {err}
+                </div>
+              )}
+
+              <div className="lg-options">
+                <label><input type="checkbox" defaultChecked /> Ghi nhớ đăng nhập</label>
+                <a href="#" onClick={(e) => e.preventDefault()}>Quên mật khẩu?</a>
+              </div>
+
+              <button type="submit" className="ad-btn primary" disabled={busy}>
+                {busy
+                  ? <>Đang đăng nhập…</>
+                  : <><AdIcon name="arrowRight" size={14} /> Đăng nhập</>}
+              </button>
+            </form>
+
+            <div className="lg-demo">
+              <div className="demo-head">
+                <AdIcon name="shield" size={11} /> Tài khoản demo
+              </div>
+              <div className="demo-row">
+                <div>
+                  <div className="demo-name">admin</div>
+                  <div className="demo-role">Quản trị viên · Toàn quyền</div>
+                  <code>mật khẩu: 123123</code>
+                </div>
+                <button className="use" type="button" onClick={() => fillDemo('admin')}>
+                  Dùng →
+                </button>
+              </div>
+              <div className="demo-row">
+                <div>
+                  <div className="demo-name">quydom</div>
+                  <div className="demo-role">Biên tập · Tin tức, Sản phẩm, Liên hệ, Đăng ký nhận tin</div>
+                  <code>mật khẩu: 123123</code>
+                </div>
+                <button className="use" type="button" onClick={() => fillDemo('quydom')}>
+                  Dùng →
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  ReactDOM.createRoot(document.getElementById('root')).render(<LoginPage />);
+</script>
+</body>
+</html>
