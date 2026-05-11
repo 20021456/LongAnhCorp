@@ -66,6 +66,7 @@ function adCurrentPageId() {
   if (path === 'products.html')                return 'products';
   if (path === 'product-edit.html')            return 'products';
   if (path === 'news.html')                    return 'news';
+  if (path === 'news-edit.html')               return 'news';
   if (path === 'contacts.html')                return 'contacts';
   if (path === 'media.html')                   return 'gallery';
   if (path === 'roles.html')                   return 'roles';
@@ -259,7 +260,8 @@ const ADMIN_GLOBAL_CSS = `
 
   /* Badge */
   .ad-badge { display:inline-flex; align-items:center; gap:5px; padding:2px 8px;
-        font-size:11.5px; font-weight:600; border-radius:99px; line-height:1.6; }
+        font-size:11.5px; font-weight:600; border-radius:99px; line-height:1.6;
+        white-space:nowrap; }
   .ad-badge .dot { width:6px; height:6px; border-radius:50%; }
   .ad-badge.pub { background:var(--ad-success-soft); color:#15803D; }
   .ad-badge.pub .dot { background:var(--ad-success); }

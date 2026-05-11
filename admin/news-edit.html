@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sửa bài · Long Anh Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="admin-shell.jsx"></script>
+<script type="text/babel" src="page-edit-shell.jsx"></script>
+<script type="text/babel">
+  const style = document.createElement('style');
+  style.textContent = ADMIN_GLOBAL_CSS + PAGE_EDIT_CSS + `
+    .ne-cover { aspect-ratio: 16 / 7; border-radius: 10px; overflow: hidden;
+      background: var(--ad-line-soft); position: relative;
+      border: 1.5px dashed var(--ad-line); cursor: pointer; }
+    .ne-cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .ne-cover:hover .ne-cover-over { opacity: 1; }
+    .ne-cover-over { position: absolute; inset: 0; background: rgba(15,23,42,.55);
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      opacity: 0; transition: .15s; }
+
+    .ne-title-input { width: 100%; border: 0; padding: 8px 0;
+      font-size: 26px; font-weight: 700; letter-spacing: -.015em;
+      outline: none; line-height: 1.25; background: transparent;
+      border-bottom: 1.5px solid var(--ad-line); }
+    .ne-title-input:focus { border-color: var(--ad-primary); }
+
+    .ne-slug { display: flex; align-items: center; gap: 6px;
+      font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px;
+      color: var(--ad-text-mute); }
+    .ne-slug code { background: var(--ad-line-soft); padding: 3px 8px;
+      border-radius: 4px; color: var(--ad-text-soft); }
+
+    .ne-body-toolbar { display: flex; gap: 2px; padding: 6px;
+      background: var(--ad-line-soft); border-radius: 6px;
+      width: fit-content; margin-bottom: 8px; }
+    .ne-body-toolbar button { width: 30px; height: 28px; border: 0;
+      background: transparent; cursor: pointer; color: var(--ad-text-soft);
+      border-radius: 4px; display: flex; align-items: center; justify-content: center; }
+    .ne-body-toolbar button:hover { background: #fff; color: var(--ad-text); }
+    .ne-body-toolbar .sep { width: 1px; background: var(--ad-line);
+      margin: 4px 4px; }
+
+    .ne-body { min-height: 360px; padding: 16px;
+      border: 1px solid var(--ad-line); border-radius: 8px;
+      background: #fff; font-size: 14.5px; line-height: 1.7;
+      outline: none; }
+    .ne-body:focus { border-color: var(--ad-primary);
+      box-shadow: 0 0 0 3px var(--ad-primary-soft); }
+    .ne-body p { margin: 0 0 12px; }
+    .ne-body p:last-child { margin-bottom: 0; }
+
+    .ne-meta-row { display: grid; grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px; padding: 14px; border: 1px solid var(--ad-line);
+      border-radius: 8px; background: #FCFCFD; font-size: 12.5px; }
+    .ne-meta-row .lbl { font-weight: 600; color: var(--ad-text-mute);
+      font-size: 11px; letter-spacing: .04em; text-transform: uppercase;
+      margin-bottom: 4px; }
+  `;
+  document.head.appendChild(style);
+
+  /* Source of truth — must mirror admin/news.html (and ultimately /news.html) */
+  const POSTS = {
+    1: { cat: 'business',  date: '2026-05-06', views: 4280, comments: 23, author: 'AN', readMin: 4,
+         img: '../assets/kho-hang-xuat-khau.webp',
+         title: 'Long Anh ký hợp đồng xuất khẩu 12,000 tấn bột đá CaCO₃ sang Ấn Độ',
+         excerpt: 'Hợp đồng kéo dài 18 tháng với 3 đối tác công nghiệp lớn tại Mumbai và Delhi, đánh dấu cột mốc mới cho thị trường Nam Á của Long Anh.',
+         body: 'Sáng ngày 6/5/2026 tại trụ sở Long Anh ở Vinh, đại diện công ty đã ký kết hợp đồng xuất khẩu 12,000 tấn bột đá CaCO₃ siêu mịn với 3 đối tác công nghiệp nhựa và sơn tại Mumbai và Delhi.\n\nHợp đồng có thời hạn 18 tháng, bao gồm cả các SKU phủ và không phủ Stearic Acid, cỡ hạt 3–15 µm. Giá trị tổng hợp đồng ước đạt 8,5 triệu USD — đưa Ấn Độ vào nhóm 3 thị trường xuất khẩu lớn nhất của Long Anh, cùng Hàn Quốc và Nhật Bản.\n\nTheo CEO Long Anh, đây là kết quả của 2 năm làm việc liên tục với các khách hàng B2B tại khu vực Nam Á, đặc biệt là sau khi đạt chứng nhận ISO 9001:2015 và mở rộng dây chuyền phủ Stearic công nghệ Đức cuối năm 2025.',
+         tags: ['xuất khẩu', 'Ấn Độ', 'CaCO3', 'hợp đồng'] },
+    2: { cat: 'milestone', date: '2026-05-02', views: 2156, comments: 8, author: 'LH', readMin: 3,
+         img: '../assets/nha-may-bot-sieu-min-3.webp',
+         title: 'Khánh thành dây chuyền nghiền bột siêu mịn số 4 tại Quỳ Hợp',
+         excerpt: 'Dây chuyền số 4 nâng tổng công suất nhà máy lên 350,000 tấn/năm, áp dụng công nghệ Đức tiên tiến nhất cho cỡ hạt 3 µm.',
+         body: 'Ngày 2/5/2026, Long Anh chính thức đưa vào vận hành dây chuyền nghiền bột siêu mịn số 4 tại Quỳ Hợp, Nghệ An. Đây là dây chuyền nghiền khô hiện đại nhất Việt Nam có khả năng sản xuất bột CaCO₃ với cỡ hạt D50 = 3 µm.\n\nVới việc vận hành dây chuyền mới, tổng công suất nhà máy Long Anh đạt 350,000 tấn/năm — tăng 28% so với năm 2024.',
+         tags: ['dây chuyền mới', 'Quỳ Hợp', 'siêu mịn', '3µm'] },
+    3: { cat: 'tech', date: '2026-04-28', views: 1820, comments: 12, author: 'AN', readMin: 5,
+         img: '../assets/kiem-dinh.jpg',
+         title: 'Đạt chứng nhận ISO 9001:2015 cho toàn bộ 5 nhà máy',
+         excerpt: 'BSI Việt Nam cấp chứng nhận ISO 9001:2015 mở rộng cho tất cả nhà máy của Long Anh sau 18 tháng triển khai hệ thống quản lý chất lượng.',
+         body: 'BSI Việt Nam đã cấp chứng nhận ISO 9001:2015 mở rộng cho tất cả 5 nhà máy của Long Anh sau 18 tháng triển khai hệ thống quản lý chất lượng đồng bộ.',
+         tags: ['ISO 9001', 'chứng nhận', 'QC'] },
+    4: { cat: 'product', date: '2026-04-25', views: 1490, comments: 5, author: 'LH', readMin: 3,
+         img: '../assets/da-slab-sieu-trang.webp',
+         title: 'Báo giá tháng 5: Đá Slab 1.6×2.4m và bảng giá xuất khẩu CaCO₃',
+         excerpt: 'Cập nhật giá FOB tháng 5/2026 cho đá Slab tấm lớn và bột đá CaCO₃ uncoated/coated với 7 cỡ hạt từ 3 đến 20 µm.',
+         body: 'Cập nhật giá FOB tháng 5/2026...',
+         tags: ['báo giá', 'FOB', 'tháng 5'] },
+    5: { cat: 'event', date: '2026-04-15', views: 982, comments: 3, author: 'AN', readMin: 4,
+         img: '../assets/co-so-ha-tang.jpg',
+         title: 'Long Anh tham gia triển lãm Vietbuild Hà Nội 2026',
+         excerpt: 'Gian hàng B-204 trưng bày toàn bộ dòng sản phẩm bột đá và đá tự nhiên, kèm chương trình demo trực tiếp công nghệ phủ Stearic Acid.',
+         body: 'Gian hàng B-204 trưng bày toàn bộ dòng sản phẩm...',
+         tags: ['Vietbuild', 'triển lãm', 'Hà Nội'] },
+    6: { cat: 'business', date: '2026-04-08', views: 1670, comments: 7, author: 'AN', readMin: 4,
+         img: '../assets/nha-may-bot-sieu-min.webp',
+         title: 'Mở rộng thị trường Trung Đông: 3 hợp đồng mới tại UAE và Ai Cập',
+         excerpt: 'Tổng giá trị hợp đồng đạt 4,2 triệu USD, đưa Trung Đông trở thành khu vực xuất khẩu lớn thứ 3 của Long Anh sau Đông Á và Nam Á.',
+         body: 'Tổng giá trị hợp đồng đạt 4,2 triệu USD...',
+         tags: ['Trung Đông', 'UAE', 'Ai Cập', 'xuất khẩu'] },
+    7: { cat: 'milestone', date: '2026-03-22', views: 3540, comments: 41, author: 'AN', readMin: 6,
+         img: '../assets/kho-hang.webp',
+         title: 'Lễ kỷ niệm 20 năm thành lập KS Long Anh (2006-2026)',
+         excerpt: 'Từ một mỏ đá vôi trắng đến nhà sản xuất bột đá hàng đầu Bắc Trung Bộ với 350,000 tấn/năm và 12 thị trường xuất khẩu — hành trình 20 năm.',
+         body: 'Từ một mỏ đá vôi trắng...',
+         tags: ['20 năm', 'kỷ niệm', 'lịch sử'] },
+    8: { cat: 'csr', date: '2026-03-10', views: 740, comments: 18, author: 'LH', readMin: 3,
+         img: '../assets/kho-da-nguyen-lieu.webp',
+         title: 'Long Anh tài trợ chương trình học bổng cho học sinh Quỳ Hợp',
+         excerpt: 'Quỹ học bổng 500 triệu đồng dành cho 50 học sinh xuất sắc tại 5 trường cấp 2 và cấp 3 trên địa bàn huyện Quỳ Hợp năm học 2026-2027.',
+         body: 'Quỹ học bổng 500 triệu đồng...',
+         tags: ['học bổng', 'CSR', 'cộng đồng'] },
+    9: { cat: 'product', date: '2026-03-02', views: 1280, comments: 6, author: 'LH', readMin: 3,
+         img: '../assets/bot-caco3-sieu-min.webp',
+         title: 'Ra mắt dòng bột CaCO₃ siêu mịn 3 µm cho compound nhựa PVC cao cấp',
+         excerpt: 'Sản phẩm bột CaCO₃ phủ Stearic 3 µm cải thiện độ phân tán 25% so với dòng 5 µm — đáp ứng yêu cầu khắt khe nhất của masterbatch xuất khẩu.',
+         body: 'Sản phẩm bột CaCO₃ phủ Stearic 3 µm...',
+         tags: ['3µm', 'PVC', 'masterbatch'] },
+    10: { cat: 'event', date: '2026-02-18', views: 856, comments: 4, author: 'AN', readMin: 5,
+         img: '../assets/nha-may-bot-sieu-min-1.webp',
+         title: 'Long Anh đón đoàn khách Nhật Bản tham quan nhà máy Quỳ Hợp',
+         excerpt: 'Đoàn 15 đại diện từ 5 công ty nhập khẩu Nhật Bản tham quan toàn bộ chuỗi sản xuất — từ khai thác đá đến đóng gói thành phẩm.',
+         body: 'Đoàn 15 đại diện từ 5 công ty nhập khẩu Nhật Bản...',
+         tags: ['Nhật Bản', 'tham quan', 'khách hàng'] },
+    11: { cat: 'tech', date: '2026-02-05', views: 2105, comments: 14, author: 'AN', readMin: 4,
+         img: '../assets/co-so-ha-tang.jpg',
+         title: 'Đầu tư 80 tỷ đồng nâng cấp dây chuyền phủ Stearic Acid thế hệ mới',
+         excerpt: 'Dây chuyền Đức mới giúp nâng tỷ lệ phủ stearic đồng đều lên 99.5%, giảm tiêu hao năng lượng 18% và tăng công suất 30% so với hệ thống cũ.',
+         body: 'Dây chuyền Đức mới giúp nâng tỷ lệ phủ stearic đồng đều lên 99.5%...',
+         tags: ['Stearic', 'đầu tư', 'công nghệ Đức'] },
+    12: { cat: 'business', date: '2026-01-22', views: 1340, comments: 9, author: 'LH', readMin: 4,
+         img: '../assets/da-nguyen-lieu-cao-cap2.webp',
+         title: 'Tổng kết 2025: Doanh thu xuất khẩu tăng 32%, mở thêm 2 thị trường mới',
+         excerpt: 'Năm 2025 Long Anh đạt 280 tỷ doanh thu xuất khẩu, tăng trưởng 32% YoY với 2 thị trường mới: Bangladesh và Sri Lanka. Kế hoạch 2026 hướng tới 350 tỷ.',
+         body: 'Năm 2025 Long Anh đạt 280 tỷ doanh thu xuất khẩu...',
+         tags: ['2025', 'tổng kết', 'doanh thu'] },
+  };
+
+  const CAT_LABEL = {
+    business: 'Kinh doanh', product: 'Sản phẩm', event: 'Sự kiện',
+    csr: 'CSR', tech: 'Công nghệ', milestone: 'Cột mốc',
+  };
+  const AUTHORS = {
+    AN: { name: 'Anh Nam',     role: 'Trưởng phòng nội dung' },
+    LH: { name: 'Lê Hà',       role: 'Biên tập viên' },
+    QD: { name: 'Quý Đỗm',     role: 'Biên tập viên' },
+  };
+
+  function slugify(s) {
+    return s.toLowerCase()
+      .normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd')
+      .replace(/[^a-z0-9 -]/g, '').trim().replace(/\s+/g, '-');
+  }
+
+  function NewsEdit() {
+    const params  = new URLSearchParams(location.search);
+    const idParam = parseInt(params.get('id') || '0', 10);
+    const isNew   = !idParam || !POSTS[idParam];
+    const id      = isNew ? 0 : idParam;
+    const post    = isNew
+      ? { cat: 'business', date: new Date().toISOString().slice(0, 10),
+          views: 0, comments: 0, author: 'AN', readMin: 3,
+          img: '', title: '', excerpt: '', body: '', tags: [] }
+      : POSTS[id];
+
+    const [lang,    setLang]    = React.useState('vi');
+    const [status,  setStatus]  = React.useState('pub');
+    const [title,   setTitle]   = React.useState(post.title);
+    const [slug,    setSlug]    = React.useState('bai-' + (id || 'moi'));
+    const [excerpt, setExcerpt] = React.useState(post.excerpt);
+    const [body,    setBody]    = React.useState(post.body);
+    const [cat,     setCat]     = React.useState(post.cat);
+    const [featured,setFeatured]= React.useState(post.views > 2000);
+    const [author,  setAuthor]  = React.useState(post.author);
+    const [pubDate, setPubDate] = React.useState(post.date);
+    const [tags,    setTags]    = React.useState(post.tags);
+
+    function regenSlug() { setSlug(title ? slugify(title) : 'bai-moi'); }
+
+    return (
+      <PeEditorShell
+        active="news"
+        crumb={[
+          { label: 'Trang chủ', href: 'index.html' },
+          { label: 'Tin tức', href: 'news.html' },
+          { label: isNew ? 'Bài viết mới' : `Bài #${id}` },
+        ]}
+        title={isNew ? 'Bài viết mới' : title || `Bài #${id}`}
+        slug={`/tin-tuc/${slug}`}
+        status={status} setStatus={setStatus}
+        previewHref={isNew ? '#' : `../news.html#post-${id}`}
+        lang={lang} setLang={setLang}
+        sidebarExtra={
+          <>
+            <div className="ad-card">
+              <div className="ad-card-head"><h3>Danh mục</h3></div>
+              <div style={{ padding: 14, display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {Object.entries(CAT_LABEL).map(([k, l]) => (
+                  <label key={k} style={{
+                    display: 'flex', alignItems: 'center', gap: 8, padding: '6px 8px',
+                    border: '1px solid var(--ad-line)', borderRadius: 6, cursor: 'pointer',
+                    fontSize: 12.5, fontWeight: 500,
+                    background: cat === k ? 'var(--ad-primary-soft)' : '#fff',
+                    color: cat === k ? 'var(--ad-primary)' : 'var(--ad-text-soft)',
+                  }}>
+                    <input type="radio" name="cat" checked={cat === k}
+                           onChange={() => setCat(k)} /> {l}
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <div className="ad-card">
+              <div className="ad-card-head"><h3>Cờ & hiển thị</h3></div>
+              <div style={{ padding: 14, display: 'flex', flexDirection: 'column', gap: 12, fontSize: 13 }}>
+                <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <span>Bài viết nổi bật (Featured)</span>
+                  <AdSwitch on={featured} onChange={setFeatured} />
+                </label>
+                <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <span>Ghim lên đầu danh mục</span>
+                  <AdSwitch on={false} onChange={() => {}} />
+                </label>
+                <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <span>Cho phép bình luận</span>
+                  <AdSwitch on={true} onChange={() => {}} />
+                </label>
+              </div>
+            </div>
+
+            <div className="ad-card">
+              <div className="ad-card-head"><h3>Tác giả & ngày đăng</h3></div>
+              <div style={{ padding: 14, display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <AdField label="Tác giả">
+                  <select className="ad-select" value={author} onChange={e => setAuthor(e.target.value)}>
+                    {Object.entries(AUTHORS).map(([k, v]) =>
+                      <option key={k} value={k}>{v.name} · {v.role}</option>
+                    )}
+                  </select>
+                </AdField>
+                <AdField label="Ngày xuất bản">
+                  <input className="ad-input" type="date"
+                         value={pubDate} onChange={e => setPubDate(e.target.value)} />
+                </AdField>
+                {!isNew && (
+                  <div style={{ background: 'var(--ad-line-soft)', borderRadius: 6,
+                                padding: 10, fontSize: 11.5, color: 'var(--ad-text-soft)' }}>
+                    {post.views.toLocaleString()} lượt xem · {post.comments} bình luận · {post.readMin} phút đọc
+                  </div>
+                )}
+              </div>
+            </div>
+          </>
+        }>
+
+        {/* 01 — Cover + Title + Slug */}
+        <PeSection num="01" icon="image" title="Ảnh bìa & Tiêu đề"
+                   sub="Cover (1600×700), tiêu đề và đường dẫn">
+          <div className="pe-stack">
+            <div className="ne-cover">
+              {post.img
+                ? <img src={post.img} alt={title} />
+                : <div style={{
+                    position: 'absolute', inset: 0, display: 'flex',
+                    flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                    color: 'var(--ad-text-mute)', gap: 8 }}>
+                    <AdIcon name="upload" size={26} />
+                    <div style={{ fontSize: 13 }}>Tải ảnh bìa (khuyến nghị 1600×700)</div>
+                  </div>}
+              <div className="ne-cover-over">
+                <button className="ad-btn"><AdIcon name="refresh" size={13} /> Đổi ảnh</button>
+                <button className="ad-btn"><AdIcon name="edit" size={13} /> Crop</button>
+              </div>
+            </div>
+
+            <AdField label="Tiêu đề bài viết" req
+                     help={`${title.length}/100 ký tự · Khuyến nghị 60-80 ký tự cho SEO`}>
+              <input className="ne-title-input"
+                     value={title} onChange={e => setTitle(e.target.value)}
+                     placeholder="Nhập tiêu đề bài viết…" />
+            </AdField>
+
+            <div className="ne-slug">
+              <AdIcon name="link" size={13} />
+              long-anh.com/tin-tuc/<code>{slug}</code>
+              <button className="ad-btn ghost sm" onClick={regenSlug}
+                      style={{ marginLeft: 'auto' }} title="Tạo lại từ tiêu đề">
+                <AdIcon name="refresh" size={12} /> Tạo lại slug
+              </button>
+            </div>
+          </div>
+        </PeSection>
+
+        {/* 02 — Excerpt */}
+        <PeSection num="02" icon="file" title="Tóm tắt (Excerpt)"
+                   sub="2-3 câu hiển thị trên list, social share và Google preview">
+          <AdField label="Đoạn tóm tắt" req
+                   help={`${excerpt.length}/200 ký tự · 140-180 là tối ưu`}>
+            <textarea className="ad-textarea" style={{ minHeight: 80 }}
+                      value={excerpt} onChange={e => setExcerpt(e.target.value)}
+                      placeholder="Mô tả ngắn 2-3 câu…" />
+          </AdField>
+        </PeSection>
+
+        {/* 03 — Body */}
+        <PeSection num="03" icon="edit" title="Nội dung bài viết"
+                   sub="Soạn thảo nội dung chính (rich text)">
+          <div className="pe-stack">
+            <div className="ne-body-toolbar">
+              <button title="Bold"><b style={{ fontSize: 13 }}>B</b></button>
+              <button title="Italic"><i style={{ fontSize: 13 }}>I</i></button>
+              <button title="Underline"><u style={{ fontSize: 13 }}>U</u></button>
+              <div className="sep" />
+              <button title="Heading"><b style={{ fontSize: 11 }}>H₂</b></button>
+              <button title="Quote">"</button>
+              <button title="Link"><AdIcon name="link" size={13} /></button>
+              <div className="sep" />
+              <button title="Bullet list"><AdIcon name="list" size={13} /></button>
+              <button title="Image"><AdIcon name="image" size={13} /></button>
+              <button title="Embed"><AdIcon name="globe" size={13} /></button>
+              <div className="sep" />
+              <button title="Hoàn tác"><AdIcon name="refresh" size={13} /></button>
+            </div>
+            <textarea className="ne-body" style={{ resize: 'vertical' }}
+                      value={body} onChange={e => setBody(e.target.value)}
+                      placeholder="Viết nội dung bài viết…" />
+            <div style={{ display: 'flex', gap: 14, fontSize: 12, color: 'var(--ad-text-mute)' }}>
+              <span>{body.length.toLocaleString()} ký tự</span>
+              <span>~{Math.max(1, Math.round(body.split(/\s+/).length / 200))} phút đọc</span>
+              <span>{body.split(/\s+/).filter(Boolean).length} từ</span>
+            </div>
+          </div>
+        </PeSection>
+
+        {/* 04 — Tags */}
+        <PeSection num="04" icon="folder" title="Tags & Bài liên quan"
+                   sub={'Tags hỗ trợ tìm kiếm và section "Bài liên quan"'}
+                   defaultOpen={false}>
+          <div className="pe-stack">
+            <AdField label="Tags">
+              <PeTags tags={tags} />
+            </AdField>
+            <AdField label="Bài liên quan thủ công (tối đa 3)"
+                     help="Để trống cho hệ thống tự gợi ý theo danh mục + tag">
+              <PeTags tags={[]} />
+            </AdField>
+          </div>
+        </PeSection>
+
+        {/* 05 — Stats overview (read-only when editing existing post) */}
+        {!isNew && (
+          <PeSection num="05" icon="trend" title="Thống kê bài viết"
+                     sub="Hiển thị, không cho phép sửa" defaultOpen={false}>
+            <div className="ne-meta-row">
+              <div>
+                <div className="lbl">Lượt xem</div>
+                <div style={{ fontSize: 18, fontWeight: 700 }}>{post.views.toLocaleString()}</div>
+              </div>
+              <div>
+                <div className="lbl">Bình luận</div>
+                <div style={{ fontSize: 18, fontWeight: 700 }}>{post.comments}</div>
+              </div>
+              <div>
+                <div className="lbl">Thời gian đọc</div>
+                <div style={{ fontSize: 18, fontWeight: 700 }}>{post.readMin} phút</div>
+              </div>
+            </div>
+          </PeSection>
+        )}
+
+        {/* 06 — SEO */}
+        <PeSeoSection
+          num={isNew ? '05' : '06'}
+          metaTitle={title || 'Tiêu đề bài viết Long Anh'}
+          metaDesc={excerpt}
+          keywords={tags}
+          ogImage={post.img}
+          googleSlug={`tin-tuc/${slug}`} />
+
+      </PeEditorShell>
+    );
+  }
+
+  ReactDOM.createRoot(document.getElementById('root')).render(<NewsEdit />);
+</script>
+</body>
+</html>

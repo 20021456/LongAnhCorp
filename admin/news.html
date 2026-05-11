@@ -18,14 +18,19 @@
     .nw-thumb { width:60px; height:42px; border-radius:4px; object-fit:cover;
           flex:none; background:var(--ad-line-soft); }
     .nw-title-cell { display:flex; gap:12px; align-items:center; }
-    .nw-cat { display:inline-block; padding:2px 8px; border-radius:99px;
-          font-size:11px; font-weight:600; line-height:1.6; }
+    .nw-cat { display:inline-block; padding:2px 9px; border-radius:99px;
+          font-size:11px; font-weight:600; line-height:1.6;
+          white-space:nowrap; }
     .nw-cat.business  { background:#E8F0FB; color:#1D4ED8; }
     .nw-cat.product   { background:#FFF1E5; color:#C2410C; }
     .nw-cat.event     { background:#FCE7F3; color:#BE185D; }
     .nw-cat.csr       { background:#DCFCE7; color:#15803D; }
     .nw-cat.tech      { background:#EDE9FE; color:#6D28D9; }
     .nw-cat.milestone { background:#FEF3C7; color:#A16207; }
+    /* Tighter row-actions cell so icons aren't pinned at the very edge */
+    .ad-table .row-actions { padding-right:4px; opacity:1; }
+    .ad-table .row-actions .ad-btn.sm { width:30px; height:30px; padding:0;
+          justify-content:center; }
   `;
   document.head.appendChild(style);
 
@@ -88,9 +93,9 @@
         <button className="ad-btn">
           <AdIcon name="download" size={14} /> Xuất CSV
         </button>
-        <button className="ad-btn primary">
+        <a href="news-edit.html" className="ad-btn primary">
           <AdIcon name="plus" size={14} /> Bài viết mới
-        </button>
+        </a>
       </>
     );
 
@@ -143,13 +148,13 @@
               <tr>
                 <th style={{ width: 36 }}><input type="checkbox" /></th>
                 <th>Tiêu đề</th>
-                <th style={{ width: 130 }}>Danh mục</th>
-                <th style={{ width: 90 }}>Tác giả</th>
-                <th style={{ width: 110 }}>Ngày đăng</th>
-                <th style={{ width: 90 }}>Xem</th>
-                <th style={{ width: 80 }}>BL</th>
-                <th style={{ width: 130 }}>Trạng thái</th>
-                <th style={{ width: 140 }}></th>
+                <th style={{ width: 110 }}>Danh mục</th>
+                <th style={{ width: 60 }}>Tác giả</th>
+                <th style={{ width: 100 }}>Ngày đăng</th>
+                <th style={{ width: 70 }}>Xem</th>
+                <th style={{ width: 60 }}>BL</th>
+                <th style={{ width: 110 }}>Trạng thái</th>
+                <th style={{ width: 160 }}></th>
               </tr>
             </thead>
             <tbody>
@@ -189,9 +194,12 @@
                   <td style={{ fontSize: 12.5, color: 'var(--ad-text-soft)' }}>{p.comments}</td>
                   <td><AdBadge status={p.status} /></td>
                   <td>
-                    <div className="row-actions" style={{ justifyContent: 'flex-end' }}>
-                      <button className="ad-btn ghost sm" title="Sửa"><AdIcon name="edit" size={13} /></button>
-                      <a className="ad-btn ghost sm" title="Xem"
+                    <div className="row-actions" style={{ justifyContent: 'flex-end', gap: 4 }}>
+                      <a className="ad-btn ghost sm" title="Sửa bài viết"
+                         href={`news-edit.html?id=${p.id}`}>
+                        <AdIcon name="edit" size={13} />
+                      </a>
+                      <a className="ad-btn ghost sm" title="Xem trên web"
                          href={`../news.html#post-${p.id}`} target="_blank">
                         <AdIcon name="eye" size={13} />
                       </a>
