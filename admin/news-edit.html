@@ -62,6 +62,50 @@
     .ne-meta-row .lbl { font-weight: 600; color: var(--ad-text-mute);
       font-size: 11px; letter-spacing: .04em; text-transform: uppercase;
       margin-bottom: 4px; }
+
+    /* Image gallery section */
+    .ne-gallery { display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 12px; }
+    @media (max-width: 720px) { .ne-gallery { grid-template-columns: repeat(2, 1fr); } }
+    .ne-gimg { position: relative; aspect-ratio: 4 / 3; border-radius: 8px;
+      overflow: hidden; background: var(--ad-line-soft);
+      border: 1px solid var(--ad-line); cursor: pointer; }
+    .ne-gimg img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .ne-gimg .badge { position: absolute; top: 6px; left: 6px;
+      font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 600;
+      background: rgba(15,23,42,.7); color: #fff; padding: 2px 6px;
+      border-radius: 4px; }
+    .ne-gimg .featured-flag { position: absolute; top: 6px; right: 6px;
+      background: var(--ad-accent); color: #fff; padding: 2px 7px;
+      border-radius: 4px; font-size: 10px; font-weight: 700;
+      display: flex; align-items: center; gap: 4px; }
+    .ne-gimg .alt { position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 6px 8px; background: linear-gradient(0deg, rgba(0,0,0,.7), transparent);
+      color: #fff; font-size: 10.5px; line-height: 1.4;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .ne-gimg .over { position: absolute; inset: 0; background: rgba(15,23,42,.65);
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      opacity: 0; transition: .15s; flex-wrap: wrap; padding: 8px; }
+    .ne-gimg:hover .over { opacity: 1; }
+    .ne-gimg .over button { width: 30px; height: 30px; padding: 0;
+      justify-content: center; }
+
+    .ne-gadd { aspect-ratio: 4 / 3; border-radius: 8px;
+      border: 1.5px dashed var(--ad-line); background: transparent;
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; gap: 6px; cursor: pointer;
+      color: var(--ad-text-mute); font-size: 12px; }
+    .ne-gadd:hover { border-color: var(--ad-primary); color: var(--ad-primary);
+      background: var(--ad-primary-soft); }
+
+    .ne-galt-modal { position: fixed; inset: 0; background: rgba(15,23,42,.55);
+      z-index: 100; display: flex; align-items: center; justify-content: center;
+      padding: 20px; }
+    .ne-galt-card { background: #fff; border-radius: 10px; width: 100%;
+      max-width: 460px; padding: 22px; }
+    .ne-galt-card h3 { margin: 0 0 14px; font-size: 16px; font-weight: 600; }
+    .ne-galt-card .actions { display: flex; gap: 8px; justify-content: flex-end;
+      margin-top: 16px; }
   `;
   document.head.appendChild(style);
 
@@ -180,7 +224,63 @@
     const [pubDate, setPubDate] = React.useState(post.date);
     const [tags,    setTags]    = React.useState(post.tags);
 
+    /* Image gallery for the post: cover + any extra images attached. */
+    const [gallery, setGallery] = React.useState(() => {
+      const seed = [];
+      if (post.img) seed.push({ src: post.img, alt: post.title, featured: true });
+      /* Demo: pre-fill a couple of related images so the section isn't empty. */
+      if (!isNew) {
+        const extras = [
+          '../assets/da-nguyen-lieu-cao-cap.webp',
+          '../assets/co-so-ha-tang.jpg',
+          '../assets/kho-hang-2.webp',
+        ];
+        extras.forEach(s => { if (s !== post.img) seed.push({ src: s, alt: '', featured: false }); });
+      }
+      return seed;
+    });
+    const [editAltIdx, setEditAltIdx] = React.useState(-1);
+    const [altDraft, setAltDraft]     = React.useState('');
+
     function regenSlug() { setSlug(title ? slugify(title) : 'bai-moi'); }
+
+    function gAddDemo() {
+      /* Mock "upload" — picks a random asset so user sees a new tile appear. */
+      const pool = [
+        '../assets/bot-caco3-sieu-min.webp',
+        '../assets/bot-sieu-min.webp',
+        '../assets/da-slab-sieu-trang.webp',
+        '../assets/kho-da-nguyen-lieu.webp',
+        '../assets/nha-may-bot-sieu-min.webp',
+        '../assets/nha-may-bot-sieu-min-1.webp',
+        '../assets/kiem-dinh.jpg',
+        '../assets/kho-hang.webp',
+      ];
+      const next = pool[Math.floor(Math.random() * pool.length)];
+      setGallery(g => [...g, { src: next, alt: '', featured: false }]);
+    }
+    function gMakeFeatured(i) {
+      setGallery(g => g.map((it, j) => ({ ...it, featured: j === i })));
+    }
+    function gMoveUp(i) {
+      if (i === 0) return;
+      setGallery(g => { const c = [...g]; [c[i - 1], c[i]] = [c[i], c[i - 1]]; return c; });
+    }
+    function gMoveDown(i) {
+      setGallery(g => {
+        if (i >= g.length - 1) return g;
+        const c = [...g]; [c[i], c[i + 1]] = [c[i + 1], c[i]]; return c;
+      });
+    }
+    function gDelete(i) { setGallery(g => g.filter((_, j) => j !== i)); }
+    function gInsertIntoBody(src) {
+      setBody(b => `${b}${b && !b.endsWith('\n') ? '\n\n' : ''}![](${src})\n\n`);
+    }
+    function gOpenAlt(i) { setEditAltIdx(i); setAltDraft(gallery[i].alt || ''); }
+    function gSaveAlt() {
+      setGallery(g => g.map((it, j) => j === editAltIdx ? { ...it, alt: altDraft } : it));
+      setEditAltIdx(-1);
+    }
 
     return (
       <PeEditorShell
@@ -337,8 +437,91 @@
           </div>
         </PeSection>
 
-        {/* 04 — Tags */}
-        <PeSection num="04" icon="folder" title="Tags & Bài liên quan"
+        {/* 04 — Image gallery */}
+        <PeSection num="04" icon="image" title="Thư viện ảnh"
+                   sub={`Quản lý ảnh đính kèm bài viết · ${gallery.length} ảnh`}>
+          <div className="pe-stack">
+            <div className="ne-gallery">
+              {gallery.map((g, i) => (
+                <div key={i} className="ne-gimg">
+                  <img src={g.src} alt={g.alt} />
+                  <span className="badge">IMG {String(i + 1).padStart(2, '0')}</span>
+                  {g.featured && (
+                    <span className="featured-flag">
+                      <AdIcon name="star" size={10} /> Bìa
+                    </span>
+                  )}
+                  {g.alt && <div className="alt">{g.alt}</div>}
+                  <div className="over">
+                    <button className="ad-btn sm" title="Đặt làm ảnh bìa"
+                            onClick={() => gMakeFeatured(i)}>
+                      <AdIcon name="star" size={12} />
+                    </button>
+                    <button className="ad-btn sm" title="Sửa mô tả (alt)"
+                            onClick={() => gOpenAlt(i)}>
+                      <AdIcon name="edit" size={12} />
+                    </button>
+                    <button className="ad-btn sm" title="Chèn vào nội dung"
+                            onClick={() => gInsertIntoBody(g.src)}>
+                      <AdIcon name="plus" size={12} />
+                    </button>
+                    <button className="ad-btn sm" title="Đẩy lên"
+                            onClick={() => gMoveUp(i)} disabled={i === 0}>
+                      <AdIcon name="arrowLeft" size={12} />
+                    </button>
+                    <button className="ad-btn sm" title="Đẩy xuống"
+                            onClick={() => gMoveDown(i)} disabled={i === gallery.length - 1}>
+                      <AdIcon name="arrowRight" size={12} />
+                    </button>
+                    <button className="ad-btn sm danger" title="Xóa"
+                            onClick={() => gDelete(i)}>
+                      <AdIcon name="trash" size={12} />
+                    </button>
+                  </div>
+                </div>
+              ))}
+              <button className="ne-gadd" onClick={gAddDemo}>
+                <AdIcon name="upload" size={22} />
+                <div>Tải ảnh lên</div>
+                <div style={{ fontSize: 11, opacity: .7 }}>hoặc kéo thả</div>
+              </button>
+            </div>
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
+              <button className="ad-btn" onClick={gAddDemo}>
+                <AdIcon name="upload" size={13} /> Thêm ảnh
+              </button>
+              <button className="ad-btn">
+                <AdIcon name="image" size={13} /> Chọn từ thư viện chung
+              </button>
+              <div style={{ fontSize: 12, color: 'var(--ad-text-mute)', marginLeft: 'auto' }}>
+                Khuyến nghị: JPG/WebP · &lt; 1MB · ảnh ngang 1200×800px
+              </div>
+            </div>
+          </div>
+        </PeSection>
+
+        {editAltIdx >= 0 && (
+          <div className="ne-galt-modal" onClick={() => setEditAltIdx(-1)}>
+            <div className="ne-galt-card" onClick={e => e.stopPropagation()}>
+              <h3>Mô tả ảnh (alt text)</h3>
+              <AdField label="Văn bản thay thế"
+                       help="Quan trọng cho SEO và screen reader. Mô tả ngắn gọn nội dung ảnh.">
+                <input className="ad-input" autoFocus
+                       value={altDraft} onChange={e => setAltDraft(e.target.value)}
+                       placeholder="Ví dụ: Bao bột đá CaCO₃ tại kho xuất khẩu" />
+              </AdField>
+              <div className="actions">
+                <button className="ad-btn" onClick={() => setEditAltIdx(-1)}>Hủy</button>
+                <button className="ad-btn primary" onClick={gSaveAlt}>
+                  <AdIcon name="check" size={13} /> Lưu
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* 05 — Tags */}
+        <PeSection num="05" icon="folder" title="Tags & Bài liên quan"
                    sub={'Tags hỗ trợ tìm kiếm và section "Bài liên quan"'}
                    defaultOpen={false}>
           <div className="pe-stack">
@@ -352,9 +535,9 @@
           </div>
         </PeSection>
 
-        {/* 05 — Stats overview (read-only when editing existing post) */}
+        {/* 06 — Stats overview (read-only when editing existing post) */}
         {!isNew && (
-          <PeSection num="05" icon="trend" title="Thống kê bài viết"
+          <PeSection num="06" icon="trend" title="Thống kê bài viết"
                      sub="Hiển thị, không cho phép sửa" defaultOpen={false}>
             <div className="ne-meta-row">
               <div>
@@ -373,13 +556,13 @@
           </PeSection>
         )}
 
-        {/* 06 — SEO */}
+        {/* 07 — SEO */}
         <PeSeoSection
-          num={isNew ? '05' : '06'}
+          num={isNew ? '06' : '07'}
           metaTitle={title || 'Tiêu đề bài viết Long Anh'}
           metaDesc={excerpt}
           keywords={tags}
-          ogImage={post.img}
+          ogImage={(gallery.find(g => g.featured) || gallery[0] || {}).src || post.img}
           googleSlug={`tin-tuc/${slug}`} />
 
       </PeEditorShell>
