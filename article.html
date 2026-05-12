@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chi tiết tin tức — KS Long Anh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fraunces:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0;padding:0;min-height:100%;background:#FAFBFD;}
+  body{font-family:'Inter',system-ui,sans-serif;}
+  *{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+// ─── Translations ───────────────────────────────────────────────────────────
+const COPY = {
+  vi: {
+    nav: ['Trang chủ', 'Giới thiệu', 'Sản phẩm', 'Tuyển dụng', 'Tin tức', 'Liên hệ'],
+    tagline: 'Bột đá Canxi Cacbonat & Đá tự nhiên Việt Nam',
+    phone: ['(+84) 912 779 799', '(+84-2383) 982 555'],
+    email: 'info@longanhcorp.com',
+    footnote: '© 2026 Công ty TNHH KS Long Anh · Mã số DN 2901xxxxx',
+    home: 'Trang chủ', news: 'Tin tức',
+    notFound: 'Không tìm thấy bài viết', backToNews: 'Quay lại trang tin tức',
+    categories: {
+      'business':'Kinh doanh', 'product':'Sản phẩm', 'event':'Sự kiện',
+      'csr':'CSR', 'tech':'Công nghệ', 'milestone':'Cột mốc'
+    },
+    minRead: 'phút đọc', publishedOn: 'Đăng ngày', author: 'Tác giả',
+    viewCount: 'lượt xem', commentCount: 'bình luận',
+    sharePrompt: 'Chia sẻ bài viết',
+    relatedTitle: 'Tin liên quan',
+    tableOfContents: 'Nội dung bài viết',
+    tags: 'Thẻ', backToList: 'Tất cả tin tức',
+    sourceLabel: 'Nguồn',
+    newsletterShort: 'Đăng ký nhận tin Long Anh',
+    newsletterShortBody: 'Tin tức và báo cáo thị trường gửi đến hộp thư hàng tháng.',
+    emailPlaceholder: 'Email của bạn',
+    subscribe: 'Đăng ký',
+  },
+  en: {
+    nav: ['Home', 'About', 'Products', 'Career', 'News', 'Contact'],
+    tagline: 'Vietnamese Calcium Carbonate & Natural Stone',
+    phone: ['(+84) 912 779 799', '(+84-2383) 982 555'],
+    email: 'info@longanhcorp.com',
+    footnote: '© 2026 Long Anh Mineral Co., Ltd · Reg. No. 2901xxxxx',
+    home: 'Home', news: 'News',
+    notFound: 'Article not found', backToNews: 'Back to news',
+    categories: {
+      'business':'Business', 'product':'Product', 'event':'Event',
+      'csr':'CSR', 'tech':'Technology', 'milestone':'Milestone'
+    },
+    minRead: 'min read', publishedOn: 'Published', author: 'By',
+    viewCount: 'views', commentCount: 'comments',
+    sharePrompt: 'Share this article',
+    relatedTitle: 'Related news',
+    tableOfContents: 'Table of contents',
+    tags: 'Tags', backToList: 'All news',
+    sourceLabel: 'Source',
+    newsletterShort: 'Subscribe to Long Anh newsletter',
+    newsletterShortBody: 'Industry news and market reports delivered monthly.',
+    emailPlaceholder: 'Your email',
+    subscribe: 'Subscribe',
+  },
+  zh: {
+    nav: ['首页', '关于我们', '产品', '招聘', '新闻', '联系'],
+    tagline: '越南碳酸钙粉与天然石材',
+    phone: ['(+84) 912 779 799', '(+84-2383) 982 555'],
+    email: 'info@longanhcorp.com',
+    footnote: '© 2026 龙英矿业有限公司 · 注册号 2901xxxxx',
+    home: '首页', news: '新闻',
+    notFound: '未找到文章', backToNews: '返回新闻列表',
+    categories: {
+      'business':'商务', 'product':'产品', 'event':'活动',
+      'csr':'企业责任', 'tech':'技术', 'milestone':'里程碑'
+    },
+    minRead: '分钟阅读', publishedOn: '发布于', author: '作者',
+    viewCount: '浏览', commentCount: '评论',
+    sharePrompt: '分享这篇文章',
+    relatedTitle: '相关新闻',
+    tableOfContents: '目录',
+    tags: '标签', backToList: '全部新闻',
+    sourceLabel: '来源',
+    newsletterShort: '订阅龙英新闻',
+    newsletterShortBody: '行业新闻和市场报告每月发送。',
+    emailPlaceholder: '您的邮箱',
+    subscribe: '订阅',
+  },
+};
+
+// ─── Article database (with full body content) ──────────────────────────────
+const ARTICLES = {
+  '1': {
+    id:1, views:4280, comments:23, cat:'business', date:'2026-05-06', readMin:4,
+    img:'assets/kho-hang-xuat-khau.webp',
+    author:{ vi:'Nguyễn Long Anh · CEO', en:'Nguyen Long Anh · CEO', zh:'阮龙英 · 首席执行官' },
+    title:{
+      vi:'Long Anh ký hợp đồng xuất khẩu 12,000 tấn bột đá CaCO₃ sang Ấn Độ',
+      en:'Long Anh signs 12,000-ton CaCO₃ export contract with India',
+      zh:'龙英与印度签订12,000吨碳酸钙粉出口合同',
+    },
+    lead:{
+      vi:'Hợp đồng kéo dài 18 tháng với 3 đối tác công nghiệp lớn tại Mumbai và Delhi, đánh dấu cột mốc mới cho thị trường Nam Á của Long Anh — nâng tổng doanh thu xuất khẩu khu vực này lên gấp đôi so với năm 2025.',
+      en:'18-month contract with 3 major industrial partners in Mumbai and Delhi marks a new milestone for Long Anh in the South Asia market — doubling regional export revenue compared to 2025.',
+      zh:'与孟买和德里的3家主要工业合作伙伴签订18个月合同,标志着龙英在南亚市场的新里程碑 — 该地区出口收入比2025年翻一番。',
+    },
+    body:{
+      vi:[
+        'Ngày 06/05/2026, tại trụ sở Long Anh ở thành phố Vinh, Nghệ An, đại diện Ban giám đốc đã ký kết hợp đồng cung cấp 12,000 tấn bột đá CaCO₃ phủ và không phủ Stearic Acid cho 3 đối tác công nghiệp lớn tại Ấn Độ. Tổng giá trị hợp đồng đạt 3,8 triệu USD, kéo dài từ tháng 6/2026 đến tháng 11/2027.',
+        'Ba đối tác bao gồm: PolyChem Mumbai (compound nhựa PVC), Delhi Paint Works (sơn nước cao cấp) và Bharat Masterbatch Ltd (masterbatch xuất khẩu). Tất cả đều là khách hàng B2B lớn trong ngành nhựa, sơn và masterbatch tại Ấn Độ — thị trường tiêu thụ CaCO₃ lớn thứ 3 thế giới sau Trung Quốc và Hoa Kỳ.',
+        'Theo hợp đồng, Long Anh sẽ cung cấp 4 quy cách cỡ hạt chính: 5 µm (40%), 10 µm (30%), 15 µm (20%) và 20 µm (10%). Hàm lượng CaCO₃ tối thiểu 98.5%, độ trắng tối thiểu 98%. Sản phẩm được giao FOB cảng Cửa Lò và Hải Phòng, vận chuyển qua các tuyến tàu container thẳng đến cảng JNPT (Mumbai) và Mundra (Gujarat).',
+        '"Đây là hợp đồng có giá trị lớn nhất mà Long Anh ký với thị trường Ấn Độ từ trước đến nay", ông Nguyễn Long Anh — Chủ tịch kiêm Tổng giám đốc — chia sẻ. "Nó là kết quả của 3 năm xây dựng quan hệ, đầu tư công nghệ phủ Stearic Acid theo chuẩn châu Âu, và đạt chứng nhận REACH cho thị trường xuất khẩu khó tính."',
+        'Để đáp ứng hợp đồng này, Long Anh đã chuẩn bị sẵn 35,000 tấn nguyên liệu trong kho nhà máy Quỳ Hợp và đẩy nhanh tiến độ vận hành dây chuyền số 4 — nâng tổng công suất nhà máy lên 350,000 tấn/năm. Bộ phận QC sẽ thực hiện kiểm tra mỗi lô trước khi xếp container, đảm bảo 100% sản phẩm xuất khẩu đạt tiêu chuẩn ISO 9001:2015 với đầy đủ COA và MSDS.',
+        'Ngoài Ấn Độ, Long Anh hiện đang xuất khẩu đến 12 quốc gia: Hàn Quốc, Nhật Bản, Bangladesh, Indonesia, UAE, Ai Cập, Thổ Nhĩ Kỳ, Sri Lanka, Pakistan, Malaysia, Thái Lan và Philippines. Theo kế hoạch 2026, doanh thu xuất khẩu dự kiến đạt 350 tỷ đồng (tăng 25% so với 2025), trong đó thị trường Nam Á chiếm 35% tổng giá trị.',
+      ],
+      en:[
+        'On May 6, 2026, at Long Anh\'s headquarters in Vinh City, Nghe An, representatives of the Board of Directors signed a contract to supply 12,000 tons of stearic-acid coated and uncoated CaCO₃ powder to 3 major industrial partners in India. Total contract value reaches $3.8M, running from June 2026 to November 2027.',
+        'The three partners are: PolyChem Mumbai (PVC compounds), Delhi Paint Works (premium water-based paint), and Bharat Masterbatch Ltd (export masterbatch). All are major B2B customers in India\'s plastics, paint and masterbatch industries — the world\'s third-largest CaCO₃ consumer after China and the United States.',
+        'Per the contract, Long Anh will supply 4 main particle-size specifications: 5 µm (40%), 10 µm (30%), 15 µm (20%) and 20 µm (10%). Minimum CaCO₃ content is 98.5%, minimum whiteness 98%. Products will be delivered FOB Cua Lo and Hai Phong ports, shipped via direct container routes to JNPT (Mumbai) and Mundra (Gujarat) ports.',
+        '"This is the largest contract Long Anh has ever signed with the Indian market," said Mr. Nguyen Long Anh — Chairman and CEO. "It\'s the result of 3 years of relationship-building, investment in European-standard stearic-acid coating technology, and achieving REACH certification for demanding export markets."',
+        'To fulfill the contract, Long Anh has prepared 35,000 tons of raw material at the Quy Hop plant and accelerated commissioning of Line #4 — raising total capacity to 350,000 tons/year. The QC team will inspect every batch before container loading, ensuring 100% of export products meet ISO 9001:2015 standards with full COA and MSDS.',
+        'Beyond India, Long Anh currently exports to 12 countries: South Korea, Japan, Bangladesh, Indonesia, UAE, Egypt, Türkiye, Sri Lanka, Pakistan, Malaysia, Thailand and the Philippines. The 2026 plan targets 350 billion VND in export revenue (+25% YoY), with South Asia accounting for 35% of total value.',
+      ],
+      zh:[
+        '2026年5月6日,在义安省荣市龙英总部,董事会代表签订了向印度3家主要工业合作伙伴供应12,000吨硬脂酸涂层和未涂层碳酸钙粉的合同。合同总价值达380万美元,从2026年6月持续到2027年11月。',
+        '三家合作伙伴包括:孟买PolyChem(PVC复合材料)、德里Paint Works(高端水性涂料)和Bharat Masterbatch Ltd(出口母粒)。所有伙伴都是印度塑料、涂料和母粒行业的主要B2B客户 — 印度是仅次于中国和美国的世界第三大碳酸钙消费国。',
+        '根据合同,龙英将提供4种主要粒径规格:5微米(40%)、10微米(30%)、15微米(20%)和20微米(10%)。碳酸钙最低含量98.5%,白度最低98%。产品FOB窗碧港和海防港交货,通过直达集装箱航线运往JNPT(孟买)和Mundra(古吉拉特邦)港口。',
+        '"这是龙英与印度市场迄今签订的最大合同",董事长兼首席执行官阮龙英先生表示。"这是3年建立关系、投资欧洲标准硬脂酸涂层技术,以及获得严苛出口市场REACH认证的成果。"',
+        '为履行合同,龙英已在归合工厂准备了35,000吨原材料,并加快4号生产线的投产 — 将总产能提升至35万吨/年。QC团队将在集装箱装载前检查每个批次,确保100%出口产品符合ISO 9001:2015标准,提供完整的COA和MSDS。',
+        '除印度外,龙英目前向12个国家出口:韩国、日本、孟加拉国、印度尼西亚、阿联酋、埃及、土耳其、斯里兰卡、巴基斯坦、马来西亚、泰国和菲律宾。2026年计划出口收入达3500亿越南盾(同比增长25%),其中南亚占总价值的35%。',
+      ],
+    },
+    tags:{
+      vi:['Xuất khẩu', 'Ấn Độ', 'CaCO₃', 'Nam Á', 'Hợp đồng B2B'],
+      en:['Export', 'India', 'CaCO₃', 'South Asia', 'B2B Contract'],
+      zh:['出口', '印度', '碳酸钙', '南亚', 'B2B合同'],
+    },
+  },
+
+  '2': {
+    id:2, views:2156, comments:8, cat:'milestone', date:'2026-05-02', readMin:3,
+    img:'assets/nha-may-bot-sieu-min-3.webp',
+    author:{ vi:'Trần Minh Trung · COO', en:'Tran Minh Trung · COO', zh:'陈明忠 · 首席运营官' },
+    title:{
+      vi:'Khánh thành dây chuyền nghiền bột siêu mịn số 4 tại Quỳ Hợp',
+      en:'Long Anh opens 4th ultra-fine grinding line at Quy Hop',
+      zh:'龙英归合超细研磨生产线#4开工',
+    },
+    lead:{
+      vi:'Dây chuyền số 4 nâng tổng công suất nhà máy lên 350,000 tấn/năm, áp dụng công nghệ Đức Hosokawa Alpine tiên tiến nhất cho cỡ hạt siêu mịn 3 µm.',
+      en:'Line #4 raises total plant capacity to 350,000 tons/year, using the latest Hosokawa Alpine German technology for ultra-fine 3 µm particle sizes.',
+      zh:'4号线将工厂总产能提升至35万吨/年,采用最新德国Hosokawa Alpine技术生产超细3微米粒径。',
+    },
+    body:{
+      vi:[
+        'Sau 18 tháng thiết kế, xây dựng và chạy thử, ngày 02/05/2026 Long Anh chính thức khánh thành dây chuyền nghiền bột siêu mịn số 4 tại nhà máy Quỳ Hợp — Nghệ An. Tổng vốn đầu tư 65 tỷ đồng cho dây chuyền hiện đại nhất hiện có tại Bắc Trung Bộ.',
+        'Dây chuyền số 4 sử dụng công nghệ phân loại tuần hoàn Hosokawa Alpine ATP-NG (Đức) — cho phép sản xuất bột CaCO₃ cỡ hạt từ 3 đến 20 µm với độ đồng đều D50 ±0.5 µm. Đặc biệt, dây chuyền tối ưu cho cỡ hạt siêu mịn 3 µm và 5 µm — đáp ứng yêu cầu khắt khe của các nhà sản xuất masterbatch và compound nhựa cao cấp.',
+        'Công suất thiết kế 80,000 tấn/năm, dây chuyền số 4 nâng tổng công suất nhà máy Quỳ Hợp lên 350,000 tấn/năm — đứng đầu khu vực Bắc Trung Bộ. Dây chuyền vận hành 24/7 với 3 ca/ngày, đội ngũ 28 kỹ sư và kỹ thuật viên.',
+        'Cùng với dây chuyền số 4, nhà máy được nâng cấp hệ thống điện 22kV, lắp đặt thêm bồn chứa nguyên liệu 5,000 tấn, và xây dựng kho thành phẩm mới 8,000 m² — đảm bảo lưu kho linh hoạt cho các đơn hàng xuất khẩu lớn.',
+        'Lễ khánh thành có sự tham dự của đại diện UBND tỉnh Nghệ An, Sở Công Thương, Hiệp hội Khoáng sản Việt Nam và 12 đối tác khách hàng quốc tế đến từ Hàn Quốc, Nhật Bản, Ấn Độ và UAE. Sau lễ khánh thành, đoàn khách đã tham quan toàn bộ chuỗi sản xuất từ mỏ đá đến đóng gói thành phẩm.',
+      ],
+      en:[
+        'After 18 months of design, construction and trial runs, on May 2, 2026 Long Anh officially opened its 4th ultra-fine grinding line at the Quy Hop plant in Nghe An. Total investment of 65 billion VND for the most modern line in North-Central Vietnam.',
+        'Line #4 uses Hosokawa Alpine ATP-NG cyclonic classification technology (Germany) — enabling production of CaCO₃ powder in particle sizes from 3 to 20 µm with D50 uniformity of ±0.5 µm. The line is especially optimized for ultra-fine 3 µm and 5 µm sizes — meeting the strict demands of premium masterbatch and plastic compound manufacturers.',
+        'With a design capacity of 80,000 tons/year, Line #4 raises Quy Hop plant\'s total capacity to 350,000 tons/year — the highest in North-Central Vietnam. The line operates 24/7 with 3 shifts/day, staffed by 28 engineers and technicians.',
+        'Alongside Line #4, the plant has upgraded to 22kV power supply, added a 5,000-ton raw material storage tank, and built a new 8,000 m² finished-goods warehouse — ensuring flexible inventory for large export orders.',
+        'The opening ceremony was attended by representatives of Nghe An Provincial People\'s Committee, the Department of Industry and Trade, the Vietnam Mineral Association, and 12 international customers from Korea, Japan, India and UAE. After the ceremony, guests toured the full production chain from quarry to finished-goods packaging.',
+      ],
+      zh:[
+        '经过18个月的设计、建设和试运行,2026年5月2日,龙英在义安省归合工厂正式开通4号超细研磨生产线。总投资650亿越南盾,是越南北中部最现代化的生产线。',
+        '4号线采用Hosokawa Alpine ATP-NG旋风分级技术(德国) — 可生产粒径3至20微米的碳酸钙粉,D50均匀度±0.5微米。该生产线特别优化用于超细3微米和5微米粒径 — 满足高端母粒和塑料复合材料制造商的严格要求。',
+        '设计产能8万吨/年,4号线将归合工厂总产能提升至35万吨/年 — 越南北中部最高。生产线24/7运行,每天3班,由28名工程师和技术员配备。',
+        '除4号线外,工厂还升级至22kV电源,增加5,000吨原材料储罐,建造新的8,000平方米成品仓库 — 确保大批量出口订单的灵活库存。',
+        '开幕式由义安省人民委员会代表、工业和贸易部、越南矿产协会以及来自韩国、日本、印度和阿联酋的12家国际客户出席。仪式结束后,客人参观了从采石场到成品包装的完整生产链。',
+      ],
+    },
+    tags:{
+      vi:['Dây chuyền mới', 'Công suất', 'Hosokawa', '3 µm', 'Đầu tư'],
+      en:['New line', 'Capacity', 'Hosokawa', '3 µm', 'Investment'],
+      zh:['新生产线', '产能', 'Hosokawa', '3微米', '投资'],
+    },
+  },
+
+  '3': {
+    id:3, views:1820, comments:12, cat:'tech', date:'2026-04-28', readMin:5,
+    img:'assets/kiem-dinh.jpg',
+    author:{ vi:'Phòng Quản lý chất lượng', en:'Quality Management Dept.', zh:'质量管理部' },
+    title:{
+      vi:'Đạt chứng nhận ISO 9001:2015 cho toàn bộ 5 nhà máy',
+      en:'ISO 9001:2015 certified across all 5 plants',
+      zh:'全部5家工厂获得ISO 9001:2015认证',
+    },
+    lead:{
+      vi:'BSI Việt Nam cấp chứng nhận ISO 9001:2015 mở rộng cho tất cả nhà máy của Long Anh sau 18 tháng triển khai hệ thống quản lý chất lượng toàn diện.',
+      en:'BSI Vietnam grants extended ISO 9001:2015 certification to all Long Anh plants after 18 months of comprehensive quality management implementation.',
+      zh:'BSI越南在18个月全面质量管理实施后,为所有龙英工厂颁发扩展的ISO 9001:2015认证。',
+    },
+    body:{
+      vi:[
+        'Ngày 28/04/2026, BSI Việt Nam đã chính thức cấp chứng nhận ISO 9001:2015 mở rộng cho toàn bộ 5 nhà máy của Long Anh sau 18 tháng triển khai và 3 vòng đánh giá nội bộ + bên ngoài.',
+        'Chứng nhận bao trùm các hoạt động: khai thác đá vôi trắng tại 5 mỏ, vận hành 6 dây chuyền nghiền khô, 2 dây chuyền phủ Stearic Acid, kho bãi và logistics tại 3 trung tâm phân phối. Đây là lần đầu tiên một doanh nghiệp khoáng sản tại Bắc Trung Bộ đạt chứng nhận ISO 9001:2015 cho toàn bộ chuỗi sản xuất.',
+        'Quá trình triển khai bao gồm: xây dựng hệ thống quy trình SOP cho 47 vị trí công việc, đào tạo 312 nhân viên, thiết lập phòng QC trung tâm với 12 thiết bị phân tích laser/XRF, và triển khai hệ thống truy xuất nguồn gốc QR code cho 100% lô sản phẩm.',
+        'Theo bà Lê Thị Hoa — Trưởng phòng QC: "Để đạt chứng nhận, chúng tôi đã xây dựng hơn 200 quy trình kiểm soát, từ lấy mẫu nguyên liệu đầu vào đến phân tích cỡ hạt, độ trắng, hàm lượng CaCO₃ cho từng lô. Mỗi lô đều có COA điện tử kèm QR code để khách hàng truy xuất tức thì."',
+        'Chứng nhận ISO 9001:2015 là điều kiện bắt buộc cho các thị trường xuất khẩu khó tính như Nhật Bản, Hàn Quốc và Châu Âu. Long Anh dự kiến trong năm 2026 sẽ tiếp tục đạt thêm chứng nhận ISO 14001:2015 (môi trường) và ISO 45001:2018 (an toàn lao động).',
+      ],
+      en:[
+        'On April 28, 2026, BSI Vietnam officially granted extended ISO 9001:2015 certification to all 5 Long Anh plants after 18 months of implementation and 3 rounds of internal + external audits.',
+        'The certification covers: white limestone mining at 5 quarries, operation of 6 dry-grinding lines, 2 Stearic Acid coating lines, and warehouse/logistics at 3 distribution centers. This is the first time a mineral enterprise in North-Central Vietnam achieves ISO 9001:2015 certification for the entire production chain.',
+        'Implementation included: building SOP systems for 47 job positions, training 312 employees, establishing a central QC lab with 12 laser/XRF analytical instruments, and deploying QR-code traceability for 100% of product batches.',
+        'According to Ms. Le Thi Hoa — QC Manager: "To achieve certification, we built over 200 control procedures, from raw material sampling to particle size, whiteness, and CaCO₃ content analysis for each batch. Each batch has an electronic COA with QR code for instant customer traceability."',
+        'ISO 9001:2015 certification is a mandatory condition for demanding export markets like Japan, Korea and Europe. Long Anh plans to obtain additional ISO 14001:2015 (environmental) and ISO 45001:2018 (occupational safety) certifications during 2026.',
+      ],
+      zh:[
+        '2026年4月28日,BSI越南在18个月实施和3轮内外部审计后,正式为龙英全部5家工厂颁发扩展的ISO 9001:2015认证。',
+        '该认证覆盖:5个矿场的白石灰岩开采、6条干法研磨生产线运营、2条硬脂酸涂层生产线,以及3个配送中心的仓储和物流。这是越南北中部矿业企业首次为整个生产链获得ISO 9001:2015认证。',
+        '实施过程包括:为47个工作岗位建立SOP系统、培训312名员工、建立配备12台激光/XRF分析仪器的中央QC实验室,以及为100%产品批次部署QR码追溯。',
+        '根据QC经理黎氏花女士的说法:"为获得认证,我们建立了200多个控制程序,从原材料取样到每批次的粒径、白度和碳酸钙含量分析。每批产品都附有带QR码的电子COA,供客户即时追溯。"',
+        'ISO 9001:2015认证是日本、韩国和欧洲等严苛出口市场的强制条件。龙英计划在2026年期间再获得ISO 14001:2015(环境)和ISO 45001:2018(职业安全)认证。',
+      ],
+    },
+    tags:{
+      vi:['ISO 9001', 'BSI', 'Chất lượng', 'COA', 'Truy xuất nguồn gốc'],
+      en:['ISO 9001', 'BSI', 'Quality', 'COA', 'Traceability'],
+      zh:['ISO 9001', 'BSI', '质量', 'COA', '追溯'],
+    },
+  },
+
+  '4': {
+    id:4, views:1490, comments:5, cat:'product', date:'2026-04-25', readMin:3,
+    img:'assets/da-slab-sieu-trang.webp',
+    author:{ vi:'Phòng Kinh doanh Xuất khẩu', en:'Export Sales Dept.', zh:'出口销售部' },
+    title:{
+      vi:'Báo giá tháng 5: Đá Slab 1.6×2.4m và bảng giá xuất khẩu CaCO₃',
+      en:'May pricing: Slab 1.6×2.4m and export CaCO₃ price list',
+      zh:'5月报价:1.6×2.4米大板和出口碳酸钙价目表',
+    },
+    lead:{
+      vi:'Cập nhật giá FOB tháng 5/2026 cho đá Slab tấm lớn và bột đá CaCO₃ uncoated/coated với 8 cỡ hạt từ 3 đến 20 µm. Khách hàng đặt hàng trước 15/05 được giảm 3% trên đơn hàng đầu tiên.',
+      en:'May 2026 FOB pricing update for large-format Slab and uncoated/coated CaCO₃ powder in 8 particle sizes from 3 to 20 µm. Orders before May 15 receive 3% discount on first order.',
+      zh:'2026年5月大板和未涂层/涂层碳酸钙粉的FOB报价更新,8种粒径从3到20微米。5月15日前订购首单可享3%折扣。',
+    },
+    body:{
+      vi:[
+        'Long Anh chính thức công bố bảng giá xuất khẩu tháng 5/2026 cho toàn bộ dòng sản phẩm bột đá CaCO₃ và đá tự nhiên. Bảng giá áp dụng từ 01/05 đến 31/05/2026, FOB cảng Cửa Lò và Hải Phòng.',
+        'Bột đá CaCO₃ không phủ: 145–225 USD/tấn (tùy cỡ hạt từ 3 đến 20 µm). Bột đá CaCO₃ phủ Stearic Acid: 225–325 USD/tấn (cao hơn 80–100 USD/tấn so với bột không phủ do giá trị gia tăng từ lớp phủ Stearic 1.0–1.5%).',
+        'Đá Slab tấm lớn 1.6×2.4m: Slab dày 18mm giá 340 USD/tấm, dày 20mm giá 375 USD/tấm, dày 30mm giá 490 USD/tấm. MOQ: 1 container 20ft (~48–65 tấm tùy độ dày).',
+        'Đá xẻ quy cách: 60×30×2 cm giá 19 USD/m², 40×60×2 cm giá 21 USD/m², 80×40×2 cm giá 24 USD/m². MOQ: 500 m². Đá trang trí ngoại thất: 19–29 USD/m² tùy quy cách và bề mặt hoàn thiện.',
+        'Khách hàng đặt hàng trước 15/05/2026 được giảm 3% trên đơn hàng đầu tiên. Đơn hàng từ 50,000 USD trở lên có hỗ trợ thanh toán L/C 60 ngày. Liên hệ Phòng Kinh doanh Xuất khẩu tại sales@longanhcorp.com hoặc hotline +84 912 779 799 để nhận báo giá chính xác kèm spec sheet.',
+      ],
+      en:[
+        'Long Anh officially announces May 2026 export pricing for the full range of CaCO₃ powder and natural stone products. Pricing applies from May 1 to May 31, 2026, FOB Cua Lo and Hai Phong ports.',
+        'Uncoated CaCO₃ powder: $145–225/ton (depending on particle size from 3 to 20 µm). Stearic-coated CaCO₃ powder: $225–325/ton ($80–100/ton higher than uncoated due to value-added from 1.0–1.5% Stearic coating).',
+        'Slab stone 1.6×2.4m: 18mm thickness $340/slab, 20mm $375/slab, 30mm $490/slab. MOQ: 1 × 20ft container (~48–65 slabs depending on thickness).',
+        'Cut-to-size tile: 60×30×2 cm at $19/m², 40×60×2 cm at $21/m², 80×40×2 cm at $24/m². MOQ: 500 m². Decorative outdoor stone: $19–29/m² depending on format and surface finish.',
+        'Customers ordering before May 15, 2026 receive a 3% discount on first order. Orders above $50,000 qualify for 60-day L/C payment support. Contact Export Sales at sales@longanhcorp.com or +84 912 779 799 for accurate quotes with spec sheets.',
+      ],
+      zh:[
+        '龙英正式公布2026年5月碳酸钙粉和天然石材产品全系列出口报价。价格适用于2026年5月1日至5月31日,FOB窗碧港和海防港。',
+        '未涂层碳酸钙粉:145–225美元/吨(取决于粒径,3至20微米)。硬脂酸涂层碳酸钙粉:225–325美元/吨(由于1.0–1.5%硬脂酸涂层的增值,比未涂层高80–100美元/吨)。',
+        '1.6×2.4米大板:18mm厚340美元/块,20mm 375美元/块,30mm 490美元/块。最低订量:1个20英尺集装箱(约48–65块,取决于厚度)。',
+        '定制规格石材:60×30×2 cm 19美元/平方米,40×60×2 cm 21美元/平方米,80×40×2 cm 24美元/平方米。最低订量:500平方米。户外装饰石材:19–29美元/平方米,取决于规格和表面饰面。',
+        '客户在2026年5月15日前订购首单可享3%折扣。订单超过5万美元可获得60天信用证付款支持。联系出口销售部门sales@longanhcorp.com或+84 912 779 799获取附规格表的准确报价。',
+      ],
+    },
+    tags:{
+      vi:['Báo giá', 'FOB', 'Tháng 5/2026', 'Khuyến mãi'],
+      en:['Pricing', 'FOB', 'May 2026', 'Promotion'],
+      zh:['报价', 'FOB', '2026年5月', '促销'],
+    },
+  },
+
+  '5': {
+    id:5, views:982, comments:3, cat:'event', date:'2026-04-15', readMin:4,
+    img:'assets/co-so-ha-tang.jpg',
+    author:{ vi:'Phòng Marketing', en:'Marketing Dept.', zh:'市场部' },
+    title:{
+      vi:'Long Anh tham gia triển lãm Vietbuild Hà Nội 2026',
+      en:'Long Anh exhibits at Vietbuild Hanoi 2026',
+      zh:'龙英参加2026年河内国际建筑展',
+    },
+    lead:{
+      vi:'Gian hàng B-204 trưng bày toàn bộ dòng sản phẩm bột đá CaCO₃ và đá tự nhiên, kèm chương trình demo trực tiếp công nghệ phủ Stearic Acid từ ngày 18 đến 22/04/2026.',
+      en:'Booth B-204 showcases the full powder and natural stone product range, with live demo of stearic-acid coating technology from April 18-22, 2026.',
+      zh:'B-204展位展示完整的粉末和天然石材产品系列,并在2026年4月18日至22日现场演示硬脂酸涂层技术。',
+    },
+    body:{
+      vi:[
+        'Từ ngày 18 đến 22/04/2026, Long Anh tham gia Vietbuild Hà Nội 2026 — triển lãm quốc tế lớn nhất Việt Nam về vật liệu xây dựng và bất động sản — với gian hàng B-204 tại Cung Văn hóa Lao động Hữu nghị Việt Xô.',
+        'Tại gian hàng 36m², Long Anh trưng bày toàn bộ dòng sản phẩm chủ lực: 8 loại bột CaCO₃ không phủ (cỡ hạt 3–20µm), 7 loại bột phủ Stearic Acid, đá Slab 1.6×2.4m, đá xẻ quy cách và đá trang trí ngoại thất. Tâm điểm là khu vực demo trực tiếp dây chuyền phủ Stearic Acid quy mô nhỏ — giúp khách tham quan hiểu rõ quy trình tạo ra lớp phủ đồng đều 1.0–1.5%.',
+        'Đội ngũ kỹ thuật và kinh doanh xuất khẩu của Long Anh sẽ tư vấn miễn phí: lựa chọn cỡ hạt phù hợp cho từng ứng dụng (sơn, nhựa, giấy, masterbatch), so sánh kinh tế giữa CaCO₃ và các filler khác, tính toán chi phí FOB cho từng thị trường xuất khẩu.',
+        'Trong khuôn khổ triển lãm, Long Anh tổ chức 2 hội thảo chuyên đề: "Ứng dụng CaCO₃ siêu mịn trong masterbatch PVC cao cấp" (19/04) và "Đá tự nhiên Việt Nam — Tiềm năng thị trường nội địa và xuất khẩu" (21/04). Đăng ký tham dự miễn phí qua landing page hoặc tại quầy lễ tân Vietbuild.',
+        'Khách tham quan đặt hàng tại sự kiện hoặc trong vòng 30 ngày sau triển lãm sẽ nhận ưu đãi đặc biệt: giảm 5% trên đơn hàng đầu tiên, miễn phí vận chuyển nội địa, và tặng kèm bộ mẫu sản phẩm đầy đủ (3 kg bột mỗi loại).',
+      ],
+      en:[
+        'From April 18-22, 2026, Long Anh participates in Vietbuild Hanoi 2026 — Vietnam\'s largest international exhibition for construction materials and real estate — with booth B-204 at the Vietnam-Soviet Friendship Labor Culture Palace.',
+        'At the 36m² booth, Long Anh showcases its full flagship product range: 8 types of uncoated CaCO₃ (3–20µm particle sizes), 7 stearic-coated variants, 1.6×2.4m Slab stone, cut-to-size tile and decorative outdoor stone. The highlight is a live demo of a small-scale Stearic Acid coating line — helping visitors understand the process of creating a uniform 1.0–1.5% coating.',
+        'Long Anh\'s technical and export sales teams will provide free consultations: selecting the right particle size for each application (paint, plastic, paper, masterbatch), comparing economics of CaCO₃ versus other fillers, and calculating FOB costs for export markets.',
+        'During the exhibition, Long Anh hosts 2 thematic seminars: "Ultra-fine CaCO₃ Applications in Premium PVC Masterbatch" (April 19) and "Vietnamese Natural Stone — Domestic & Export Market Potential" (April 21). Free registration via landing page or at the Vietbuild reception desk.',
+        'Visitors placing orders at the event or within 30 days after will receive special offers: 5% discount on first order, free domestic shipping, and a complete product sample kit (3 kg of each powder type).',
+      ],
+      zh:[
+        '2026年4月18日至22日,龙英参加2026年河内国际建筑展 — 越南最大的建材和房地产国际展览会 — 展位B-204位于越苏友谊劳动文化宫。',
+        '在36平方米展位上,龙英展示其全部旗舰产品系列:8种未涂层碳酸钙(3–20微米粒径)、7种硬脂酸涂层变体、1.6×2.4米大板、定制规格石材和户外装饰石材。亮点是小型硬脂酸涂层生产线的现场演示 — 帮助参观者了解形成均匀1.0–1.5%涂层的工艺。',
+        '龙英的技术和出口销售团队将提供免费咨询:为每个应用(涂料、塑料、纸张、母粒)选择合适的粒径、比较碳酸钙与其他填料的经济性,以及计算出口市场的FOB成本。',
+        '展览期间,龙英举办2场主题研讨会:"超细碳酸钙在高端PVC母粒中的应用"(4月19日)和"越南天然石材 — 国内和出口市场潜力"(4月21日)。可通过登陆页面或在Vietbuild接待处免费注册。',
+        '在活动期间或活动后30天内下订单的参观者将获得特别优惠:首单5%折扣、免费国内运输,以及完整的产品样品套件(每种粉末3公斤)。',
+      ],
+    },
+    tags:{
+      vi:['Vietbuild', 'Triển lãm', 'Hà Nội', 'B-204', 'Demo'],
+      en:['Vietbuild', 'Exhibition', 'Hanoi', 'B-204', 'Demo'],
+      zh:['Vietbuild', '展览', '河内', 'B-204', '演示'],
+    },
+  },
+
+  '6': {
+    id:6, views:1670, comments:7, cat:'business', date:'2026-04-08', readMin:4,
+    img:'assets/nha-may-bot-sieu-min.webp',
+    author:{ vi:'Phòng Phát triển thị trường', en:'Market Development Dept.', zh:'市场拓展部' },
+    title:{
+      vi:'Mở rộng thị trường Trung Đông: 3 hợp đồng mới tại UAE và Ai Cập',
+      en:'Middle East expansion: 3 new contracts in UAE and Egypt',
+      zh:'中东扩张:阿联酋和埃及的3个新合同',
+    },
+    lead:{
+      vi:'Tổng giá trị hợp đồng đạt 4,2 triệu USD, đưa Trung Đông trở thành khu vực xuất khẩu lớn thứ 3 của Long Anh sau Đông Á và Nam Á.',
+      en:'Total contract value reaches $4.2M, making the Middle East Long Anh\'s 3rd-largest export region after East and South Asia.',
+      zh:'合同总价值达420万美元,使中东成为龙英第三大出口区域,仅次于东亚和南亚。',
+    },
+    body:{
+      vi:[
+        'Trong chuyến công tác tại Dubai và Cairo từ 28/03 đến 05/04/2026, đoàn Long Anh do Phó Tổng giám đốc Kinh doanh dẫn đầu đã ký 3 hợp đồng cung cấp dài hạn với tổng giá trị 4,2 triệu USD.',
+        'Tại UAE, 2 hợp đồng được ký với Dubai Polymer Industries và Sharjah Coatings — cung cấp bột CaCO₃ phủ Stearic Acid cỡ hạt 5–10 µm cho compound nhựa và sơn công nghiệp. Tổng khối lượng 9,500 tấn trong 12 tháng.',
+        'Tại Ai Cập, hợp đồng được ký với Egyptian Plastics Group tại Cairo — cung cấp 8,000 tấn bột CaCO₃ không phủ cho dây chuyền ống nhựa PVC quy mô lớn. Đây là khách hàng B2B lớn nhất khu vực Bắc Phi của Long Anh.',
+        'Hành trình mở rộng thị trường Trung Đông được khởi động từ năm 2024, khi Long Anh đạt chứng nhận REACH (EU) và đầu tư dây chuyền phủ Stearic mới. Doanh thu Trung Đông năm 2025 đạt 35 tỷ đồng, dự kiến tăng lên 110 tỷ đồng năm 2026 nhờ các hợp đồng mới.',
+        'Theo kế hoạch 2026, Long Anh sẽ tham gia 2 triệu lãm lớn tại khu vực: Saudi Plastics & Petrochem (Riyadh, tháng 9) và Cairo Building Show (Cairo, tháng 11). Mục tiêu mở rộng thêm tới Saudi Arabia, Qatar và Oman vào cuối năm.',
+      ],
+      en:[
+        'During a business trip to Dubai and Cairo from March 28 to April 5, 2026, the Long Anh delegation led by the Deputy CEO of Sales signed 3 long-term supply contracts with a total value of $4.2M.',
+        'In UAE, 2 contracts were signed with Dubai Polymer Industries and Sharjah Coatings — supplying stearic-coated CaCO₃ powder in 5–10 µm sizes for plastic compounds and industrial coatings. Total volume of 9,500 tons over 12 months.',
+        'In Egypt, a contract was signed with Egyptian Plastics Group in Cairo — supplying 8,000 tons of uncoated CaCO₃ for large-scale PVC pipe production. This is Long Anh\'s largest B2B customer in North Africa.',
+        'The Middle East expansion journey began in 2024 when Long Anh achieved REACH (EU) certification and invested in new Stearic coating lines. 2025 Middle East revenue reached 35 billion VND, expected to grow to 110 billion VND in 2026 thanks to new contracts.',
+        'For 2026, Long Anh plans to participate in 2 major regional exhibitions: Saudi Plastics & Petrochem (Riyadh, September) and Cairo Building Show (Cairo, November). The goal is further expansion into Saudi Arabia, Qatar and Oman by year-end.',
+      ],
+      zh:[
+        '在2026年3月28日至4月5日访问迪拜和开罗期间,由销售副总经理带领的龙英代表团签订了3份长期供应合同,总价值420万美元。',
+        '在阿联酋,与迪拜Polymer Industries和Sharjah Coatings签订了2份合同 — 为塑料复合材料和工业涂料供应5–10微米硬脂酸涂层碳酸钙粉。12个月内总量9,500吨。',
+        '在埃及,与开罗的Egyptian Plastics Group签订了合同 — 为大规模PVC管材生产供应8,000吨未涂层碳酸钙。这是龙英在北非最大的B2B客户。',
+        '中东扩张之旅始于2024年,当时龙英获得REACH(欧盟)认证并投资了新的硬脂酸涂层生产线。2025年中东收入达350亿越南盾,得益于新合同,预计2026年增长至1100亿越南盾。',
+        '2026年计划,龙英将参加2个主要的区域展览:沙特阿拉伯塑料和石化展(利雅得,9月)和开罗建筑展(开罗,11月)。目标是到年底进一步扩展到沙特阿拉伯、卡塔尔和阿曼。',
+      ],
+    },
+    tags:{
+      vi:['Trung Đông', 'UAE', 'Ai Cập', 'REACH', 'Mở rộng thị trường'],
+      en:['Middle East', 'UAE', 'Egypt', 'REACH', 'Market expansion'],
+      zh:['中东', '阿联酋', '埃及', 'REACH', '市场扩张'],
+    },
+  },
+
+  '7': {
+    id:7, views:3540, comments:41, cat:'milestone', date:'2026-03-22', readMin:6,
+    img:'assets/kho-hang.webp',
+    author:{ vi:'Phòng Truyền thông', en:'Communications Dept.', zh:'传播部' },
+    title:{
+      vi:'Lễ kỷ niệm 20 năm thành lập KS Long Anh (2006-2026)',
+      en:'KS Long Anh celebrates 20th anniversary (2006-2026)',
+      zh:'龙英矿业20周年庆典 (2006-2026)',
+    },
+    lead:{
+      vi:'Từ một mỏ đá vôi trắng đến nhà sản xuất bột đá hàng đầu Bắc Trung Bộ với 350,000 tấn/năm và 12 thị trường xuất khẩu — hành trình 20 năm của Long Anh.',
+      en:'From a single white limestone quarry to North-Central Vietnam\'s leading powder manufacturer with 350,000 t/y and 12 export markets — a 20-year journey.',
+      zh:'从一个白石灰岩矿场到越南北中部领先的粉末制造商,年产能35万吨,12个出口市场 — 20年历程。',
+    },
+    body:{
+      vi:[
+        'Ngày 22/03/2026, tại Trung tâm Hội nghị Mường Thanh Vinh, KS Long Anh long trọng tổ chức lễ kỷ niệm 20 năm thành lập (2006-2026) với sự tham dự của hơn 800 đại biểu: lãnh đạo tỉnh Nghệ An, đối tác khách hàng quốc tế, nhân viên và gia đình của 5 nhà máy.',
+        'Khởi nguồn năm 2006 từ một mỏ đá vôi trắng nhỏ tại Quỳ Hợp với 12 nhân viên, sau 20 năm Long Anh đã phát triển thành tập đoàn khoáng sản hàng đầu Bắc Trung Bộ: 5 mỏ đá vận hành, 5 nhà máy chế biến với tổng công suất 350,000 tấn/năm, hơn 150 nhân viên, và xuất khẩu đến 12 quốc gia trên 3 châu lục.',
+        'Trong bài phát biểu kỷ niệm, Chủ tịch HĐQT Nguyễn Long Anh nhấn mạnh: "20 năm là một hành trình dài. Chúng tôi không chỉ tự hào về những con số kinh doanh, mà còn về việc tạo công ăn việc làm ổn định cho hàng trăm gia đình ở Quỳ Hợp, đóng góp vào ngân sách tỉnh, và đặt nền móng cho ngành công nghiệp khoáng sản chế biến sâu của Nghệ An."',
+        'Các cột mốc đáng nhớ của Long Anh: 2008 thành lập chính thức · 2013 dây chuyền nghiền khô đầu tiên · 2017 dây chuyền phủ Stearic Acid · 2020 đạt ISO 9001:2015 · 2022 đạt REACH (EU) · 2024 khánh thành xưởng Slab 1.6×2.4m · 2026 dây chuyền nghiền siêu mịn số 4 và mở rộng thị trường Trung Đông.',
+        'Tại lễ kỷ niệm, Long Anh công bố Quỹ Học bổng Long Anh 5 tỷ đồng cho sinh viên ngành kỹ thuật khoáng sản, hóa, vật liệu tại các trường ĐH Bách Khoa Hà Nội, ĐH Vinh, ĐH Mỏ Địa Chất giai đoạn 2026–2030. Mỗi năm 100 suất học bổng, mỗi suất 10 triệu đồng.',
+        'Kế hoạch 5 năm tới (2026–2030): tăng công suất lên 500,000 tấn/năm, mở rộng đến 20 thị trường xuất khẩu, đầu tư R&D cho dòng sản phẩm CaCO₃ phủ silane và bột nano. Doanh thu mục tiêu 1,000 tỷ đồng vào năm 2030 — gấp 3,5 lần năm 2025.',
+      ],
+      en:[
+        'On March 22, 2026, at Muong Thanh Vinh Conference Center, KS Long Anh solemnly held its 20th anniversary celebration (2006-2026) with over 800 attendees: Nghe An provincial leaders, international customer partners, employees and families from 5 plants.',
+        'Founded in 2006 from a small white limestone quarry in Quy Hop with 12 employees, after 20 years Long Anh has grown into North-Central Vietnam\'s leading mineral group: 5 operating quarries, 5 processing plants with total capacity 350,000 tons/year, over 150 employees, and exports to 12 countries across 3 continents.',
+        'In his anniversary speech, Chairman Nguyen Long Anh emphasized: "20 years is a long journey. We are not only proud of the business numbers, but also of creating stable jobs for hundreds of families in Quy Hop, contributing to the provincial budget, and laying the foundation for Nghe An\'s deep mineral processing industry."',
+        'Long Anh\'s memorable milestones: 2008 official establishment · 2013 first dry-grinding line · 2017 Stearic Acid coating line · 2020 ISO 9001:2015 · 2022 REACH (EU) certification · 2024 1.6×2.4m Slab workshop opening · 2026 ultra-fine grinding line #4 and Middle East market expansion.',
+        'At the celebration, Long Anh announced the 5 billion VND Long Anh Scholarship Fund for students in mineral, chemical and materials engineering at Hanoi University of Science and Technology, Vinh University, and University of Mining and Geology for 2026–2030. 100 scholarships per year, 10 million VND each.',
+        '5-year plan (2026–2030): increase capacity to 500,000 tons/year, expand to 20 export markets, invest in R&D for silane-coated CaCO₃ and nano powder. Revenue target: 1,000 billion VND by 2030 — 3.5× of 2025.',
+      ],
+      zh:[
+        '2026年3月22日,在荣市Muong Thanh会议中心,龙英矿业隆重举行20周年庆典(2006-2026),超过800名嘉宾出席:义安省领导人、国际客户合作伙伴、5家工厂的员工和家属。',
+        '龙英始建于2006年,从归合的一个小型白石灰岩矿场起步,有12名员工。20年后,龙英已成长为越南北中部领先的矿业集团:5个运营矿场、5个加工厂总产能35万吨/年、150多名员工,出口到3大洲12个国家。',
+        '在周年纪念演讲中,董事长阮龙英强调:"20年是一段漫长的旅程。我们不仅为业务数字感到自豪,还为在归合为数百个家庭创造稳定的工作、为省预算做出贡献、为义安省的深矿产加工行业奠定基础感到自豪。"',
+        '龙英值得纪念的里程碑:2008年正式成立 · 2013年首条干法研磨生产线 · 2017年硬脂酸涂层生产线 · 2020年ISO 9001:2015 · 2022年REACH(欧盟)认证 · 2024年1.6×2.4米大板工坊开业 · 2026年超细研磨生产线#4和中东市场扩张。',
+        '在庆典上,龙英宣布2026-2030年期间向河内科学技术大学、荣大学和矿业与地质大学的矿物、化学和材料工程专业学生提供50亿越南盾的龙英奖学金基金。每年100个奖学金,每个1000万越南盾。',
+        '5年计划(2026-2030):产能提升至50万吨/年,扩展到20个出口市场,投资硬脂酸硅烷涂层碳酸钙和纳米粉末的研发。到2030年收入目标:1000亿越南盾 — 是2025年的3.5倍。',
+      ],
+    },
+    tags:{
+      vi:['20 năm', 'Kỷ niệm', 'Lịch sử Long Anh', 'Quỹ học bổng', 'Tầm nhìn 2030'],
+      en:['20 Years', 'Anniversary', 'Long Anh History', 'Scholarship Fund', 'Vision 2030'],
+      zh:['20年', '周年庆', '龙英历史', '奖学金基金', '2030愿景'],
+    },
+  },
+
+  '8': {
+    id:8, views:740, comments:18, cat:'csr', date:'2026-03-10', readMin:3,
+    img:'assets/kho-da-nguyen-lieu.webp',
+    author:{ vi:'Phòng CSR & Quan hệ Cộng đồng', en:'CSR & Community Relations', zh:'企业社会责任与社区关系' },
+    title:{
+      vi:'Long Anh tài trợ chương trình học bổng cho học sinh Quỳ Hợp',
+      en:'Long Anh sponsors scholarship program for Quy Hop students',
+      zh:'龙英赞助归合学生奖学金项目',
+    },
+    lead:{
+      vi:'Quỹ học bổng 500 triệu đồng dành cho 50 học sinh xuất sắc tại 5 trường cấp 2 và cấp 3 trên địa bàn huyện Quỳ Hợp năm học 2026-2027.',
+      en:'500 million VND scholarship fund for 50 outstanding students at 5 secondary schools in Quy Hop district for the 2026-2027 academic year.',
+      zh:'5亿越南盾奖学金基金,用于2026-2027学年归合县5所中学的50名优秀学生。',
+    },
+    body:{
+      vi:[
+        'Ngày 10/03/2026, KS Long Anh chính thức công bố Chương trình Học bổng "Vì tương lai Quỳ Hợp" năm học 2026-2027 với tổng quỹ 500 triệu đồng dành cho 50 học sinh xuất sắc thuộc 5 trường THCS và THPT trên địa bàn huyện Quỳ Hợp — quê hương của các mỏ và nhà máy chính của Long Anh.',
+        'Mỗi suất học bổng trị giá 10 triệu đồng, được trao cho học sinh có hoàn cảnh khó khăn nhưng đạt thành tích học tập xuất sắc (HSG cấp tỉnh trở lên hoặc điểm trung bình ≥ 9.0). Mỗi trường nhận 10 suất, lựa chọn qua hội đồng xét duyệt gồm đại diện nhà trường, phụ huynh và Long Anh.',
+        'Đây là năm thứ 3 liên tiếp Long Anh triển khai chương trình học bổng cho học sinh địa phương. Tính đến nay, đã có 130 học sinh nhận tổng cộng 1,3 tỷ đồng học bổng. Nhiều em đã thi đỗ vào các trường đại học top đầu Việt Nam và quay về làm việc tại các phòng kỹ thuật, QC của Long Anh.',
+        'Bên cạnh học bổng cho học sinh, năm 2026 Long Anh còn triển khai: hỗ trợ 200 triệu đồng cho đường liên thôn 3km ở xã Châu Quang, tài trợ máy tính cho 2 phòng tin học trường THCS Châu Hồng và THPT Quỳ Hợp 1, và xây mới 1 sân chơi cho trẻ em mầm non.',
+        'Theo bà Nguyễn Thị Hoài — Giám đốc Quỹ CSR Long Anh: "Long Anh sinh ra từ Quỳ Hợp. Trách nhiệm của chúng tôi không chỉ là khai thác tài nguyên có trách nhiệm, mà còn là đầu tư trở lại cho con người và cộng đồng — để Quỳ Hợp ngày mai có thêm những kỹ sư, bác sĩ, doanh nhân từ chính mảnh đất này."',
+      ],
+      en:[
+        'On March 10, 2026, KS Long Anh officially announced the "For Quy Hop\'s Future" Scholarship Program for the 2026-2027 academic year, with a total fund of 500 million VND for 50 outstanding students at 5 secondary and high schools in Quy Hop district — home to Long Anh\'s main quarries and plants.',
+        'Each scholarship is worth 10 million VND, awarded to students from disadvantaged backgrounds with outstanding academic achievements (provincial-level honors or GPA ≥ 9.0). Each school receives 10 awards, selected by a review board including school representatives, parents, and Long Anh.',
+        'This is the 3rd consecutive year Long Anh has implemented the scholarship program for local students. To date, 130 students have received a total of 1.3 billion VND in scholarships. Many have gained admission to top Vietnamese universities and returned to work in Long Anh\'s technical and QC departments.',
+        'Beyond student scholarships, in 2026 Long Anh is also implementing: 200 million VND support for a 3km inter-village road in Chau Quang commune, computer sponsorship for 2 computer labs at Chau Hong Secondary School and Quy Hop 1 High School, and building 1 new playground for kindergarten children.',
+        'According to Ms. Nguyen Thi Hoai — Director of Long Anh CSR Fund: "Long Anh was born in Quy Hop. Our responsibility is not only to mine resources responsibly, but also to invest back in people and community — so that tomorrow\'s Quy Hop will have more engineers, doctors, and entrepreneurs from this very land."',
+      ],
+      zh:[
+        '2026年3月10日,龙英矿业正式宣布2026-2027学年"为归合的未来"奖学金计划,总基金5亿越南盾,用于归合县5所中学的50名优秀学生 — 归合县是龙英主要矿场和工厂所在地。',
+        '每项奖学金价值1000万越南盾,授予学业成绩优异(省级以上荣誉或平均成绩≥9.0)的弱势学生。每所学校获得10项奖学金,由学校代表、家长和龙英组成的评审委员会评选。',
+        '这是龙英连续第三年为当地学生实施奖学金计划。迄今为止,已有130名学生总共获得13亿越南盾的奖学金。许多人已被越南顶尖大学录取,并回到龙英的技术和QC部门工作。',
+        '除学生奖学金外,2026年龙英还实施:为Chau Quang公社3公里村际道路提供2亿越南盾支持、为Chau Hong中学和归合1高中的2个计算机实验室赞助计算机,以及为幼儿园儿童建造1个新游乐场。',
+        '根据龙英CSR基金主管阮氏怀女士的说法:"龙英诞生于归合。我们的责任不仅是负责任地开采资源,还要为人民和社区进行投资 — 让明天的归合能从这片土地上培养更多工程师、医生和企业家。"',
+      ],
+    },
+    tags:{
+      vi:['CSR', 'Học bổng', 'Quỳ Hợp', 'Cộng đồng', 'Giáo dục'],
+      en:['CSR', 'Scholarship', 'Quy Hop', 'Community', 'Education'],
+      zh:['企业社会责任', '奖学金', '归合', '社区', '教育'],
+    },
+  },
+
+  '9': {
+    id:9, views:1280, comments:6, cat:'product', date:'2026-03-02', readMin:3,
+    img:'assets/bot-caco3-sieu-min.webp',
+    author:{ vi:'Phòng R&D', en:'R&D Dept.', zh:'研发部' },
+    title:{
+      vi:'Ra mắt dòng bột CaCO₃ siêu mịn 3 µm cho compound nhựa PVC cao cấp',
+      en:'New 3 µm ultra-fine CaCO₃ powder for premium PVC compounds',
+      zh:'推出适用于高端PVC复合材料的3 µm超细碳酸钙粉',
+    },
+    lead:{
+      vi:'Sản phẩm bột CaCO₃ phủ Stearic 3 µm cải thiện độ phân tán 25% so với dòng 5 µm — đáp ứng yêu cầu khắt khe nhất của masterbatch xuất khẩu.',
+      en:'New 3 µm stearic-coated CaCO₃ improves dispersion by 25% over 5 µm — meeting the toughest demands of export masterbatch.',
+      zh:'新3 µm硬脂酸涂层碳酸钙比5 µm分散性提高25% — 满足出口母粒最严苛的要求。',
+    },
+    body:{
+      vi:[
+        'Long Anh chính thức ra mắt dòng bột CaCO₃ siêu mịn cỡ hạt 3 µm — sản phẩm cao cấp nhất trong danh mục bột đá CaCO₃ phủ Stearic Acid. Đây là kết quả của 14 tháng R&D và đầu tư dây chuyền nghiền siêu mịn số 4 trị giá 65 tỷ đồng.',
+        'Bột CaCO₃ phủ Stearic 3 µm có ưu điểm vượt trội: độ phân tán cao hơn 25% so với dòng 5 µm, cải thiện độ bóng và độ trong của sản phẩm cuối, giảm hiện tượng vón cục trong compound PVC mềm và cứng. Đặc biệt phù hợp với masterbatch màu cao cấp, ống nhựa kỹ thuật và profile PVC trong suốt.',
+        'Thông số kỹ thuật: CaCO₃ ≥ 98.5%, độ trắng ≥ 98%, D50 = 3.0 ± 0.3 µm, độ ẩm ≤ 0.15%, hàm lượng Stearic 1.2 ± 0.2%. Đóng gói: PP 25kg với liner chống ẩm, hoặc jumbo bag 500kg/1 tấn theo yêu cầu khách hàng.',
+        'Giá bán FOB: 320 USD/tấn (đơn hàng từ 25 tấn). Khách hàng B2B xuất khẩu được hỗ trợ test miễn phí 100kg mẫu sản phẩm để đánh giá tính phù hợp trên dây chuyền sản xuất thực tế trước khi đặt hàng số lượng lớn.',
+        'Hiện đã có 3 khách hàng tại Hàn Quốc và Nhật Bản đặt hàng thử nghiệm tổng cộng 50 tấn cho dây chuyền masterbatch cao cấp. Long Anh kỳ vọng sản phẩm 3 µm sẽ chiếm 15% doanh thu bột CaCO₃ phủ Stearic trong năm 2026 và là dòng sản phẩm chủ lực mở rộng thị trường EU và Bắc Mỹ.',
+      ],
+      en:[
+        'Long Anh officially launches the 3 µm ultra-fine CaCO₃ powder line — the most premium product in the Stearic Acid coated CaCO₃ portfolio. This is the result of 14 months of R&D and the 65-billion-VND investment in Ultra-fine Grinding Line #4.',
+        '3 µm stearic-coated CaCO₃ has superior advantages: 25% higher dispersion than 5 µm, improved gloss and clarity of final products, reduced agglomeration in soft and rigid PVC compounds. Especially suited for premium color masterbatch, technical plastic pipes, and transparent PVC profiles.',
+        'Technical specs: CaCO₃ ≥ 98.5%, whiteness ≥ 98%, D50 = 3.0 ± 0.3 µm, moisture ≤ 0.15%, Stearic content 1.2 ± 0.2%. Packaging: PP 25kg with moisture barrier liner, or 500kg/1-ton jumbo bag on customer request.',
+        'FOB price: $320/ton (orders from 25 tons). B2B export customers receive 100kg of free product samples for trial on their actual production line before placing large-volume orders.',
+        'Currently 3 customers in Korea and Japan have placed trial orders totaling 50 tons for premium masterbatch lines. Long Anh expects the 3 µm product to account for 15% of stearic-coated CaCO₃ revenue in 2026 and to be a flagship product for expansion into EU and North American markets.',
+      ],
+      zh:[
+        '龙英正式推出3微米超细碳酸钙粉系列 — 硬脂酸涂层碳酸钙产品组合中最高端的产品。这是14个月研发和投资650亿越南盾建设4号超细研磨生产线的成果。',
+        '3微米硬脂酸涂层碳酸钙具有卓越优势:分散性比5微米高25%,提高最终产品的光泽度和透明度,减少软质和硬质PVC复合材料中的结块。特别适用于高端彩色母粒、技术塑料管和透明PVC型材。',
+        '技术规格:碳酸钙≥98.5%,白度≥98%,D50 = 3.0 ± 0.3微米,水分≤0.15%,硬脂酸含量1.2 ± 0.2%。包装:25公斤PP袋带防潮内衬,或根据客户要求500公斤/1吨吨袋。',
+        'FOB价格:320美元/吨(25吨起订)。B2B出口客户可获得100公斤免费产品样品,用于在实际生产线上试用,然后再下大批量订单。',
+        '目前,韩国和日本的3家客户已为高端母粒生产线下试用订单,总计50吨。龙英预计3微米产品将占2026年硬脂酸涂层碳酸钙收入的15%,并成为扩展到欧盟和北美市场的旗舰产品。',
+      ],
+    },
+    tags:{
+      vi:['Sản phẩm mới', 'CaCO₃ 3µm', 'Stearic Acid', 'Masterbatch', 'PVC'],
+      en:['New product', 'CaCO₃ 3µm', 'Stearic Acid', 'Masterbatch', 'PVC'],
+      zh:['新产品', '3微米碳酸钙', '硬脂酸', '母粒', 'PVC'],
+    },
+  },
+
+  '10': {
+    id:10, views:856, comments:4, cat:'event', date:'2026-02-18', readMin:5,
+    img:'assets/nha-may-bot-sieu-min-1.webp',
+    author:{ vi:'Phòng Kinh doanh Xuất khẩu', en:'Export Sales Dept.', zh:'出口销售部' },
+    title:{
+      vi:'Long Anh đón đoàn khách Nhật Bản tham quan nhà máy Quỳ Hợp',
+      en:'Long Anh welcomes Japanese delegation to Quy Hop facility',
+      zh:'龙英在归合工厂接待日本代表团',
+    },
+    lead:{
+      vi:'Đoàn 15 đại diện từ 5 công ty nhập khẩu Nhật Bản tham quan toàn bộ chuỗi sản xuất — từ khai thác đá đến đóng gói thành phẩm.',
+      en:'15 representatives from 5 Japanese importers toured the full production chain — from quarry to finished-goods packaging.',
+      zh:'5家日本进口商的15名代表参观了从采石场到成品包装的完整生产链。',
+    },
+    body:{
+      vi:[
+        'Ngày 18/02/2026, Long Anh vinh dự đón đoàn 15 đại diện từ 5 công ty nhập khẩu Nhật Bản: Mitsui Mineral Resources, Tokyo Polymer Industries, Osaka Coatings Co, Kobe Paper Manufacturers và Nagoya Masterbatch Group. Đoàn do ông Hiroshi Tanaka — Phó Chủ tịch Mitsui — dẫn đầu.',
+        'Tour 2 ngày bắt đầu từ mỏ đá vôi trắng tại Quỳ Hợp, đoàn được giới thiệu quy trình khai thác có kiểm soát môi trường, hệ thống xử lý bụi và nước thải đạt chuẩn ISO 14001 (đang xin chứng nhận). Sau đó tham quan nhà máy nghiền chính với 4 dây chuyền nghiền khô và 2 dây chuyền phủ Stearic Acid.',
+        'Buổi chiều, đoàn đến phòng QC trung tâm để chứng kiến quy trình lấy mẫu và phân tích 5 chỉ tiêu chính (CaCO₃, độ trắng, độ ẩm, cỡ hạt, hàm lượng Stearic) bằng các thiết bị laser, XRF và máy đo độ trắng Konica Minolta. Đặc biệt ấn tượng với hệ thống truy xuất nguồn gốc QR code cho 100% lô sản phẩm.',
+        'Tại buổi làm việc cuối tour, đại diện 5 công ty Nhật đã ký Biên bản ghi nhớ (MOU) với tổng khối lượng cam kết 18,000 tấn cho 12 tháng tới — chủ yếu là bột CaCO₃ phủ Stearic cỡ hạt 5-10µm cho compound PVC và masterbatch.',
+        '"Chúng tôi rất ấn tượng với chất lượng quy trình của Long Anh, đặc biệt là hệ thống QC và truy xuất nguồn gốc", ông Hiroshi Tanaka chia sẻ. "Đây là cấp độ chuẩn mực Nhật Bản hiếm thấy ở các nhà cung cấp khoáng sản tại Đông Nam Á. Mitsui sẽ tăng đơn hàng từ Long Anh trong năm 2026."',
+        'Đây là lần thứ 4 Long Anh đón khách Nhật Bản trong vòng 6 tháng. Doanh thu xuất khẩu Nhật Bản năm 2025 đạt 48 tỷ đồng (chiếm 17% tổng kim ngạch xuất khẩu), dự kiến tăng lên 75 tỷ trong năm 2026.',
+      ],
+      en:[
+        'On February 18, 2026, Long Anh was honored to welcome a delegation of 15 representatives from 5 Japanese importers: Mitsui Mineral Resources, Tokyo Polymer Industries, Osaka Coatings Co, Kobe Paper Manufacturers, and Nagoya Masterbatch Group. The delegation was led by Mr. Hiroshi Tanaka — Vice Chairman of Mitsui.',
+        'The 2-day tour started at the white limestone quarry in Quy Hop, where the delegation was introduced to environmentally controlled mining processes, dust and wastewater treatment systems meeting ISO 14001 standards (certification pending). They then toured the main grinding plant with 4 dry-grinding lines and 2 Stearic Acid coating lines.',
+        'In the afternoon, the delegation visited the central QC lab to witness sampling procedures and analysis of 5 key parameters (CaCO₃, whiteness, moisture, particle size, Stearic content) using laser, XRF, and Konica Minolta whiteness meters. They were especially impressed with the QR-code traceability system for 100% of product batches.',
+        'At the closing meeting, representatives of 5 Japanese companies signed Memoranda of Understanding (MOU) with a total committed volume of 18,000 tons for the next 12 months — primarily stearic-coated CaCO₃ in 5-10µm sizes for PVC compounds and masterbatch.',
+        '"We are deeply impressed with Long Anh\'s process quality, especially the QC system and traceability," shared Mr. Hiroshi Tanaka. "This is Japanese-standard quality rarely seen among mineral suppliers in Southeast Asia. Mitsui will increase orders from Long Anh in 2026."',
+        'This is the 4th time Long Anh has hosted Japanese customers in 6 months. 2025 Japan export revenue reached 48 billion VND (17% of total exports), expected to grow to 75 billion VND in 2026.',
+      ],
+      zh:[
+        '2026年2月18日,龙英荣幸地接待了来自5家日本进口商的15名代表:Mitsui Mineral Resources、Tokyo Polymer Industries、Osaka Coatings Co、Kobe Paper Manufacturers和Nagoya Masterbatch Group。代表团由Mitsui副董事长Hiroshi Tanaka先生带领。',
+        '为期2天的参观从归合的白石灰岩矿场开始,代表团了解了环境控制采矿工艺,以及符合ISO 14001标准(认证待批)的除尘和废水处理系统。然后参观了主要研磨工厂,有4条干法研磨生产线和2条硬脂酸涂层生产线。',
+        '下午,代表团参观了中央QC实验室,见证了使用激光、XRF和Konica Minolta白度计对5个关键参数(碳酸钙、白度、水分、粒径、硬脂酸含量)进行取样和分析的程序。他们对100%产品批次的QR码追溯系统印象深刻。',
+        '在闭幕会议上,5家日本公司的代表签署了谅解备忘录(MOU),未来12个月承诺总量为18,000吨 — 主要是用于PVC复合材料和母粒的5-10微米硬脂酸涂层碳酸钙。',
+        '"我们对龙英的工艺质量印象深刻,特别是QC系统和追溯",Hiroshi Tanaka先生分享道。"这是东南亚矿物供应商中罕见的日本标准质量。Mitsui将在2026年增加来自龙英的订单。"',
+        '这是龙英6个月内第4次接待日本客户。2025年日本出口收入达480亿越南盾(占总出口的17%),预计2026年增长至750亿越南盾。',
+      ],
+    },
+    tags:{
+      vi:['Nhật Bản', 'Mitsui', 'Tham quan nhà máy', 'MOU', '18,000 tấn'],
+      en:['Japan', 'Mitsui', 'Plant tour', 'MOU', '18,000 tons'],
+      zh:['日本', 'Mitsui', '工厂参观', 'MOU', '18,000吨'],
+    },
+  },
+
+  '11': {
+    id:11, views:2105, comments:14, cat:'tech', date:'2026-02-05', readMin:4,
+    img:'assets/co-so-ha-tang.jpg',
+    author:{ vi:'Phòng Kỹ thuật & Dự án', en:'Engineering & Projects Dept.', zh:'工程项目部' },
+    title:{
+      vi:'Đầu tư 80 tỷ đồng nâng cấp dây chuyền phủ Stearic Acid thế hệ mới',
+      en:'80 billion VND invested in new-generation Stearic Acid coating line',
+      zh:'投资800亿越南盾升级新一代硬脂酸涂层生产线',
+    },
+    lead:{
+      vi:'Dây chuyền Đức mới giúp nâng tỷ lệ phủ stearic đồng đều lên 99.5%, giảm tiêu hao năng lượng 18% và tăng công suất 30% so với hệ thống cũ.',
+      en:'The new German line raises stearic coating uniformity to 99.5%, cuts energy consumption by 18% and increases capacity by 30%.',
+      zh:'新德国生产线将硬脂酸涂层均匀度提升至99.5%,降低能耗18%,产能提升30%。',
+    },
+    body:{
+      vi:[
+        'Đầu tháng 02/2026, Long Anh ký hợp đồng đầu tư 80 tỷ đồng với Eirich GmbH (Đức) — nhà cung cấp thiết bị xử lý vật liệu hàng đầu thế giới — để nâng cấp dây chuyền phủ Stearic Acid số 2 lên thế hệ mới Eirich R09T-HD.',
+        'Hệ thống mới sử dụng công nghệ trộn cường lực (intensive mixing) với 2 cánh trộn đồng tâm tốc độ cao — cho phép phân tán Stearic Acid đồng đều ở quy mô micro, đạt tỷ lệ phủ đồng đều 99.5% (so với 96–98% của hệ thống cũ). Đồng đều cao giúp bột phủ ổn định trong compound nhựa, không xảy ra hiện tượng "không đều phủ" gây bọt khí hoặc rạn nứt sản phẩm.',
+        'Ngoài nâng cao chất lượng, hệ thống mới có 3 lợi thế lớn: (1) Tiêu hao năng lượng giảm 18% nhờ động cơ servo hiệu suất cao và hệ thống thu hồi nhiệt; (2) Công suất tăng 30%, từ 18,000 tấn/năm lên 23,400 tấn/năm; (3) Tự động hóa hoàn toàn — giảm nhân công vận hành từ 4 xuống 2 người/ca.',
+        'Quá trình lắp đặt và chạy thử dự kiến diễn ra từ tháng 03 đến 06/2026, do đoàn kỹ sư Eirich (Đức) trực tiếp giám sát. Dây chuyền mới sẽ chính thức vận hành thương mại từ tháng 07/2026, kịp đáp ứng các đơn hàng xuất khẩu lớn cho thị trường Nhật Bản và Ấn Độ.',
+        'Tổng đầu tư 80 tỷ đồng được tài trợ 60% từ vốn tự có và 40% từ khoản vay ưu đãi của BIDV cho dự án công nghiệp xanh. Hệ thống mới còn giảm phát thải CO₂ khoảng 320 tấn/năm — góp phần đáp ứng các tiêu chuẩn ESG của khách hàng quốc tế.',
+      ],
+      en:[
+        'In early February 2026, Long Anh signed an 80-billion-VND investment contract with Eirich GmbH (Germany) — the world\'s leading materials processing equipment supplier — to upgrade Stearic Acid coating line #2 to the new Eirich R09T-HD generation.',
+        'The new system uses intensive mixing technology with 2 concentric high-speed mixing blades — enabling micro-scale uniform dispersion of Stearic Acid, achieving 99.5% coating uniformity (vs 96–98% of the old system). High uniformity ensures the coated powder remains stable in plastic compounds, preventing "uneven coating" that causes air bubbles or product cracking.',
+        'Beyond quality improvement, the new system has 3 major advantages: (1) Energy consumption reduced 18% thanks to high-efficiency servo motors and heat recovery systems; (2) Capacity increased 30%, from 18,000 to 23,400 tons/year; (3) Full automation — reducing operators from 4 to 2 per shift.',
+        'Installation and trial runs are scheduled from March to June 2026, directly supervised by Eirich German engineers. The new line will commence commercial operation in July 2026, in time to meet large export orders for Japan and India.',
+        'The 80-billion-VND total investment is funded 60% from equity and 40% from a preferential BIDV loan for green industrial projects. The new system also reduces CO₂ emissions by ~320 tons/year — contributing to international customers\' ESG standards.',
+      ],
+      zh:[
+        '2026年2月初,龙英与世界领先的材料处理设备供应商Eirich GmbH(德国)签订了800亿越南盾的投资合同,将2号硬脂酸涂层生产线升级为新一代Eirich R09T-HD。',
+        '新系统采用强力混合技术,配备2个同心高速搅拌刀片 — 实现硬脂酸的微观均匀分散,达到99.5%涂层均匀度(旧系统为96-98%)。高均匀度确保涂层粉末在塑料复合材料中保持稳定,防止造成气泡或产品开裂的"涂层不均"。',
+        '除了质量改进,新系统还有3个主要优势:(1)能耗降低18%,得益于高效伺服电机和热回收系统;(2)产能提升30%,从18,000吨/年增加到23,400吨/年;(3)完全自动化 — 将每班操作员从4人减少到2人。',
+        '安装和试运行计划于2026年3月至6月进行,由Eirich德国工程师直接监督。新生产线将于2026年7月开始商业运营,及时满足日本和印度的大量出口订单。',
+        '800亿越南盾的总投资60%来自自有资金,40%来自BIDV绿色工业项目的优惠贷款。新系统还每年减少约320吨二氧化碳排放 — 有助于符合国际客户的ESG标准。',
+      ],
+    },
+    tags:{
+      vi:['Đầu tư', 'Eirich', 'Phủ Stearic', '80 tỷ', 'Tự động hóa'],
+      en:['Investment', 'Eirich', 'Stearic coating', '80B VND', 'Automation'],
+      zh:['投资', 'Eirich', '硬脂酸涂层', '800亿', '自动化'],
+    },
+  },
+
+  '12': {
+    id:12, views:1340, comments:9, cat:'business', date:'2026-01-22', readMin:4,
+    img:'assets/da-nguyen-lieu-cao-cap2.webp',
+    author:{ vi:'Phòng Tài chính & Đầu tư', en:'Finance & Investment Dept.', zh:'财务与投资部' },
+    title:{
+      vi:'Tổng kết 2025: Doanh thu xuất khẩu tăng 32%, mở thêm 2 thị trường mới',
+      en:'2025 review: Export revenue up 32%, 2 new markets opened',
+      zh:'2025年总结:出口收入增长32%,开拓2个新市场',
+    },
+    lead:{
+      vi:'Năm 2025 Long Anh đạt 280 tỷ doanh thu xuất khẩu, tăng trưởng 32% YoY với 2 thị trường mới: Bangladesh và Sri Lanka. Kế hoạch 2026 hướng tới 350 tỷ.',
+      en:'In 2025, Long Anh achieved 280 billion VND in export revenue (+32% YoY) and opened 2 new markets: Bangladesh and Sri Lanka. 2026 target: 350 billion.',
+      zh:'2025年,龙英实现280亿越南盾出口收入(同比增长32%),并开拓2个新市场:孟加拉国和斯里兰卡。2026年目标:350亿。',
+    },
+    body:{
+      vi:[
+        'Ngày 22/01/2026, KS Long Anh công bố báo cáo tổng kết kinh doanh năm 2025 với những con số ấn tượng: tổng doanh thu 420 tỷ đồng (tăng 28% so với 2024), trong đó doanh thu xuất khẩu 280 tỷ đồng (tăng 32% YoY) — chiếm 67% tổng doanh thu.',
+        'Năm 2025 đánh dấu việc Long Anh mở rộng thành công sang 2 thị trường mới: Bangladesh (hợp đồng 4,500 tấn với Bangladesh Plastics Group) và Sri Lanka (hợp đồng 2,200 tấn với Colombo Coatings). Cùng với 10 thị trường cũ, Long Anh hiện đang xuất khẩu đến 12 quốc gia trên 3 châu lục.',
+        'Cơ cấu doanh thu xuất khẩu 2025 theo khu vực: Đông Á (Hàn Quốc, Nhật Bản) 42%, Nam Á (Ấn Độ, Bangladesh, Sri Lanka, Pakistan) 28%, Đông Nam Á (Indonesia, Malaysia, Thái Lan, Philippines) 18%, Trung Đông (UAE, Ai Cập, Thổ Nhĩ Kỳ) 12%. Cơ cấu theo sản phẩm: bột CaCO₃ phủ Stearic 58%, bột không phủ 32%, đá tự nhiên 10%.',
+        'Lợi nhuận sau thuế 2025 đạt 62 tỷ đồng (biên lợi nhuận 14.8%) — cao nhất trong 5 năm gần đây. Đầu tư R&D và thiết bị mới đạt 145 tỷ đồng, bao gồm dây chuyền nghiền số 4 (65 tỷ) và nâng cấp dây chuyền phủ Stearic số 2 (đặt hàng cuối 2025, lắp đặt 2026).',
+        'Kế hoạch 2026: tổng doanh thu mục tiêu 520 tỷ đồng (+24%), xuất khẩu 380 tỷ đồng (+36%), tăng thêm 3 thị trường mới (Saudi Arabia, Qatar, Oman), khánh thành dây chuyền số 4 đã hoàn thành (tháng 5), và đặt nền móng cho kế hoạch IPO trên HOSE giai đoạn 2027-2028.',
+        '"2025 là năm bản lề cho Long Anh chuyển từ mô hình gia đình quy mô vừa sang doanh nghiệp quốc tế chuyên nghiệp", Tổng Giám đốc Nguyễn Long Anh phát biểu. "Chúng tôi đã chứng minh được khả năng cạnh tranh trên thị trường khắt khe nhất. 2026 sẽ là năm tăng tốc."',
+      ],
+      en:[
+        'On January 22, 2026, KS Long Anh announced its 2025 business review with impressive numbers: total revenue 420 billion VND (+28% vs 2024), of which export revenue 280 billion VND (+32% YoY) — 67% of total revenue.',
+        '2025 marked Long Anh\'s successful expansion into 2 new markets: Bangladesh (4,500-ton contract with Bangladesh Plastics Group) and Sri Lanka (2,200-ton contract with Colombo Coatings). Together with 10 existing markets, Long Anh now exports to 12 countries across 3 continents.',
+        '2025 export revenue structure by region: East Asia (Korea, Japan) 42%, South Asia (India, Bangladesh, Sri Lanka, Pakistan) 28%, Southeast Asia (Indonesia, Malaysia, Thailand, Philippines) 18%, Middle East (UAE, Egypt, Türkiye) 12%. By product: stearic-coated CaCO₃ 58%, uncoated CaCO₃ 32%, natural stone 10%.',
+        '2025 after-tax profit reached 62 billion VND (profit margin 14.8%) — the highest in the last 5 years. R&D and new equipment investment totaled 145 billion VND, including Line #4 (65 billion) and upgrade of Stearic Coating Line #2 (ordered late 2025, installation 2026).',
+        '2026 plan: total revenue target 520 billion VND (+24%), exports 380 billion VND (+36%), 3 new markets (Saudi Arabia, Qatar, Oman), commissioning of Line #4 (May), and laying the groundwork for IPO on HOSE in 2027-2028.',
+        '"2025 was a pivotal year for Long Anh transitioning from a mid-sized family business to a professional international enterprise," said CEO Nguyen Long Anh. "We have proven our competitiveness in the most demanding markets. 2026 will be a year of acceleration."',
+      ],
+      zh:[
+        '2026年1月22日,龙英矿业公布2025年业务总结,数字令人印象深刻:总收入4200亿越南盾(同比增长28%),其中出口收入2800亿越南盾(同比增长32%) — 占总收入的67%。',
+        '2025年标志着龙英成功扩展到2个新市场:孟加拉国(与孟加拉国Plastics Group签订4,500吨合同)和斯里兰卡(与科伦坡Coatings签订2,200吨合同)。加上10个现有市场,龙英现在向3大洲12个国家出口。',
+        '2025年出口收入按地区结构:东亚(韩国、日本)42%,南亚(印度、孟加拉国、斯里兰卡、巴基斯坦)28%,东南亚(印度尼西亚、马来西亚、泰国、菲律宾)18%,中东(阿联酋、埃及、土耳其)12%。按产品:硬脂酸涂层碳酸钙58%,未涂层碳酸钙32%,天然石材10%。',
+        '2025年税后利润达620亿越南盾(利润率14.8%) — 近5年最高。研发和新设备投资总额1450亿越南盾,包括4号生产线(650亿)和2号硬脂酸涂层生产线升级(2025年末订购,2026年安装)。',
+        '2026年计划:总收入目标5200亿越南盾(+24%),出口3800亿越南盾(+36%),3个新市场(沙特阿拉伯、卡塔尔、阿曼),4号生产线投产(5月),并为2027-2028年HOSE上市奠定基础。',
+        '"2025年是龙英从中型家族企业向专业国际企业转型的关键一年",首席执行官阮龙英表示。"我们已在最严苛的市场证明了竞争力。2026年将是加速之年。"',
+      ],
+    },
+    tags:{
+      vi:['Tổng kết 2025', 'Doanh thu', 'Tăng trưởng', '32%', '2026 plan'],
+      en:['2025 Review', 'Revenue', 'Growth', '32%', '2026 plan'],
+      zh:['2025年总结', '收入', '增长', '32%', '2026计划'],
+    },
+  },
+};
+
+// Convert object to array for related-articles lookup
+const NEWS = Object.values(ARTICLES);
+
+// ─── Icons ──────────────────────────────────────────────────────────────────
+const Icon = ({ name, size = 18 }) => {
+  const p = {
+    arrow: <path d="M5 12h14M13 6l6 6-6 6"/>,
+    chevron: <path d="M9 6l6 6-6 6"/>,
+    mail: <><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></>,
+    clock: <><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></>,
+    cal: <><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></>,
+    eye: <><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></>,
+    chat: <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>,
+    user: <><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a4 4 0 014-4h8a4 4 0 014 4v2"/></>,
+    sun: <><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"/></>,
+    moon: <path d="M21 13a8 8 0 11-10-10 7 7 0 0010 10z"/>,
+  };
+  return (<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">{p[name]}</svg>);
+};
+
+const Logo = ({ size = 30 }) => (
+  <span style={{display:'inline-flex',alignItems:'center'}}>
+    <span style={{width:size,height:size,display:'inline-flex'}}>
+      <img src="assets/long-anh-logo.png" alt="Long Anh" style={{width:'100%',height:'100%',objectFit:'contain'}}/>
+    </span>
+  </span>
+);
+
+// ─── Chrome (header + footer) ───────────────────────────────────────────────
+const CHROME_CSS = `
+  .vac *{box-sizing:border-box;}
+  .vac{font-family:var(--va-font,'Inter'),system-ui,sans-serif;color:var(--va-text);background:var(--va-bg);
+    --va-bg:#FAFBFD;--va-bg-alt:#F1F4F9;--va-text:#0E1726;
+    --va-line:rgba(15,61,122,.10);--va-card:#fff;
+    --brand-primary:#0F3D7A;--brand-accent:#F08023;}
+  .vac.dark{--va-bg:#0A1424;--va-bg-alt:#0E1A2E;--va-text:#E6EBF3;
+    --va-line:rgba(255,255,255,.08);--va-card:#0F1B30;}
+  .vac-wrap{max-width:100%;margin:0;padding:0 clamp(24px, 4vw, 80px);}
+  .vac-strip{background:#0A2B57;color:#CFE0F2;font-size:12px;}
+  .vac.dark .vac-strip{background:#06101F;}
+  .vac-strip-in{display:flex;justify-content:space-between;align-items:center;height:36px;}
+  .vac-strip a{color:inherit;text-decoration:none;opacity:.85;}
+  .vac-strip a:hover{opacity:1;color:#fff;}
+  .vac-strip-r{display:flex;gap:18px;align-items:center;}
+  .vac-hd{position:sticky;top:0;z-index:50;background:var(--va-bg);
+    border-bottom:1px solid var(--va-line);backdrop-filter:saturate(140%) blur(8px);}
+  .vac-hd-in{display:flex;align-items:center;justify-content:space-between;height:74px;gap:24px;}
+  .vac-brand{display:flex;align-items:center;gap:14px;text-decoration:none;color:inherit;}
+  .vac-brand-mark{width:48px;height:48px;}
+  .vac-brand-name{display:flex;flex-direction:column;line-height:1;}
+  .vac-brand-name b{font-size:15px;font-weight:700;letter-spacing:.02em;color:#0F3D7A;}
+  .vac.dark .vac-brand-name b{color:#5B9BD5;}
+  .vac-brand-name span{font-size:10.5px;color:var(--va-text);opacity:.55;letter-spacing:.06em;text-transform:uppercase;margin-top:4px;}
+  .vac-nav{display:flex;gap:24px;align-items:center;}
+  .vac-nav a{color:var(--va-text);text-decoration:none;font-size:14px;font-weight:500;
+    opacity:.78;padding:6px 0;position:relative;}
+  .vac-nav a:hover{opacity:1;color:var(--brand-accent,#F08023);}
+  .vac-nav a.is-active{opacity:1;color:var(--brand-accent,#F08023);}
+  .vac-nav a.is-active::after{content:'';position:absolute;left:0;right:0;bottom:-22px;height:2px;background:var(--brand-accent,#F08023);}
+  .vac-nav-item{position:relative;padding:6px 0;}
+  .vac-nav-dropdown{position:absolute;top:calc(100% + 14px);left:50%;
+    transform:translateX(-50%) translateY(-6px);background:var(--va-card);
+    border:1px solid var(--va-line);border-radius:12px;padding:8px;min-width:280px;
+    opacity:0;visibility:hidden;transition:opacity .2s, transform .2s, visibility .2s;
+    box-shadow:0 12px 32px -8px rgba(15,61,122,.22);z-index:100;}
+  .vac-nav-item::before{content:'';position:absolute;top:100%;left:50%;width:140%;
+    height:18px;transform:translateX(-50%);}
+  .vac-nav-item:hover .vac-nav-dropdown{opacity:1;visibility:visible;
+    transform:translateX(-50%) translateY(0);}
+  .vac-nav-dropdown a{display:block;padding:12px 16px;border-radius:8px;font-size:14px;opacity:1;}
+  .vac-nav-dropdown a::after{display:none;}
+  .vac-nav-dropdown a:hover{background:var(--va-bg-alt);color:var(--brand-accent,#F08023);}
+  .vac-nav-dropdown a > b{display:block;font-weight:600;margin-bottom:4px;font-size:14px;line-height:1.2;}
+  .vac-nav-dropdown a > span{display:block;font-size:11.5px;opacity:.6;font-weight:400;}
+  .vac-cta-row{display:flex;gap:10px;align-items:center;}
+  .vac-lang{display:flex;gap:2px;padding:3px;border:1px solid var(--va-line);border-radius:8px;}
+  .vac-lang button{font:inherit;padding:4px 10px;background:transparent;color:var(--va-text);
+    border:0;border-radius:5px;cursor:pointer;font-size:12px;font-weight:600;opacity:.6;}
+  .vac-lang button.on{background:#0F3D7A;color:#fff;opacity:1;}
+  .vac.dark .vac-lang button.on{background:#5B9BD5;color:#0A1424;}
+  .vac-iconbtn{width:34px;height:34px;border-radius:8px;border:1px solid var(--va-line);
+    background:transparent;color:var(--va-text);cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:.7;}
+  .vac-iconbtn:hover{opacity:1;border-color:var(--brand-accent,#F08023);color:var(--brand-accent,#F08023);}
+  .vac-ft{background:#06101F;color:#9CB0CC;padding:54px 0 32px;font-size:13px;
+    font-family:var(--va-font,'Inter'),system-ui,sans-serif;}
+  .vac-ft-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:42px;
+    padding-bottom:32px;border-bottom:1px solid rgba(255,255,255,.08);}
+  .vac-ft h5{color:#fff;font-size:13px;font-weight:600;margin:0 0 14px;}
+  .vac-ft a{color:inherit;text-decoration:none;opacity:.75;display:block;padding:4px 0;}
+  .vac-ft a:hover{color:#F08023;opacity:1;}
+  .vac-ft-bottom{display:flex;justify-content:space-between;align-items:center;
+    padding-top:24px;opacity:.6;font-size:12px;}
+  @media (max-width:980px){.vac-nav{display:none}.vac-ft-grid{grid-template-columns:1fr 1fr}}
+`;
+
+const NAV_HREFS = ['index.html','about.html','products.html','career.html','news.html','index.html#contact'];
+const NAV_SLUGS = ['home','about','products','career','news','contact'];
+
+function VAHeader({ tweaks, current = 'news' }) {
+  const t = tweaks; const C = COPY[t.lang];
+  return (
+    <>
+      <div className="vac-strip">
+        <div className="vac-wrap vac-strip-in">
+          <span>{t.lang==='vi'?'Hotline kinh doanh:':t.lang==='zh'?'销售热线:':'Sales hotline:'} <b style={{color:'#fff'}}>{C.phone[0]}</b></span>
+          <div className="vac-strip-r">
+            <a href={'mailto:'+C.email}><Icon name="mail" size={13}/> {C.email}</a>
+            <span style={{opacity:.4}}>·</span>
+            <a href="#">ISO 9001 : 2015</a>
+          </div>
+        </div>
+      </div>
+      <header className="vac-hd">
+        <div className="vac-wrap vac-hd-in">
+          <a className="vac-brand" href="index.html">
+            <span className="vac-brand-mark"><Logo size={48}/></span>
+            <span className="vac-brand-name">
+              <b>{t.lang==='zh'?'龙英矿业':t.lang==='en'?'LONG ANH MINERAL':'KS LONG ANH'}</b>
+              <span>{C.tagline}</span>
+            </span>
+          </a>
+          <nav className="vac-nav">
+            {C.nav.map((n,i)=>{
+              if (NAV_SLUGS[i] === 'products') {
+                return (
+                  <div key={i} className="vac-nav-item">
+                    <a href={NAV_HREFS[i]} className={current===NAV_SLUGS[i]?'is-active':''}>{n}</a>
+                    <div className="vac-nav-dropdown">
+                      <a href="products.html#powder">
+                        <b>{t.lang==='zh'?'碳酸钙粉':t.lang==='en'?'CaCO₃ Powder':'Bột đá CaCO₃'}</b>
+                        <span>Coated · Uncoated · 3–20 µm</span>
+                      </a>
+                      <a href="products.html#stone">
+                        <b>{t.lang==='zh'?'天然石材饰面':t.lang==='en'?'Natural cladding stone':'Đá ốp lát tự nhiên'}</b>
+                        <span>{t.lang==='zh'?'大板 · 定制石材 · 装饰石材':t.lang==='en'?'Slab · Cut tile · Decorative':'Slab · Đá xẻ · Đá trang trí'}</span>
+                      </a>
+                    </div>
+                  </div>
+                );
+              }
+              if (NAV_SLUGS[i] === 'career') {
+                return (
+                  <div key={i} className="vac-nav-item">
+                    <a href={NAV_HREFS[i]} className={current===NAV_SLUGS[i]?'is-active':''}>{n}</a>
+                    <div className="vac-nav-dropdown">
+                      <a href="career.html#dept=san-xuat">
+                        <b>{t.lang==='zh'?'生产':t.lang==='en'?'Manufacturing':'Sản xuất'}</b>
+                        <span>{t.lang==='zh'?'工厂运营 · 设备维护':t.lang==='en'?'Plant ops · Equipment maintenance':'Vận hành nhà máy · Bảo trì thiết bị'}</span>
+                      </a>
+                      <a href="career.html#dept=kinh-doanh">
+                        <b>{t.lang==='zh'?'销售':t.lang==='en'?'Sales':'Kinh doanh'}</b>
+                        <span>{t.lang==='zh'?'出口销售 · 国内销售':t.lang==='en'?'Export sales · Domestic sales':'Xuất khẩu · Bán hàng nội địa'}</span>
+                      </a>
+                      <a href="career.html#dept=ky-thuat">
+                        <b>{t.lang==='zh'?'工程':t.lang==='en'?'Engineering':'Kỹ thuật'}</b>
+                        <span>{t.lang==='zh'?'工艺改进 · PLC':t.lang==='en'?'Process · PLC':'Cải tiến quy trình · PLC'}</span>
+                      </a>
+                      <a href="career.html#dept=chat-luong">
+                        <b>{t.lang==='zh'?'质量':t.lang==='en'?'Quality':'Chất lượng'}</b>
+                        <span>{t.lang==='zh'?'QC实验室 · ISO':t.lang==='en'?'QC lab · ISO':'Kỹ thuật QC · ISO'}</span>
+                      </a>
+                      <a href="career.html#dept=hanh-chinh">
+                        <b>{t.lang==='zh'?'行政':t.lang==='en'?'Admin':'Hành chính'}</b>
+                        <span>{t.lang==='zh'?'人力资源 · 会计':t.lang==='en'?'HR · Accounting':'Nhân sự · Kế toán'}</span>
+                      </a>
+                    </div>
+                  </div>
+                );
+              }
+              return <a key={i} href={NAV_HREFS[i]} className={current===NAV_SLUGS[i]?'is-active':''}>{n}</a>;
+            })}
+          </nav>
+          <div className="vac-cta-row">
+            <div className="vac-lang">
+              <button className={t.lang==='vi'?'on':''} onClick={()=>tweaks.set('lang','vi')}>VI</button>
+              <button className={t.lang==='en'?'on':''} onClick={()=>tweaks.set('lang','en')}>EN</button>
+              <button className={t.lang==='zh'?'on':''} onClick={()=>tweaks.set('lang','zh')}>中</button>
+            </div>
+            <button className="vac-iconbtn" onClick={()=>tweaks.set('dark',!t.dark)}>
+              <Icon name={t.dark?'sun':'moon'} size={15}/>
+            </button>
+          </div>
+        </div>
+      </header>
+    </>
+  );
+}
+
+function VAFooter({ tweaks }) {
+  const t = tweaks; const C = COPY[t.lang];
+  return (
+    <footer className="vac-ft">
+      <div className="vac-wrap">
+        <div className="vac-ft-grid">
+          <div>
+            <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:14}}>
+              <Logo size={42}/>
+              <b style={{color:'#fff',fontSize:14,letterSpacing:'.04em'}}>
+                {t.lang==='zh'?'龙英矿业':t.lang==='en'?'LONG ANH MINERAL':'KS LONG ANH'}
+              </b>
+            </div>
+            <p style={{lineHeight:1.6,opacity:.65,margin:0}}>
+              {t.lang==='zh'?'越南北中部领先的碳酸钙粉和天然石材制造商。'
+                :t.lang==='en'?'A leading manufacturer of calcium carbonate powder and natural stone in North-Central Vietnam.'
+                :'Nhà sản xuất bột đá Canxi Cacbonat và đá tự nhiên hàng đầu Bắc Trung Bộ.'}
+            </p>
+          </div>
+          <div>
+            <h5>{t.lang==='zh'?'新闻':t.lang==='en'?'News':'Tin tức'}</h5>
+            {NEWS.slice(0,5).map((n,i)=>(
+              <a key={i} href={'article.html?id='+n.id} style={{fontSize:12,lineHeight:1.4}}>
+                {n.title[t.lang].slice(0,52) + (n.title[t.lang].length>52?'…':'')}
+              </a>
+            ))}
+          </div>
+          <div>
+            <h5>{t.lang==='zh'?'公司':t.lang==='en'?'Company':'Công ty'}</h5>
+            {C.nav.map((n,i)=><a key={i} href={NAV_HREFS[i]}>{n}</a>)}
+          </div>
+          <div>
+            <h5>{t.lang==='zh'?'联系':t.lang==='en'?'Contact':'Liên hệ'}</h5>
+            <a>{C.phone[0]}</a><a>{C.phone[1]}</a><a>{C.email}</a>
+          </div>
+        </div>
+        <div className="vac-ft-bottom">
+          <span>{C.footnote}</span>
+          <span>Made in Nghệ An · Vietnam</span>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+// ─── Article detail page ───────────────────────────────────────────────────
+const AR_CSS = `
+  .ar{font-family:var(--va-font,'Inter'),system-ui,sans-serif;color:var(--va-text);background:var(--va-bg);}
+  .ar h1,.ar h2,.ar h3,.ar h4{margin:0;font-weight:700;letter-spacing:-.015em;line-height:1.25;}
+  .ar p{margin:0;}
+
+  /* Compact header (breadcrumb + cat) */
+  .ar-head{padding:24px 0 16px;background:var(--va-bg);border-bottom:1px solid var(--va-line);}
+  .ar-bcrumb{font-size:12.5px;font-family:ui-monospace,Menlo,monospace;letter-spacing:.04em;
+    display:flex;gap:10px;align-items:center;opacity:.6;flex-wrap:wrap;}
+  .ar-bcrumb a{color:inherit;text-decoration:none;}
+  .ar-bcrumb a:hover{color:var(--brand-accent,#F08023);opacity:1;}
+  .ar-bcrumb .now{color:var(--brand-accent,#F08023);opacity:1;}
+  .ar-bcrumb svg{width:11px;height:11px;opacity:.5;}
+
+  /* Article hero */
+  .ar-hero{padding:32px 0 24px;}
+  .ar-hero-inner{max-width:820px;margin:0 auto;}
+  .ar-cat{display:inline-block;font-size:11px;font-weight:700;padding:5px 12px;border-radius:6px;
+    background:rgba(240,128,35,0.12);color:var(--brand-accent,#F08023);
+    letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px;}
+  .ar-title{font-family:Fraunces,Georgia,serif;font-size:clamp(28px,3.4vw,42px);
+    font-weight:600;letter-spacing:-.02em;line-height:1.2;margin-bottom:16px;}
+  .ar-lead{font-size:17.5px;line-height:1.7;opacity:.8;margin-bottom:20px;font-weight:500;}
+  .ar-meta{display:flex;align-items:center;gap:18px;flex-wrap:wrap;font-size:13px;
+    padding:14px 0;border-block:1px solid var(--va-line);}
+  .ar-meta-item{display:flex;align-items:center;gap:6px;opacity:.7;}
+  .ar-meta-item svg{opacity:.7;}
+  .ar-meta-item.author{font-weight:600;opacity:1;}
+  .ar-meta-item.author .avatar{width:28px;height:28px;border-radius:50%;
+    background:linear-gradient(135deg,var(--brand-primary,#0F3D7A),#0A2B57);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;
+    margin-right:2px;}
+
+  /* Featured image */
+  .ar-img{margin:24px auto 0;max-width:1100px;}
+  .ar-img-wrap{aspect-ratio:16/9;border-radius:14px;overflow:hidden;background:var(--va-bg-alt);}
+  .ar-img-wrap img{width:100%;height:100%;object-fit:cover;}
+  .ar-img-caption{font-size:12.5px;opacity:.6;margin-top:10px;text-align:center;font-style:italic;}
+
+  /* Article body */
+  .ar-body{padding:48px 0;}
+  .ar-body-inner{max-width:760px;margin:0 auto;}
+  .ar-body p{font-size:16px;line-height:1.85;margin-bottom:22px;color:var(--va-text);}
+  .ar-body p:first-of-type::first-letter{
+    font-family:Fraunces,Georgia,serif;font-size:54px;font-weight:600;float:left;
+    line-height:.85;padding:6px 10px 0 0;color:var(--brand-accent,#F08023);}
+
+  /* Tags */
+  .ar-tags-row{max-width:760px;margin:24px auto 0;padding-top:24px;
+    border-top:1px solid var(--va-line);display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+  .ar-tags-label{font-size:12px;font-weight:700;color:var(--brand-accent,#F08023);
+    letter-spacing:.1em;text-transform:uppercase;}
+  .ar-tag{font-size:12.5px;padding:5px 12px;border-radius:6px;
+    background:var(--va-bg-alt);text-decoration:none;color:var(--va-text);
+    font-weight:500;transition:.2s;border:1px solid transparent;}
+  .ar-tag:hover{border-color:var(--brand-accent,#F08023);color:var(--brand-accent,#F08023);}
+
+  /* Share + back to list */
+  .ar-share{max-width:760px;margin:24px auto;padding:18px 0;
+    display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;}
+  .ar-share-label{font-size:13px;opacity:.7;font-weight:600;}
+  .ar-share-btns{display:flex;gap:8px;}
+  .ar-share-btn{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;
+    justify-content:center;background:var(--va-card);border:1px solid var(--va-line);
+    color:var(--va-text);transition:.2s;cursor:pointer;text-decoration:none;}
+  .ar-share-btn:hover{background:var(--brand-accent,#F08023);color:#fff;
+    border-color:transparent;transform:translateY(-2px);}
+  .ar-share-btn svg{width:16px;height:16px;fill:currentColor;}
+  .ar-back{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;
+    color:var(--brand-accent,#F08023);text-decoration:none;}
+  .ar-back:hover{text-decoration:underline;}
+
+  /* Related articles */
+  .ar-related{background:var(--va-bg-alt);padding:56px 0;}
+  .ar-related-head{max-width:1100px;margin:0 auto 24px;display:flex;align-items:center;
+    justify-content:space-between;padding-bottom:12px;border-bottom:2px solid var(--brand-accent,#F08023);}
+  .ar-related-head h2{font-size:20px;color:var(--brand-primary,#0F3D7A);
+    text-transform:uppercase;letter-spacing:.04em;}
+  .ar.dark .ar-related-head h2{color:#5B9BD5;}
+  .ar-related-head a{font-size:12px;color:var(--va-text);opacity:.65;
+    text-decoration:none;font-weight:600;}
+  .ar-related-head a:hover{color:var(--brand-accent,#F08023);opacity:1;}
+  .ar-related-grid{max-width:1100px;margin:0 auto;
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;}
+  .ar-rel-card{background:var(--va-card);border:1px solid var(--va-line);border-radius:12px;
+    overflow:hidden;text-decoration:none;color:inherit;transition:.3s;display:flex;flex-direction:column;}
+  .ar-rel-card:hover{transform:translateY(-6px);
+    box-shadow:0 24px 48px -24px rgba(15,61,122,.2);border-color:transparent;}
+  .ar-rel-img{aspect-ratio:16/10;overflow:hidden;background:var(--va-bg-alt);}
+  .ar-rel-img img{width:100%;height:100%;object-fit:cover;transition:transform .6s;}
+  .ar-rel-card:hover .ar-rel-img img{transform:scale(1.06);}
+  .ar-rel-body{padding:18px 20px;flex:1;display:flex;flex-direction:column;}
+  .ar-rel-cat{font-size:10.5px;font-weight:700;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--brand-accent,#F08023);margin-bottom:8px;}
+  .ar-rel-body h4{font-size:15px;line-height:1.4;margin-bottom:10px;
+    display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+  .ar-rel-body .meta{margin-top:auto;font-size:11.5px;opacity:.5;
+    font-family:ui-monospace,Menlo,monospace;}
+
+  @media (max-width:760px){
+    .ar-meta{gap:12px;font-size:12px;}
+    .ar-share{flex-direction:column;align-items:flex-start;}
+  }
+`;
+
+function fmtDate(iso, lang) {
+  const [y,m,d] = iso.split('-');
+  if (lang === 'en') {
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return `${months[parseInt(m)-1]} ${parseInt(d)}, ${y}`;
+  }
+  if (lang === 'zh') return `${y}年${parseInt(m)}月${parseInt(d)}日`;
+  return `${d}/${m}/${y}`;
+}
+
+function ArticlePage({ tweaks, id }) {
+  const t = tweaks;
+  const C = COPY[t.lang];
+  const article = ARTICLES[id];
+
+  // Scroll to top when loaded
+  React.useEffect(() => { window.scrollTo(0, 0); }, [id]);
+
+  if (!article) {
+    return (
+      <div className={'vac ar '+(t.dark?'dark':'')}>
+        <style>{CHROME_CSS}</style>
+        <style>{AR_CSS}</style>
+        <VAHeader tweaks={tweaks} current="news"/>
+        <div className="vac-wrap" style={{padding:'120px 32px',textAlign:'center'}}>
+          <h2>{C.notFound}</h2>
+          <p style={{margin:'20px 0',opacity:.7}}>ID: {id}</p>
+          <a href="news.html" className="ar-back" style={{display:'inline-flex',fontSize:15}}>
+            ← {C.backToNews}
+          </a>
+        </div>
+        <VAFooter tweaks={tweaks}/>
+      </div>
+    );
+  }
+
+  const cssVars = { '--va-font':t.font, '--va-display':t.font };
+  const title = article.title[t.lang];
+
+  // Author initials for avatar
+  const author = article.author[t.lang];
+  const initials = author.split('·')[0].trim().split(' ').slice(-2).map(w => w[0]).join('').toUpperCase();
+
+  // Related: same category first
+  const related = NEWS
+    .filter(n => n.id !== article.id)
+    .sort((a,b) => (a.cat === article.cat ? -1 : 0) - (b.cat === article.cat ? -1 : 0))
+    .slice(0, 3);
+
+  return (
+    <div className={'vac ar '+(t.dark?'dark':'')} style={cssVars}>
+      <style>{CHROME_CSS}</style>
+      <style>{AR_CSS}</style>
+      <VAHeader tweaks={tweaks} current="news"/>
+
+      {/* HEAD: breadcrumb */}
+      <section className="ar-head">
+        <div className="vac-wrap">
+          <nav className="ar-bcrumb">
+            <a href="index.html">{C.home}</a>
+            <Icon name="chevron" size={11}/>
+            <a href="news.html">{C.news}</a>
+            <Icon name="chevron" size={11}/>
+            <a href={'news.html#'+article.cat}>{C.categories[article.cat]}</a>
+            <Icon name="chevron" size={11}/>
+            <span className="now">#{String(article.id).padStart(3,'0')}</span>
+          </nav>
+        </div>
+      </section>
+
+      {/* HERO */}
+      <section className="ar-hero">
+        <div className="vac-wrap">
+          <div className="ar-hero-inner">
+            <span className="ar-cat">{C.categories[article.cat]}</span>
+            <h1 className="ar-title">{title}</h1>
+            <p className="ar-lead">{article.lead[t.lang]}</p>
+            <div className="ar-meta">
+              <div className="ar-meta-item author">
+                <span className="avatar">{initials}</span>
+                {author}
+              </div>
+              <div className="ar-meta-item">
+                <Icon name="cal" size={14}/> {fmtDate(article.date, t.lang)}
+              </div>
+              <div className="ar-meta-item">
+                <Icon name="clock" size={14}/> {article.readMin} {C.minRead}
+              </div>
+              <div className="ar-meta-item">
+                <Icon name="eye" size={14}/> {article.views.toLocaleString()} {C.viewCount}
+              </div>
+              <div className="ar-meta-item">
+                <Icon name="chat" size={14}/> {article.comments} {C.commentCount}
+              </div>
+            </div>
+          </div>
+
+          <div className="ar-img">
+            <div className="ar-img-wrap">
+              <img src={article.img} alt={title}/>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* BODY */}
+      <section className="ar-body">
+        <div className="vac-wrap">
+          <div className="ar-body-inner">
+            {article.body[t.lang].map((para, i) => (
+              <p key={i}>{para}</p>
+            ))}
+
+            {/* Tags */}
+            <div className="ar-tags-row">
+              <span className="ar-tags-label">{C.tags}:</span>
+              {article.tags[t.lang].map((tag,i)=>(
+                <a key={i} className="ar-tag" href="news.html">{tag}</a>
+              ))}
+            </div>
+
+            {/* Share + back */}
+            <div className="ar-share">
+              <div style={{display:'flex',alignItems:'center',gap:12}}>
+                <span className="ar-share-label">{C.sharePrompt}:</span>
+                <div className="ar-share-btns">
+                  <a className="ar-share-btn" href={'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent('https://20021456.github.io/LongAnhCorp/article.html?id='+article.id)} target="_blank" rel="noopener" aria-label="Facebook">
+                    <svg viewBox="0 0 24 24"><path d="M9.198 21.5h4v-8.01h3.604l.396-3.98h-4V7.5a1 1 0 0 1 1-1h3v-4h-3a5 5 0 0 0-5 5v2.01h-2l-.396 3.98h2.396v8.01z"/></svg>
+                  </a>
+                  <a className="ar-share-btn" href={'https://twitter.com/intent/tweet?text='+encodeURIComponent(title)+'&url='+encodeURIComponent('https://20021456.github.io/LongAnhCorp/article.html?id='+article.id)} target="_blank" rel="noopener" aria-label="X">
+                    <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.45-6.231zm-1.161 17.52h1.833L7.084 4.126H5.117l11.966 15.644z"/></svg>
+                  </a>
+                  <a className="ar-share-btn" href={'https://www.linkedin.com/shareArticle?mini=true&url='+encodeURIComponent('https://20021456.github.io/LongAnhCorp/article.html?id='+article.id)+'&title='+encodeURIComponent(title)} target="_blank" rel="noopener" aria-label="LinkedIn">
+                    <svg viewBox="0 0 24 24"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43c-1.14 0-2.07-.93-2.07-2.07s.93-2.07 2.07-2.07 2.07.93 2.07 2.07-.93 2.07-2.07 2.07zm1.78 13.02H3.55V9h3.57v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.55C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg>
+                  </a>
+                  <a className="ar-share-btn" href={'mailto:?subject='+encodeURIComponent(title)+'&body='+encodeURIComponent('https://20021456.github.io/LongAnhCorp/article.html?id='+article.id)} aria-label="Email">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+                  </a>
+                </div>
+              </div>
+              <a className="ar-back" href="news.html">
+                <Icon name="arrow" size={15} style={{transform:'rotate(180deg)'}}/> {C.backToList}
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* RELATED */}
+      <section className="ar-related">
+        <div className="vac-wrap">
+          <div className="ar-related-head">
+            <h2>{C.relatedTitle}</h2>
+            <a href="news.html">{C.backToList} →</a>
+          </div>
+          <div className="ar-related-grid">
+            {related.map(r => (
+              <a key={r.id} className="ar-rel-card" href={'article.html?id='+r.id}>
+                <div className="ar-rel-img"><img src={r.img} alt=""/></div>
+                <div className="ar-rel-body">
+                  <div className="ar-rel-cat">{C.categories[r.cat]}</div>
+                  <h4>{r.title[t.lang]}</h4>
+                  <div className="meta">
+                    {fmtDate(r.date, t.lang)} · {r.views.toLocaleString()} {C.viewCount}
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <VAFooter tweaks={tweaks}/>
+    </div>
+  );
+}
+
+function App() {
+  const [t, setT] = React.useState({ lang:'vi', dark:false, font:'Inter' });
+  const setTweak = (k, v) => setT(s => ({ ...s, [k]: v }));
+  const tweaks = { ...t, set: setTweak };
+
+  const params = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
+  const id = params.get('id') || '1';
+
+  return <ArticlePage tweaks={tweaks} id={id}/>;
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
