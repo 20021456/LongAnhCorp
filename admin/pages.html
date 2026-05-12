@@ -143,11 +143,20 @@
                   </td>
                   <td>
                     <div className="row-actions" style={{ justifyContent: 'flex-end' }}>
-                      <a href={p.id === 'home' ? 'page-edit-home.html' : '#'}
-                         className="ad-btn ghost sm" title="Sửa">
+                      <a href={`page-edit-${p.id}.html`}
+                         className="ad-btn ghost sm" title="Sửa nội dung">
                         <AdIcon name="edit" size={13} />
                       </a>
-                      <button className="ad-btn ghost sm" title="Xem"><AdIcon name="eye" size={13} /></button>
+                      <a className="ad-btn ghost sm" title="Xem trên web"
+                         href={({
+                           home: '../index.html', about: '../about.html',
+                           products: '../products.html', news: '../news.html',
+                           contact: '../index.html#contact',
+                           careers: '../career.html',
+                         })[p.id] || '#'}
+                         target="_blank">
+                        <AdIcon name="eye" size={13} />
+                      </a>
                       <button className="ad-btn ghost sm" title="Nhân bản"><AdIcon name="copy" size={13} /></button>
                       <button className="ad-btn ghost sm" title="Thêm"><AdIcon name="more" size={13} /></button>
                     </div>
