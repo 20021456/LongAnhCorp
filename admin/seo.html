@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SEO mặc định · Long Anh Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="admin-shell.jsx"></script>
+<script type="text/babel">
+  const style = document.createElement('style');
+  style.textContent = ADMIN_GLOBAL_CSS + `
+    .st-tabs { display:flex; border-bottom:1px solid var(--ad-line); margin-bottom:0;
+          background:#fff; border-radius:10px 10px 0 0; border:1px solid var(--ad-line); }
+    .st-tab { padding:14px 20px; font-size:13.5px; font-weight:500; cursor:pointer;
+          color:var(--ad-text-soft); border-bottom:2px solid transparent; margin-bottom:-1px;
+          display:flex; align-items:center; gap:8px; }
+    .st-tab.on { color:var(--ad-primary); border-color:var(--ad-primary); font-weight:600; }
+    .st-body { background:#fff; border:1px solid var(--ad-line); border-top:0;
+          border-radius:0 0 10px 10px; padding:22px 24px; }
+    .st-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+
+    .seo-preview { background:#fff; border:1px solid var(--ad-line); border-radius:8px;
+          padding:14px 16px; margin-top:8px; }
+    .seo-preview .label { font-size:11px; font-weight:600; color:var(--ad-text-mute);
+          letter-spacing:.04em; text-transform:uppercase; margin-bottom:8px; }
+    .seo-preview .host { font-size:13px; color:#202124; margin-bottom:2px; }
+    .seo-preview .host span { color:#5F6368; }
+    .seo-preview .title { font-size:18px; color:#1A0DAB; margin-bottom:4px;
+          font-family:arial, sans-serif; }
+    .seo-preview .desc { font-size:13px; color:#4D5156; line-height:1.55; }
+
+    .seo-og { background:#fff; border:1px solid var(--ad-line); border-radius:8px;
+          overflow:hidden; max-width:420px; margin-top:8px; }
+    .seo-og img { width:100%; aspect-ratio:1.91/1; object-fit:cover; display:block;
+          background:var(--ad-line-soft); }
+    .seo-og .meta { padding:10px 14px; }
+    .seo-og .meta .host { font-size:11px; color:var(--ad-text-mute);
+          text-transform:uppercase; letter-spacing:.04em; margin-bottom:4px; }
+    .seo-og .meta .title { font-size:14px; font-weight:600; margin-bottom:3px;
+          line-height:1.3; }
+    .seo-og .meta .desc { font-size:12px; color:var(--ad-text-soft); line-height:1.4;
+          overflow:hidden; text-overflow:ellipsis; display:-webkit-box;
+          -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+
+    .seo-code { background:#0f172a; color:#cbd5e1; padding:14px 16px; border-radius:8px;
+          font-family:'JetBrains Mono', ui-monospace, monospace; font-size:12px;
+          line-height:1.6; white-space:pre; overflow-x:auto;
+          border:1px solid var(--ad-line); }
+
+    .seo-section-title { font-size:12px; font-weight:600; color:var(--ad-text-mute);
+          letter-spacing:.05em; text-transform:uppercase; margin: 18px 0 12px; }
+    .seo-section-title:first-child { margin-top:0; }
+
+    .seo-verify-row { display:grid; grid-template-columns:auto 1fr auto;
+          gap:12px; align-items:center; padding:10px 14px; background:#FCFCFD;
+          border:1px solid var(--ad-line); border-radius:8px; margin-bottom:8px; }
+    .seo-verify-row .name { font-weight:500; font-size:13.5px; }
+    .seo-verify-row .ico { width:32px; height:32px; border-radius:6px;
+          background:var(--ad-primary-soft); color:var(--ad-primary);
+          display:flex; align-items:center; justify-content:center; flex:none; }
+  `;
+  document.head.appendChild(style);
+
+  const ROBOTS_TXT = `User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /*?utm_*
+
+# AI crawlers
+User-agent: GPTBot
+Disallow: /admin/
+
+Sitemap: https://long-anh.com/sitemap.xml`;
+
+  const SCHEMA_JSON = `{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Công ty TNHH KS Long Anh",
+  "alternateName": "KS Long Anh",
+  "url": "https://long-anh.com",
+  "logo": "https://long-anh.com/assets/long-anh-logo.png",
+  "foundingDate": "2008",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Số D1-22, Đường 2K, Khu Đô Thị Cửa Tiền",
+    "addressLocality": "TP. Vinh",
+    "addressRegion": "Nghệ An",
+    "addressCountry": "VN"
+  },
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "telephone": "+84-912-779-799",
+    "email": "info@longanhcorp.com",
+    "contactType": "sales"
+  }
+}`;
+
+  function SeoDefaults() {
+    const [tab, setTab] = React.useState('meta');
+    const [titleTpl, setTitleTpl] = React.useState('%title% | KS Long Anh');
+    const [desc, setDesc] = React.useState(
+      'Long Anh — Nhà sản xuất bột đá CaCO₃ phủ/không phủ Stearic Acid, đá Slab và đá tự nhiên từ mỏ Quỳ Hợp — Nghệ An. Xuất khẩu 12 quốc gia.');
+
+    const Header = (
+      <>
+        <a href="../sitemap.xml" target="_blank" className="ad-btn">
+          <AdIcon name="eye" size={13} /> Xem sitemap
+        </a>
+        <button className="ad-btn primary">
+          <AdIcon name="check" size={13} /> Lưu thay đổi
+        </button>
+      </>
+    );
+
+    const tabs = [
+      ['meta',    'Meta mặc định',  'seo'],
+      ['social',  'Social cards',    'globe'],
+      ['sitemap', 'Sitemap & Robots','file'],
+      ['verify',  'Xác minh',        'shield'],
+      ['schema',  'Schema.org',      'box'],
+    ];
+
+    return (
+      <AdPage active="seo"
+        crumb={[{ label: 'Trang chủ', href: 'index.html' }, { label: 'SEO mặc định' }]}
+        title="SEO mặc định"
+        sub="Cấu hình SEO áp dụng cho toàn site khi mỗi trang không tự khai báo"
+        actions={Header}>
+
+        <div className="st-tabs">
+          {tabs.map(([k, l, ic]) => (
+            <div key={k} className={`st-tab ${tab === k ? 'on' : ''}`} onClick={() => setTab(k)}>
+              <AdIcon name={ic} size={15} /> {l}
+            </div>
+          ))}
+        </div>
+
+        <div className="st-body">
+
+          {tab === 'meta' && (
+            <>
+              <div className="seo-section-title">Title & Description</div>
+              <div className="st-grid">
+                <AdField label="Meta title template" req
+                         help="Dùng %title% để chèn tiêu đề trang. Khuyến nghị 50-60 ký tự.">
+                  <input className="ad-input" value={titleTpl}
+                         onChange={e => setTitleTpl(e.target.value)} />
+                </AdField>
+                <AdField label="Tách tiêu đề (separator)">
+                  <select className="ad-select" defaultValue="|">
+                    <option>|</option>
+                    <option>·</option>
+                    <option>—</option>
+                    <option>·</option>
+                  </select>
+                </AdField>
+              </div>
+              <div style={{ marginTop: 16 }}>
+                <AdField label="Meta description mặc định"
+                         help="150-160 ký tự là tối ưu · hiện 158/160">
+                  <textarea className="ad-textarea" value={desc}
+                            onChange={e => setDesc(e.target.value)} />
+                </AdField>
+              </div>
+              <div style={{ marginTop: 16 }}>
+                <AdField label="Từ khóa mặc định (meta keywords)"
+                         help="Google không dùng nữa, nhưng Bing/Yandex vẫn đọc">
+                  <input className="ad-input" defaultValue="bột đá, CaCO3, KS Long Anh, đá Slab, Quỳ Hợp Nghệ An, bột phủ Stearic" />
+                </AdField>
+              </div>
+
+              <div className="seo-preview" style={{ marginTop: 18 }}>
+                <div className="label">Xem trước trên Google</div>
+                <div className="host">long-anh.com › <span>trang-mau</span></div>
+                <div className="title">{titleTpl.replace('%title%', 'Sản phẩm bột đá CaCO₃')}</div>
+                <div className="desc">{desc}</div>
+              </div>
+
+              <div className="seo-section-title">Hành vi crawler</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12, fontSize: 13 }}>
+                <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <span>Cho phép Google index toàn site</span>
+                  <AdSwitch on={true} onChange={() => {}} />
+                </label>
+                <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <span>Cho phép GPTBot / AI crawlers</span>
+                  <AdSwitch on={false} onChange={() => {}} />
+                </label>
+                <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <span>Thêm thẻ <code>nofollow</code> mặc định cho link ngoài</span>
+                  <AdSwitch on={false} onChange={() => {}} />
+                </label>
+              </div>
+            </>
+          )}
+
+          {tab === 'social' && (
+            <>
+              <div className="seo-section-title">Open Graph mặc định (Facebook · Zalo · LinkedIn)</div>
+              <div className="st-grid">
+                <AdField label="OG title fallback">
+                  <input className="ad-input" defaultValue="KS Long Anh — Bột đá CaCO₃ & Đá tự nhiên Việt Nam" />
+                </AdField>
+                <AdField label="OG type">
+                  <select className="ad-select">
+                    <option>website</option>
+                    <option>article</option>
+                    <option>product</option>
+                  </select>
+                </AdField>
+              </div>
+              <div style={{ marginTop: 16 }}>
+                <AdField label="OG description fallback">
+                  <textarea className="ad-textarea"
+                            defaultValue="Nhà sản xuất bột đá Canxi Cacbonat và đá tự nhiên hàng đầu Bắc Trung Bộ. 5 nhà máy · 350K tấn/năm · xuất khẩu 12 quốc gia." />
+                </AdField>
+              </div>
+              <div style={{ marginTop: 16 }}>
+                <AdField label="OG image (1200×630px)" help="Dùng khi trang không tự khai báo ảnh share">
+                  <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: 14, alignItems: 'start' }}>
+                    <div style={{ aspectRatio: '1.91 / 1', border: '1.5px dashed var(--ad-line)',
+                                  borderRadius: 8, overflow: 'hidden', background: 'var(--ad-line-soft)' }}>
+                      <img src="../assets/nha-may-bot-sieu-min-3.webp"
+                           style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                      <button className="ad-btn" style={{ width: 'fit-content' }}>
+                        <AdIcon name="upload" size={13} /> Đổi ảnh
+                      </button>
+                      <div style={{ fontSize: 12, color: 'var(--ad-text-mute)' }}>
+                        Khuyến nghị: JPG · 1200×630px · &lt; 1MB · có logo Long Anh.
+                      </div>
+                    </div>
+                  </div>
+                </AdField>
+              </div>
+
+              <div className="seo-section-title">Twitter Cards</div>
+              <div className="st-grid">
+                <AdField label="Card type">
+                  <select className="ad-select" defaultValue="summary_large_image">
+                    <option value="summary">summary</option>
+                    <option value="summary_large_image">summary_large_image</option>
+                  </select>
+                </AdField>
+                <AdField label="Twitter handle @site">
+                  <input className="ad-input" defaultValue="@longanhcorp" />
+                </AdField>
+              </div>
+
+              <div style={{ marginTop: 18 }}>
+                <div className="label" style={{ fontSize: 11, fontWeight: 600,
+                                                 color: 'var(--ad-text-mute)',
+                                                 letterSpacing: '.04em',
+                                                 textTransform: 'uppercase', marginBottom: 8 }}>
+                  Xem trước Facebook / Zalo
+                </div>
+                <div className="seo-og">
+                  <img src="../assets/nha-may-bot-sieu-min-3.webp" />
+                  <div className="meta">
+                    <div className="host">long-anh.com</div>
+                    <div className="title">KS Long Anh — Bột đá CaCO₃ & Đá tự nhiên Việt Nam</div>
+                    <div className="desc">Nhà sản xuất bột đá Canxi Cacbonat và đá tự nhiên hàng đầu Bắc Trung Bộ. 5 nhà máy · 350K tấn/năm · xuất khẩu 12 quốc gia.</div>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
+
+          {tab === 'sitemap' && (
+            <>
+              <div className="seo-section-title">Sitemap XML</div>
+              <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginBottom: 14 }}>
+                <code style={{ background: 'var(--ad-line-soft)', padding: '4px 10px',
+                                borderRadius: 4, fontSize: 12.5 }}>
+                  https://long-anh.com/sitemap.xml
+                </code>
+                <span className="ad-badge pub" style={{ fontSize: 10 }}>
+                  <span className="dot" />128 URL · cập nhật 2h trước
+                </span>
+                <button className="ad-btn ghost sm" style={{ marginLeft: 'auto' }}>
+                  <AdIcon name="refresh" size={13} /> Tạo lại
+                </button>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10, fontSize: 13 }}>
+                <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <span>Tự động tạo sitemap khi có nội dung mới</span>
+                  <AdSwitch on={true} onChange={() => {}} />
+                </label>
+                <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <span>Bao gồm bài Tin tức</span>
+                  <AdSwitch on={true} onChange={() => {}} />
+                </label>
+                <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <span>Bao gồm các trang draft / hidden</span>
+                  <AdSwitch on={false} onChange={() => {}} />
+                </label>
+                <AdField label="Tần suất ping Google Search Console">
+                  <select className="ad-select" style={{ maxWidth: 240 }}>
+                    <option>Mỗi giờ</option>
+                    <option>Mỗi 6 giờ</option>
+                    <option>Mỗi ngày</option>
+                    <option>Thủ công</option>
+                  </select>
+                </AdField>
+              </div>
+
+              <div className="seo-section-title">robots.txt</div>
+              <div className="seo-code">{ROBOTS_TXT}</div>
+              <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
+                <button className="ad-btn"><AdIcon name="edit" size={13} /> Sửa</button>
+                <a href="../robots.txt" target="_blank" className="ad-btn">
+                  <AdIcon name="eye" size={13} /> Xem file public
+                </a>
+              </div>
+            </>
+          )}
+
+          {tab === 'verify' && (
+            <>
+              <div className="seo-section-title">Mã xác minh webmaster</div>
+              <div style={{ fontSize: 13, color: 'var(--ad-text-mute)', marginBottom: 14 }}>
+                Dán meta tag verification code từ từng công cụ. Hệ thống tự chèn vào
+                <code style={{ background: 'var(--ad-line-soft)', padding: '1px 6px',
+                                borderRadius: 3, marginLeft: 4 }}>&lt;head&gt;</code> trên mọi trang.
+              </div>
+
+              <div className="seo-verify-row">
+                <div className="ico"><AdIcon name="seo" size={16} /></div>
+                <div>
+                  <div className="name">Google Search Console</div>
+                  <input className="ad-input" style={{ marginTop: 6 }}
+                         defaultValue="google-site-verification=AbCd1234EfGh5678IjKl..." />
+                </div>
+                <span className="ad-badge pub" style={{ fontSize: 10 }}>
+                  <span className="dot" />Verified
+                </span>
+              </div>
+
+              <div className="seo-verify-row">
+                <div className="ico" style={{ background: '#FEF3C7', color: '#A16207' }}>
+                  <AdIcon name="seo" size={16} />
+                </div>
+                <div>
+                  <div className="name">Bing Webmaster Tools</div>
+                  <input className="ad-input" style={{ marginTop: 6 }}
+                         defaultValue="msvalidate.01=1234ABCD5678EFGH9012IJKL..." />
+                </div>
+                <span className="ad-badge pub" style={{ fontSize: 10 }}>
+                  <span className="dot" />Verified
+                </span>
+              </div>
+
+              <div className="seo-verify-row">
+                <div className="ico" style={{ background: '#FCE7F3', color: '#BE185D' }}>
+                  <AdIcon name="seo" size={16} />
+                </div>
+                <div>
+                  <div className="name">Yandex Webmaster</div>
+                  <input className="ad-input" style={{ marginTop: 6 }}
+                         placeholder="yandex-verification=…" />
+                </div>
+                <span className="ad-badge hide" style={{ fontSize: 10 }}>
+                  <span className="dot" />Chưa cấu hình
+                </span>
+              </div>
+
+              <div className="seo-verify-row">
+                <div className="ico" style={{ background: '#DCFCE7', color: '#15803D' }}>
+                  <AdIcon name="trend" size={16} />
+                </div>
+                <div>
+                  <div className="name">Google Analytics 4 (đo lường)</div>
+                  <input className="ad-input" style={{ marginTop: 6 }}
+                         defaultValue="G-XXXXXXXXXX" />
+                </div>
+                <span className="ad-badge pub" style={{ fontSize: 10 }}>
+                  <span className="dot" />Tracking
+                </span>
+              </div>
+            </>
+          )}
+
+          {tab === 'schema' && (
+            <>
+              <div className="seo-section-title">Structured data — Organization</div>
+              <div style={{ fontSize: 13, color: 'var(--ad-text-mute)', marginBottom: 14 }}>
+                JSON-LD nhúng vào mọi trang. Cập nhật khi đổi tên công ty, địa chỉ, hotline.
+              </div>
+              <div className="seo-code">{SCHEMA_JSON}</div>
+              <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
+                <button className="ad-btn"><AdIcon name="edit" size={13} /> Sửa JSON</button>
+                <a href="https://search.google.com/test/rich-results"
+                   target="_blank" className="ad-btn">
+                  <AdIcon name="globe" size={13} /> Test với Rich Results
+                </a>
+              </div>
+
+              <div className="seo-section-title">Schema cho trang sản phẩm</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10, fontSize: 13 }}>
+                <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <span>Tự động sinh schema Product cho từng SKU</span>
+                  <AdSwitch on={true} onChange={() => {}} />
+                </label>
+                <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <span>Bao gồm AggregateRating (từ testimonials)</span>
+                  <AdSwitch on={false} onChange={() => {}} />
+                </label>
+                <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <span>Sinh schema BreadcrumbList</span>
+                  <AdSwitch on={true} onChange={() => {}} />
+                </label>
+                <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <span>Sinh schema NewsArticle cho bài Tin tức</span>
+                  <AdSwitch on={true} onChange={() => {}} />
+                </label>
+              </div>
+            </>
+          )}
+
+        </div>
+      </AdPage>
+    );
+  }
+
+  ReactDOM.createRoot(document.getElementById('root')).render(<SeoDefaults />);
+</script>
+</body>
+</html>

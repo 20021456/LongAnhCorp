@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Menu navigation · Long Anh Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="admin-shell.jsx"></script>
+<script type="text/babel">
+  const style = document.createElement('style');
+  style.textContent = ADMIN_GLOBAL_CSS + `
+    .st-tabs { display:flex; border-bottom:1px solid var(--ad-line); margin-bottom:0;
+          background:#fff; border-radius:10px 10px 0 0; border:1px solid var(--ad-line); }
+    .st-tab { padding:14px 20px; font-size:13.5px; font-weight:500; cursor:pointer;
+          color:var(--ad-text-soft); border-bottom:2px solid transparent; margin-bottom:-1px;
+          display:flex; align-items:center; gap:8px; }
+    .st-tab.on { color:var(--ad-primary); border-color:var(--ad-primary); font-weight:600; }
+    .st-tab .count { font-size:10px; padding:1px 7px; border-radius:99px;
+          background:var(--ad-line-soft); color:var(--ad-text-soft); font-weight:600; }
+    .st-tab.on .count { background:var(--ad-primary-soft); color:var(--ad-primary); }
+    .st-body { background:#fff; border:1px solid var(--ad-line); border-top:0;
+          border-radius:0 0 10px 10px; padding:22px 24px; }
+
+    .mn-item { background:#fff; border:1px solid var(--ad-line); border-radius:8px;
+          padding:14px; margin-bottom:10px; display:grid;
+          grid-template-columns:auto 1fr auto; gap:14px; align-items:center; }
+    .mn-item.sub { margin-left:36px; background:#FCFCFD; }
+    .mn-drag { cursor:grab; color:var(--ad-text-mute); padding:4px; }
+    .mn-drag:hover { color:var(--ad-text); }
+    .mn-grid { display:grid; grid-template-columns:1.4fr 1.6fr auto; gap:10px;
+          align-items:center; min-width:0; }
+    .mn-grid input { min-width:0; }
+    .mn-toggle-row { display:flex; gap:10px; align-items:center; }
+    .mn-actions { display:flex; gap:4px; }
+    .mn-actions button { border:0; background:transparent; color:var(--ad-text-mute);
+          cursor:pointer; padding:6px; border-radius:4px; display:flex; }
+    .mn-actions button:hover { background:var(--ad-line-soft); color:var(--ad-text); }
+
+    .mn-preview { background:#0F3D7A; color:#fff; padding:14px 22px; border-radius:8px;
+          display:flex; align-items:center; gap:24px; margin-bottom:16px;
+          font-size:13.5px; flex-wrap:wrap; }
+    .mn-preview .brand { font-weight:700; font-size:15px; letter-spacing:-.01em;
+          padding-right:24px; border-right:1px solid rgba(255,255,255,.2); }
+    .mn-preview a { color:rgba(255,255,255,.85); font-weight:500; }
+    .mn-preview a.cta { background:var(--ad-accent); padding:6px 14px;
+          border-radius:6px; margin-left:auto; color:#fff; font-weight:600; }
+  `;
+  document.head.appendChild(style);
+
+  const HEADER_MENU = [
+    { id: 1, label: 'Trang chủ',     href: '/',             children: [] },
+    { id: 2, label: 'Giới thiệu',    href: '/about.html',   children: [] },
+    { id: 3, label: 'Sản phẩm',      href: '/products.html',
+      children: [
+        { id: 31, label: 'Bột đá CaCO₃ không phủ',     href: '/product.html?code=P-01' },
+        { id: 32, label: 'Bột đá CaCO₃ phủ Stearic',   href: '/product.html?code=P-02' },
+        { id: 33, label: 'Đá Slab',                     href: '/product.html?code=P-03' },
+        { id: 34, label: 'Đá xẻ quy cách',              href: '/product.html?code=P-04' },
+        { id: 35, label: 'Đá trang trí',                href: '/product.html?code=P-05' },
+      ] },
+    { id: 4, label: 'Tin tức',       href: '/news.html',    children: [] },
+    { id: 5, label: 'Tuyển dụng',    href: '/career.html',  children: [] },
+    { id: 6, label: 'Liên hệ',       href: '/index.html#contact', children: [] },
+  ];
+
+  const FOOTER_COLS = [
+    { id: 1, title: 'Sản phẩm', links: [
+      { id: 11, label: 'Bột đá CaCO₃', href: '/products.html#cat-powder' },
+      { id: 12, label: 'Đá tự nhiên',   href: '/products.html#cat-stone' },
+      { id: 13, label: 'Báo giá FOB',   href: '/index.html#contact' },
+    ]},
+    { id: 2, title: 'Công ty', links: [
+      { id: 21, label: 'Về Long Anh',   href: '/about.html' },
+      { id: 22, label: 'Tin tức',       href: '/news.html' },
+      { id: 23, label: 'Tuyển dụng',    href: '/career.html' },
+      { id: 24, label: 'Liên hệ',       href: '/index.html#contact' },
+    ]},
+    { id: 3, title: 'Pháp lý', links: [
+      { id: 31, label: 'Chính sách bảo mật',  href: '/privacy.html' },
+      { id: 32, label: 'Điều khoản sử dụng',  href: '/terms.html' },
+      { id: 33, label: 'Cookie policy',       href: '/cookies.html' },
+    ]},
+  ];
+
+  const MOBILE_EXTRA = [
+    { id: 1, label: 'Hotline gọi nhanh', href: 'tel:+84912779799', icon: 'bell' },
+    { id: 2, label: 'Zalo OA',            href: 'https://zalo.me/longanhcorp', icon: 'chat' },
+    { id: 3, label: 'Yêu cầu báo giá',   href: '/index.html#contact', icon: 'mail' },
+  ];
+
+  function MenuManager() {
+    const [tab, setTab] = React.useState('header');
+
+    const Header = (
+      <>
+        <button className="ad-btn">
+          <AdIcon name="refresh" size={13} /> Khôi phục mặc định
+        </button>
+        <button className="ad-btn primary">
+          <AdIcon name="check" size={13} /> Lưu thay đổi
+        </button>
+      </>
+    );
+
+    const tabs = [
+      ['header', 'Menu Header',  'nav',    HEADER_MENU.length],
+      ['footer', 'Menu Footer',  'grid',   FOOTER_COLS.reduce((s, c) => s + c.links.length, 0)],
+      ['mobile', 'Menu Mobile',  'box',    MOBILE_EXTRA.length],
+    ];
+
+    return (
+      <AdPage active="menu"
+        crumb={[{ label: 'Trang chủ', href: 'index.html' }, { label: 'Menu navigation' }]}
+        title="Menu navigation"
+        sub="Quản lý menu header, footer và menu mobile của website"
+        actions={Header}>
+
+        <div className="st-tabs">
+          {tabs.map(([k, l, ic, n]) => (
+            <div key={k} className={`st-tab ${tab === k ? 'on' : ''}`} onClick={() => setTab(k)}>
+              <AdIcon name={ic} size={15} /> {l} <span className="count">{n}</span>
+            </div>
+          ))}
+        </div>
+
+        <div className="st-body">
+          {tab === 'header' && (
+            <>
+              <div className="mn-preview">
+                <div className="brand">KS LONG ANH</div>
+                {HEADER_MENU.map(m => <a key={m.id} href="#">{m.label}</a>)}
+                <a className="cta" href="#">Báo giá</a>
+              </div>
+
+              <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--ad-text-mute)',
+                            letterSpacing: '.05em', textTransform: 'uppercase', marginBottom: 10 }}>
+                Cấu trúc menu ({HEADER_MENU.length} mục)
+              </div>
+
+              {HEADER_MENU.map(item => (
+                <React.Fragment key={item.id}>
+                  <div className="mn-item">
+                    <span className="mn-drag"><AdIcon name="drag" size={14} /></span>
+                    <div className="mn-grid">
+                      <input className="ad-input" defaultValue={item.label} placeholder="Nhãn" />
+                      <input className="ad-input" defaultValue={item.href} placeholder="Đường dẫn" />
+                      <label className="mn-toggle-row" style={{ fontSize: 12 }}>
+                        <AdSwitch on={true} onChange={() => {}} /> Hiển thị
+                      </label>
+                    </div>
+                    <div className="mn-actions">
+                      <button title="Thêm submenu" disabled={item.id === 3}>
+                        <AdIcon name="plus" size={13} />
+                      </button>
+                      <button title="Xóa"><AdIcon name="trash" size={13} /></button>
+                    </div>
+                  </div>
+                  {item.children.map(sub => (
+                    <div key={sub.id} className="mn-item sub">
+                      <span className="mn-drag"><AdIcon name="drag" size={14} /></span>
+                      <div className="mn-grid">
+                        <input className="ad-input" defaultValue={sub.label} placeholder="Nhãn" />
+                        <input className="ad-input" defaultValue={sub.href} placeholder="Đường dẫn" />
+                        <label className="mn-toggle-row" style={{ fontSize: 12 }}>
+                          <AdSwitch on={true} onChange={() => {}} /> Hiển thị
+                        </label>
+                      </div>
+                      <div className="mn-actions">
+                        <button title="Xóa"><AdIcon name="trash" size={13} /></button>
+                      </div>
+                    </div>
+                  ))}
+                </React.Fragment>
+              ))}
+
+              <button className="ad-btn" style={{ marginTop: 8 }}>
+                <AdIcon name="plus" size={13} /> Thêm mục menu
+              </button>
+
+              <div style={{ marginTop: 24, paddingTop: 20,
+                            borderTop: '1px solid var(--ad-line-soft)' }}>
+                <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--ad-text-mute)',
+                              letterSpacing: '.05em', textTransform: 'uppercase', marginBottom: 12 }}>
+                  CTA chính (nút cam)
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr auto',
+                              gap: 10, alignItems: 'center' }}>
+                  <input className="ad-input" defaultValue="Báo giá" />
+                  <input className="ad-input" defaultValue="/index.html#contact" />
+                  <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12.5 }}>
+                    <AdSwitch on={true} onChange={() => {}} /> Hiển thị
+                  </label>
+                </div>
+              </div>
+            </>
+          )}
+
+          {tab === 'footer' && (
+            <>
+              <div style={{ fontSize: 13, color: 'var(--ad-text-mute)', marginBottom: 14 }}>
+                Footer chia thành {FOOTER_COLS.length} cột. Mỗi cột có 1 tiêu đề và danh sách liên kết.
+              </div>
+              {FOOTER_COLS.map(col => (
+                <div key={col.id} style={{
+                  background: '#FCFCFD', border: '1px solid var(--ad-line)',
+                  borderRadius: 8, padding: 16, marginBottom: 14,
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+                    <span className="mn-drag"><AdIcon name="drag" size={14} /></span>
+                    <input className="ad-input" defaultValue={col.title}
+                           style={{ fontWeight: 600 }} placeholder="Tiêu đề cột" />
+                    <button className="mn-actions"
+                            style={{ border: 0, background: 'transparent', cursor: 'pointer',
+                                     color: 'var(--ad-text-mute)', padding: 6 }}>
+                      <AdIcon name="trash" size={13} />
+                    </button>
+                  </div>
+                  {col.links.map(l => (
+                    <div key={l.id} className="mn-item" style={{ marginBottom: 8, marginLeft: 24 }}>
+                      <span className="mn-drag"><AdIcon name="drag" size={14} /></span>
+                      <div className="mn-grid">
+                        <input className="ad-input" defaultValue={l.label} placeholder="Nhãn" />
+                        <input className="ad-input" defaultValue={l.href} placeholder="Đường dẫn" />
+                        <label className="mn-toggle-row" style={{ fontSize: 12 }}>
+                          <AdSwitch on={true} onChange={() => {}} /> Hiển thị
+                        </label>
+                      </div>
+                      <div className="mn-actions">
+                        <button title="Xóa"><AdIcon name="trash" size={13} /></button>
+                      </div>
+                    </div>
+                  ))}
+                  <button className="ad-btn ghost sm" style={{ marginLeft: 24 }}>
+                    <AdIcon name="plus" size={12} /> Thêm link
+                  </button>
+                </div>
+              ))}
+              <button className="ad-btn">
+                <AdIcon name="plus" size={13} /> Thêm cột mới
+              </button>
+            </>
+          )}
+
+          {tab === 'mobile' && (
+            <>
+              <div style={{ fontSize: 13, color: 'var(--ad-text-mute)', marginBottom: 14 }}>
+                Trên mobile, menu chính dùng lại Header. Đây là các shortcut bổ sung
+                (gọi nhanh, Zalo, báo giá) hiển thị riêng trên drawer mobile.
+              </div>
+              {MOBILE_EXTRA.map(m => (
+                <div key={m.id} className="mn-item">
+                  <span className="mn-drag"><AdIcon name="drag" size={14} /></span>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr 1.4fr',
+                                gap: 10, alignItems: 'center', minWidth: 0 }}>
+                    <select className="ad-select" defaultValue={m.icon}
+                            style={{ width: 110 }}>
+                      <option value="bell">📞 Hotline</option>
+                      <option value="chat">💬 Chat</option>
+                      <option value="mail">✉ Email</option>
+                      <option value="globe">🌐 Link</option>
+                    </select>
+                    <input className="ad-input" defaultValue={m.label} placeholder="Nhãn" />
+                    <input className="ad-input" defaultValue={m.href} placeholder="Đường dẫn (URL / tel: / mailto:)" />
+                  </div>
+                  <div className="mn-actions">
+                    <button title="Xóa"><AdIcon name="trash" size={13} /></button>
+                  </div>
+                </div>
+              ))}
+              <button className="ad-btn">
+                <AdIcon name="plus" size={13} /> Thêm shortcut
+              </button>
+            </>
+          )}
+        </div>
+      </AdPage>
+    );
+  }
+
+  ReactDOM.createRoot(document.getElementById('root')).render(<MenuManager />);
+</script>
+</body>
+</html>

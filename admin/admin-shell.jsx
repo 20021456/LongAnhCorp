@@ -39,7 +39,7 @@ function adCanAccess(itemId) {
 const AD_ID_TO_HREF = {
   dashboard: 'index.html', pages: 'pages.html', news: 'news.html',
   products: 'products.html', gallery: 'media.html',
-  settings: 'settings.html', menu: '#', i18n: '#', seo: '#',
+  settings: 'settings.html', menu: 'menu.html', i18n: 'i18n.html', seo: 'seo.html',
   livechat: 'livechat.html',
   contacts: 'contacts.html', subscribers: '#',
   roles: 'roles.html',
@@ -72,6 +72,9 @@ function adCurrentPageId() {
   if (path === 'media.html')                   return 'gallery';
   if (path === 'roles.html')                   return 'roles';
   if (path === 'settings.html')                return 'settings';
+  if (path === 'menu.html')                    return 'menu';
+  if (path === 'i18n.html')                    return 'i18n';
+  if (path === 'seo.html')                     return 'seo';
   return null;
 }
 
@@ -419,9 +422,9 @@ function AdSidebar({ active = 'dashboard' }) {
     { type: 'item', id: 'gallery', label: 'Gallery', icon: 'image', href: 'media.html' },
     { type: 'sec', label: 'Cấu hình' },
     { type: 'item', id: 'settings', label: 'Cài đặt site', icon: 'settings', href: 'settings.html' },
-    { type: 'item', id: 'menu', label: 'Menu navigation', icon: 'nav', href: '#' },
-    { type: 'item', id: 'i18n', label: 'Ngôn ngữ', icon: 'globe', href: '#' },
-    { type: 'item', id: 'seo', label: 'SEO mặc định', icon: 'seo', href: '#' },
+    { type: 'item', id: 'menu', label: 'Menu navigation', icon: 'nav', href: 'menu.html' },
+    { type: 'item', id: 'i18n', label: 'Ngôn ngữ', icon: 'globe', href: 'i18n.html' },
+    { type: 'item', id: 'seo', label: 'SEO mặc định', icon: 'seo', href: 'seo.html' },
     { type: 'sec', label: 'Tương tác' },
     { type: 'item', id: 'livechat', label: 'Hỗ trợ trực tiếp', icon: 'chat', href: 'livechat.html', badge: '3' },
     { type: 'item', id: 'contacts', label: 'Liên hệ', icon: 'mail', href: 'contacts.html', badge: '5' },

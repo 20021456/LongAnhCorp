@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ngôn ngữ · Long Anh Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="admin-shell.jsx"></script>
+<script type="text/babel">
+  const style = document.createElement('style');
+  style.textContent = ADMIN_GLOBAL_CSS + `
+    .i18-grid { display:grid; grid-template-columns: 2fr 1fr; gap:24px;
+          align-items:flex-start; }
+    @media (max-width: 1024px) { .i18-grid { grid-template-columns: 1fr; } }
+
+    .i18-lang { background:#fff; border:1px solid var(--ad-line); border-radius:10px;
+          padding:18px 20px; margin-bottom:12px; display:grid;
+          grid-template-columns:auto 1fr auto auto; gap:18px; align-items:center; }
+    .i18-lang.default { border-color:var(--ad-primary);
+          background:linear-gradient(180deg, var(--ad-primary-soft) 0%, #fff 65%); }
+    .i18-lang .flag { font-size:36px; line-height:1; flex:none;
+          width:48px; text-align:center; }
+    .i18-lang .name { font-weight:600; font-size:15px; margin-bottom:2px;
+          display:flex; align-items:center; gap:8px; }
+    .i18-lang .code { font-family:'JetBrains Mono',monospace; font-size:11px;
+          padding:2px 6px; background:var(--ad-line-soft); color:var(--ad-text-soft);
+          border-radius:4px; }
+    .i18-lang .sub { font-size:12.5px; color:var(--ad-text-mute); }
+    .i18-lang .progress { font-size:12.5px; color:var(--ad-text-soft); }
+    .i18-lang .progress-bar { width:140px; height:6px; background:var(--ad-line-soft);
+          border-radius:3px; overflow:hidden; margin-top:4px; }
+    .i18-lang .progress-bar > div { height:100%; background:var(--ad-success);
+          border-radius:3px; }
+    .i18-lang .progress-bar.warn > div { background:var(--ad-warn); }
+    .i18-lang .progress-bar.danger > div { background:var(--ad-danger); }
+    .i18-lang .actions { display:flex; gap:6px; }
+
+    .i18-cov-table { width:100%; border-collapse:collapse; background:#fff;
+          border:1px solid var(--ad-line); border-radius:8px; overflow:hidden;
+          font-size:13px; }
+    .i18-cov-table th { background:#FAFAFB; padding:10px 14px; text-align:left;
+          font-size:11px; font-weight:600; color:var(--ad-text-mute);
+          text-transform:uppercase; letter-spacing:.04em;
+          border-bottom:1px solid var(--ad-line); }
+    .i18-cov-table td { padding:10px 14px; border-bottom:1px solid var(--ad-line-soft); }
+    .i18-cov-table tr:last-child td { border-bottom:0; }
+    .i18-cov-table .pill { display:inline-block; padding:2px 8px; border-radius:99px;
+          font-size:11px; font-weight:600; }
+    .i18-cov-table .pill.ok   { background:var(--ad-success-soft); color:#15803D; }
+    .i18-cov-table .pill.warn { background:var(--ad-warn-soft); color:#A16207; }
+    .i18-cov-table .pill.miss { background:var(--ad-danger-soft); color:var(--ad-danger); }
+  `;
+  document.head.appendChild(style);
+
+  const LANGS = [
+    { code: 'vi', name: 'Tiếng Việt', flag: '🇻🇳', native: 'Tiếng Việt',
+      progress: 100, isDefault: true, enabled: true,
+      sub: 'Ngôn ngữ gốc — không cần dịch.' },
+    { code: 'en', name: 'English',    flag: '🇬🇧', native: 'English',
+      progress: 92,  isDefault: false, enabled: true,
+      sub: 'Dùng cho khách quốc tế · Hàn Quốc · Nhật Bản · Trung Đông.' },
+    { code: 'zh', name: '中文 (Trung)', flag: '🇨🇳', native: '中文',
+      progress: 78,  isDefault: false, enabled: true,
+      sub: 'Dùng cho thị trường Trung Quốc — đang dịch một số bài tin tức.' },
+    { code: 'ko', name: '한국어',       flag: '🇰🇷', native: '한국어',
+      progress: 12,  isDefault: false, enabled: false,
+      sub: 'Bản beta — chỉ bật khi khách Hàn Quốc cần.' },
+    { code: 'ja', name: '日本語',       flag: '🇯🇵', native: '日本語',
+      progress: 0,   isDefault: false, enabled: false,
+      sub: 'Chưa khởi tạo. Cần dịch ~340 chuỗi.' },
+  ];
+
+  /* Translation coverage per surface */
+  const COVERAGE = [
+    { area: 'Trang chủ / Hero',   vi: 'ok',   en: 'ok',   zh: 'ok',   notes: '12/12 chuỗi' },
+    { area: 'Trang chủ / Stats',  vi: 'ok',   en: 'ok',   zh: 'ok',   notes: '8/8' },
+    { area: 'Trang chủ / About',  vi: 'ok',   en: 'ok',   zh: 'warn', notes: '14/18 (thiếu 4 chuỗi ZH)' },
+    { area: 'Sản phẩm',           vi: 'ok',   en: 'ok',   zh: 'ok',   notes: '36/36' },
+    { area: 'Chi tiết SP P-01',   vi: 'ok',   en: 'ok',   zh: 'ok',   notes: '28/28' },
+    { area: 'Giới thiệu',         vi: 'ok',   en: 'ok',   zh: 'warn', notes: '21/26 ZH' },
+    { area: 'Tin tức (list)',     vi: 'ok',   en: 'warn', zh: 'warn', notes: '6/12 EN · 4/12 ZH' },
+    { area: 'Tin tức (chi tiết)', vi: 'ok',   en: 'warn', zh: 'miss', notes: '4/12 EN · chưa dịch ZH' },
+    { area: 'Tuyển dụng',         vi: 'ok',   en: 'ok',   zh: 'ok',   notes: '24/24' },
+    { area: 'Footer & legal',     vi: 'ok',   en: 'ok',   zh: 'ok',   notes: '18/18' },
+  ];
+
+  function I18nManager() {
+    const [defaultLang, setDefaultLang] = React.useState('vi');
+    const [autoTr, setAutoTr] = React.useState(true);
+
+    const Header = (
+      <>
+        <button className="ad-btn">
+          <AdIcon name="download" size={13} /> Xuất file dịch (.po)
+        </button>
+        <button className="ad-btn primary">
+          <AdIcon name="plus" size={13} /> Thêm ngôn ngữ
+        </button>
+      </>
+    );
+
+    return (
+      <AdPage active="i18n"
+        crumb={[{ label: 'Trang chủ', href: 'index.html' }, { label: 'Ngôn ngữ' }]}
+        title="Ngôn ngữ"
+        sub="Quản lý các ngôn ngữ website hỗ trợ và tiến độ dịch"
+        actions={Header}>
+
+        <div className="i18-grid">
+          {/* MAIN — language list */}
+          <div>
+            <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--ad-text-mute)',
+                          letterSpacing: '.05em', textTransform: 'uppercase', marginBottom: 10 }}>
+              Ngôn ngữ trên site ({LANGS.filter(l => l.enabled).length}/{LANGS.length} đang bật)
+            </div>
+
+            {LANGS.map(l => {
+              const isDef = l.code === defaultLang;
+              const barClass = l.progress >= 80 ? '' : l.progress >= 40 ? 'warn' : 'danger';
+              return (
+                <div key={l.code} className={`i18-lang ${isDef ? 'default' : ''}`}>
+                  <span className="flag">{l.flag}</span>
+                  <div>
+                    <div className="name">
+                      {l.name}
+                      <span className="code">{l.code.toUpperCase()}</span>
+                      {isDef && (
+                        <span className="ad-badge pub" style={{ fontSize: 10 }}>
+                          <span className="dot" /> Mặc định
+                        </span>
+                      )}
+                    </div>
+                    <div className="sub">{l.sub}</div>
+                  </div>
+                  <div className="progress" style={{ textAlign: 'right' }}>
+                    {l.progress}% dịch
+                    <div className={`progress-bar ${barClass}`}>
+                      <div style={{ width: l.progress + '%' }} />
+                    </div>
+                  </div>
+                  <div className="actions">
+                    {!isDef && (
+                      <button className="ad-btn sm" onClick={() => setDefaultLang(l.code)}
+                              title="Đặt làm mặc định">
+                        <AdIcon name="star" size={13} />
+                      </button>
+                    )}
+                    <button className="ad-btn sm" title="Sửa chuỗi dịch">
+                      <AdIcon name="edit" size={13} />
+                    </button>
+                    <AdSwitch on={l.enabled} onChange={() => {}} />
+                  </div>
+                </div>
+              );
+            })}
+
+            <div style={{ marginTop: 28 }}>
+              <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--ad-text-mute)',
+                            letterSpacing: '.05em', textTransform: 'uppercase', marginBottom: 12 }}>
+                Tiến độ dịch theo khu vực
+              </div>
+              <table className="i18-cov-table">
+                <thead>
+                  <tr>
+                    <th>Khu vực</th>
+                    <th style={{ width: 80, textAlign: 'center' }}>🇻🇳 VI</th>
+                    <th style={{ width: 80, textAlign: 'center' }}>🇬🇧 EN</th>
+                    <th style={{ width: 80, textAlign: 'center' }}>🇨🇳 ZH</th>
+                    <th>Ghi chú</th>
+                    <th style={{ width: 40 }} />
+                  </tr>
+                </thead>
+                <tbody>
+                  {COVERAGE.map((row, i) => (
+                    <tr key={i}>
+                      <td><strong>{row.area}</strong></td>
+                      {['vi', 'en', 'zh'].map(k => (
+                        <td key={k} style={{ textAlign: 'center' }}>
+                          <span className={`pill ${row[k]}`}>
+                            {row[k] === 'ok' ? '✓' : row[k] === 'warn' ? '!' : '—'}
+                          </span>
+                        </td>
+                      ))}
+                      <td style={{ color: 'var(--ad-text-mute)', fontSize: 12.5 }}>{row.notes}</td>
+                      <td>
+                        <button className="ad-btn ghost sm" title="Sửa dịch">
+                          <AdIcon name="edit" size={13} />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* SIDE — options */}
+          <aside style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <div className="ad-card">
+              <div className="ad-card-head"><h3>Ngôn ngữ mặc định</h3></div>
+              <div style={{ padding: 14, display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {LANGS.filter(l => l.enabled).map(l => (
+                  <label key={l.code} style={{
+                    display: 'flex', alignItems: 'center', gap: 10, padding: '8px 10px',
+                    border: '1px solid var(--ad-line)', borderRadius: 6, cursor: 'pointer',
+                    fontSize: 13, fontWeight: 500,
+                    background: defaultLang === l.code ? 'var(--ad-primary-soft)' : '#fff',
+                    color: defaultLang === l.code ? 'var(--ad-primary)' : 'var(--ad-text-soft)',
+                  }}>
+                    <input type="radio" name="defaultLang"
+                           checked={defaultLang === l.code}
+                           onChange={() => setDefaultLang(l.code)} />
+                    <span style={{ fontSize: 16 }}>{l.flag}</span>
+                    {l.name}
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <div className="ad-card">
+              <div className="ad-card-head"><h3>Tự động dịch (AI)</h3></div>
+              <div style={{ padding: 14, display: 'flex', flexDirection: 'column', gap: 12, fontSize: 13 }}>
+                <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <span>Bật auto-translate</span>
+                  <AdSwitch on={autoTr} onChange={setAutoTr} />
+                </label>
+                <AdField label="Provider">
+                  <select className="ad-select" disabled={!autoTr}>
+                    <option>DeepL Pro</option>
+                    <option>Google Cloud Translation</option>
+                    <option>Azure Translator</option>
+                    <option>OpenAI GPT-4</option>
+                  </select>
+                </AdField>
+                <AdField label="API key" help="Ẩn để bảo mật">
+                  <input className="ad-input" type="password"
+                         defaultValue="••••••••••••••••" disabled={!autoTr} />
+                </AdField>
+                <div style={{ fontSize: 11.5, color: 'var(--ad-text-mute)' }}>
+                  Bản dịch tự động vẫn cần biên tập viên review trước khi xuất bản.
+                </div>
+              </div>
+            </div>
+
+            <div className="ad-card">
+              <div className="ad-card-head"><h3>URL ngôn ngữ</h3></div>
+              <div style={{ padding: 14, display: 'flex', flexDirection: 'column', gap: 10, fontSize: 12.5 }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <input type="radio" name="urlMode" defaultChecked /> Subdirectory
+                  <code style={{ background: 'var(--ad-line-soft)', padding: '2px 6px',
+                                  borderRadius: 4, marginLeft: 'auto' }}>/en/products</code>
+                </label>
+                <label style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <input type="radio" name="urlMode" /> Subdomain
+                  <code style={{ background: 'var(--ad-line-soft)', padding: '2px 6px',
+                                  borderRadius: 4, marginLeft: 'auto' }}>en.long-anh.com</code>
+                </label>
+                <label style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <input type="radio" name="urlMode" /> Query param
+                  <code style={{ background: 'var(--ad-line-soft)', padding: '2px 6px',
+                                  borderRadius: 4, marginLeft: 'auto' }}>?lang=en</code>
+                </label>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </AdPage>
+    );
+  }
+
+  ReactDOM.createRoot(document.getElementById('root')).render(<I18nManager />);
+</script>
+</body>
+</html>
