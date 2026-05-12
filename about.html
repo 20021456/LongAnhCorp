@@ -773,5 +773,206 @@ function App() {
 }
 ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
 </script>
+
+<!-- KS Long Anh Live Chat Widget -->
+<style>
+  #la-chat-fab{position:fixed;bottom:24px;right:24px;z-index:9998;width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#f97316,#ea580c);color:#fff;border:none;cursor:pointer;box-shadow:0 8px 24px rgba(249,115,22,.4),0 2px 8px rgba(0,0,0,.12);display:flex;align-items:center;justify-content:center;transition:transform .2s,box-shadow .2s;font-family:system-ui,-apple-system,sans-serif}
+  #la-chat-fab:hover{transform:scale(1.08);box-shadow:0 12px 32px rgba(249,115,22,.5)}
+  #la-chat-fab svg{width:28px;height:28px}
+  #la-chat-fab .la-chat-badge{position:absolute;top:-2px;right:-2px;width:18px;height:18px;border-radius:50%;background:#22c55e;border:2px solid #fff;animation:la-pulse 2s infinite}
+  @keyframes la-pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.15);opacity:.85}}
+  #la-chat-fab .la-chat-tip{position:absolute;right:72px;top:50%;transform:translateY(-50%);background:#0f172a;color:#fff;padding:8px 14px;border-radius:20px;font-size:13px;font-weight:500;white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,.15);opacity:0;pointer-events:none;transition:opacity .25s;font-family:system-ui,-apple-system,sans-serif}
+  #la-chat-fab .la-chat-tip::after{content:'';position:absolute;left:100%;top:50%;transform:translateY(-50%);border:6px solid transparent;border-left-color:#0f172a}
+  #la-chat-fab.show-tip .la-chat-tip{opacity:1}
+  #la-chat-panel{position:fixed;bottom:96px;right:24px;z-index:9999;width:360px;max-width:calc(100vw - 32px);height:540px;max-height:calc(100vh - 120px);background:#fff;border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.18),0 2px 8px rgba(0,0,0,.08);display:none;flex-direction:column;overflow:hidden;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;opacity:0;transform:translateY(20px);transition:opacity .25s,transform .25s}
+  #la-chat-panel.is-open{display:flex;opacity:1;transform:translateY(0)}
+  .la-chat-head{background:linear-gradient(135deg,#f97316,#ea580c);color:#fff;padding:18px 20px;display:flex;align-items:center;gap:12px;flex-shrink:0}
+  .la-chat-avatar{width:42px;height:42px;border-radius:50%;background:#fff;color:#ea580c;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;letter-spacing:.5px;flex-shrink:0}
+  .la-chat-title{flex:1;min-width:0}
+  .la-chat-title h4{margin:0;font-size:15px;font-weight:600;line-height:1.2}
+  .la-chat-title p{margin:2px 0 0;font-size:11.5px;opacity:.92;display:flex;align-items:center;gap:6px}
+  .la-chat-title p::before{content:'';width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 2px rgba(34,197,94,.35)}
+  .la-chat-close{background:rgba(255,255,255,.18);border:none;color:#fff;width:30px;height:30px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;line-height:1;transition:background .15s;flex-shrink:0}
+  .la-chat-close:hover{background:rgba(255,255,255,.3)}
+  .la-chat-body{flex:1;overflow-y:auto;padding:16px;background:#f8fafc;display:flex;flex-direction:column;gap:10px}
+  .la-chat-body::-webkit-scrollbar{width:6px}
+  .la-chat-body::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:3px}
+  .la-msg{max-width:80%;padding:10px 14px;border-radius:16px;font-size:13.5px;line-height:1.45;word-wrap:break-word;animation:la-in .25s ease}
+  @keyframes la-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  .la-msg.bot{background:#fff;color:#0f172a;border:1px solid #e2e8f0;align-self:flex-start;border-bottom-left-radius:4px}
+  .la-msg.user{background:#f97316;color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+  .la-msg .la-msg-time{display:block;font-size:10.5px;opacity:.6;margin-top:4px}
+  .la-quick{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+  .la-quick button{background:#fff;border:1px solid #fed7aa;color:#ea580c;padding:7px 12px;border-radius:14px;font-size:12px;cursor:pointer;font-family:inherit;transition:all .15s}
+  .la-quick button:hover{background:#fff7ed;border-color:#fdba74}
+  .la-channels{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:4px}
+  .la-channels a{display:flex;align-items:center;gap:8px;padding:10px;background:#fff;border:1px solid #e2e8f0;border-radius:10px;text-decoration:none;color:#0f172a;font-size:12.5px;font-weight:500;transition:all .15s}
+  .la-channels a:hover{border-color:#f97316;background:#fff7ed}
+  .la-channels a svg{width:18px;height:18px;flex-shrink:0}
+  .la-chat-input{display:flex;gap:8px;padding:12px;background:#fff;border-top:1px solid #e2e8f0;flex-shrink:0}
+  .la-chat-input textarea{flex:1;border:1px solid #e2e8f0;border-radius:18px;padding:9px 14px;font-size:13.5px;font-family:inherit;resize:none;outline:none;max-height:80px;min-height:38px;line-height:1.4;transition:border-color .15s}
+  .la-chat-input textarea:focus{border-color:#f97316}
+  .la-chat-send{width:38px;height:38px;border-radius:50%;background:#f97316;color:#fff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .15s}
+  .la-chat-send:hover{background:#ea580c}
+  .la-chat-send:disabled{background:#cbd5e1;cursor:not-allowed}
+  .la-chat-foot{padding:6px 12px;text-align:center;font-size:10.5px;color:#94a3b8;background:#fff;border-top:1px solid #f1f5f9}
+  @media (max-width:480px){
+    #la-chat-panel{right:8px;left:8px;width:auto;bottom:84px;height:calc(100vh - 100px)}
+    #la-chat-fab{bottom:16px;right:16px;width:54px;height:54px}
+  }
+</style>
+<button id="la-chat-fab" aria-label="Mở chat tư vấn">
+  <span class="la-chat-badge"></span>
+  <span class="la-chat-tip">Tư vấn ngay</span>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+</button>
+<div id="la-chat-panel" role="dialog" aria-label="Khung chat tư vấn">
+  <div class="la-chat-head">
+    <div class="la-chat-avatar">LA</div>
+    <div class="la-chat-title">
+      <h4>KS Long Anh</h4>
+      <p>Tư vấn trực tuyến • Sẵn sàng hỗ trợ</p>
+    </div>
+    <button class="la-chat-close" aria-label="Đóng">×</button>
+  </div>
+  <div class="la-chat-body" id="la-chat-body"></div>
+  <div class="la-chat-input">
+    <textarea id="la-chat-text" rows="1" placeholder="Nhập câu hỏi của bạn..."></textarea>
+    <button class="la-chat-send" id="la-chat-send" aria-label="Gửi">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+    </button>
+  </div>
+  <div class="la-chat-foot">Phản hồi trong vòng 5–15 phút (giờ làm việc)</div>
+</div>
+<script>
+(function(){
+  var EMAIL='info@kslonganh.com';
+  var PHONE='+84901234567';
+  var ZALO='https://zalo.me/0901234567';
+  var FB='https://facebook.com/kslonganh';
+
+  var fab=document.getElementById('la-chat-fab');
+  var panel=document.getElementById('la-chat-panel');
+  var closeBtn=panel.querySelector('.la-chat-close');
+  var body=document.getElementById('la-chat-body');
+  var input=document.getElementById('la-chat-text');
+  var sendBtn=document.getElementById('la-chat-send');
+
+  function time(){var d=new Date();return d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0')}
+
+  function addMsg(html,who){
+    var el=document.createElement('div');
+    el.className='la-msg '+(who||'bot');
+    el.innerHTML=html+'<span class="la-msg-time">'+time()+'</span>';
+    body.appendChild(el);
+    body.scrollTop=body.scrollHeight;
+    return el;
+  }
+
+  function addQuick(opts){
+    var wrap=document.createElement('div');
+    wrap.className='la-quick';
+    opts.forEach(function(o){
+      var b=document.createElement('button');
+      b.textContent=o.label;
+      b.onclick=function(){handleQuick(o.key,o.label)};
+      wrap.appendChild(b);
+    });
+    body.appendChild(wrap);
+    body.scrollTop=body.scrollHeight;
+  }
+
+  function addChannels(){
+    var wrap=document.createElement('div');
+    wrap.className='la-channels';
+    wrap.innerHTML=
+      '<a href="'+ZALO+'" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="#0068ff"><path d="M12 2C6.48 2 2 5.94 2 10.8c0 2.81 1.5 5.3 3.83 6.9-.18.6-.65 2.2-.74 2.55-.11.43.16.43.34.31.14-.09 2.23-1.52 3.13-2.13.79.15 1.6.22 2.44.22 5.52 0 10-3.94 10-8.8S17.52 2 12 2z"/></svg> Zalo</a>'+
+      '<a href="tel:'+PHONE+'"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg> Hotline</a>'+
+      '<a href="mailto:'+EMAIL+'"><svg viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> Email</a>'+
+      '<a href="'+FB+'" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="#1877f2"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"/></svg> Facebook</a>';
+    body.appendChild(wrap);
+    body.scrollTop=body.scrollHeight;
+  }
+
+  function handleQuick(key,label){
+    addMsg(label,'user');
+    setTimeout(function(){
+      if(key==='price'){
+        addMsg('Bảng giá thay đổi theo khối lượng và đặc tả kỹ thuật. Bạn vui lòng cho biết: <br>• Loại sản phẩm (Bột CaCO₃ / Đá ốp lát)<br>• Cỡ hạt / quy cách<br>• Khối lượng dự kiến<br>Hoặc gọi <b>0901 234 567</b> để nhận báo giá ngay.');
+      }else if(key==='sample'){
+        addMsg('Chúng tôi gửi mẫu MIỄN PHÍ trong nội địa. Bạn cho biết địa chỉ + loại mẫu cần thử, hoặc inbox Zalo <b>0901 234 567</b>.');
+      }else if(key==='product'){
+        addMsg('KS Long Anh có 2 dòng chính:<br>• <b>Bột đá CaCO₃</b> – siêu mịn, coated/uncoated, độ trắng ≥98%, cỡ hạt 3–20µm<br>• <b>Đá ốp lát tự nhiên</b> – slab, đá xẻ, đá chẻ, đá cuội<br>Xem chi tiết tại trang Sản phẩm.');
+      }else if(key==='contact'){
+        addChannels();
+      }else{
+        addMsg('Cảm ơn bạn! Đội kinh doanh sẽ phản hồi sớm nhất.');
+      }
+    },600);
+  }
+
+  function init(){
+    addMsg('Xin chào! 👋 Tôi là trợ lý của <b>KS Long Anh</b>. Bạn cần tư vấn gì hôm nay?');
+    setTimeout(function(){
+      addQuick([
+        {key:'price',label:'💰 Báo giá'},
+        {key:'sample',label:'📦 Yêu cầu mẫu'},
+        {key:'product',label:'🧱 Hỏi sản phẩm'},
+        {key:'contact',label:'☎ Liên hệ trực tiếp'}
+      ]);
+    },500);
+  }
+
+  var opened=false;
+  function open(){
+    panel.classList.add('is-open');
+    if(!opened){opened=true;init()}
+    setTimeout(function(){input.focus()},200);
+    try{sessionStorage.setItem('la_chat_opened','1')}catch(e){}
+  }
+  function close(){panel.classList.remove('is-open')}
+
+  fab.addEventListener('click',function(){
+    panel.classList.contains('is-open')?close():open();
+  });
+  closeBtn.addEventListener('click',close);
+
+  // Tooltip on first visit
+  try{
+    if(!sessionStorage.getItem('la_chat_opened')){
+      setTimeout(function(){fab.classList.add('show-tip')},1500);
+      setTimeout(function(){fab.classList.remove('show-tip')},6500);
+    }
+  }catch(e){}
+
+  function send(){
+    var msg=input.value.trim();
+    if(!msg)return;
+    addMsg(msg.replace(/[<>]/g,function(c){return c==='<'?'&lt;':'&gt;'}),'user');
+    input.value='';
+    input.style.height='auto';
+    setTimeout(function(){
+      addMsg('Cảm ơn bạn đã nhắn! Để được hỗ trợ nhanh nhất, vui lòng liên hệ qua:');
+      setTimeout(addChannels,400);
+      setTimeout(function(){
+        var subject=encodeURIComponent('Tư vấn từ website KS Long Anh');
+        var bodyTxt=encodeURIComponent('Câu hỏi: '+msg+'\\n\\nTên:\\nSố điện thoại:\\nCông ty:');
+        addMsg('Hoặc bạn có thể <a href="mailto:'+EMAIL+'?subject='+subject+'&body='+bodyTxt+'" style="color:#f97316;font-weight:600">gửi email với nội dung này</a>.');
+      },1000);
+    },700);
+  }
+
+  sendBtn.addEventListener('click',send);
+  input.addEventListener('keydown',function(e){
+    if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send()}
+  });
+  input.addEventListener('input',function(){
+    input.style.height='auto';
+    input.style.height=Math.min(input.scrollHeight,80)+'px';
+  });
+})();
+</script>
+<!-- /KS Long Anh Live Chat Widget -->
+
 </body>
 </html>
