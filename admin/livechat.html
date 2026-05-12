@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Hỗ trợ trực tiếp · Long Anh Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="admin-shell.jsx"></script>
+<script type="text/babel">
+  const style = document.createElement('style');
+  style.textContent = ADMIN_GLOBAL_CSS + `
+    .lc-layout { display:grid;
+          grid-template-columns: minmax(0, 1fr) minmax(0, 1.8fr) minmax(0, 0.95fr);
+          gap:0; background:#fff;
+          border:1px solid var(--ad-line); border-radius:10px;
+          overflow:hidden; height: calc(100vh - 200px); min-height:560px; }
+
+    /* ---- Conversation list (left) ---- */
+    .lc-list { min-width:0; border-right:1px solid var(--ad-line-soft);
+          display:flex; flex-direction:column; }
+    .lc-list-head { padding:12px 14px; border-bottom:1px solid var(--ad-line-soft);
+          display:flex; gap:8px; align-items:center; }
+    .lc-list-search { flex:1; height:32px; border:1px solid var(--ad-line);
+          background:var(--ad-bg); border-radius:6px; padding:0 12px 0 32px;
+          outline:none; font-size:13px; position:relative; }
+    .lc-list-search-wrap { flex:1; position:relative; }
+    .lc-list-search-wrap svg { position:absolute; left:10px; top:50%;
+          transform:translateY(-50%); color:var(--ad-text-mute); }
+    .lc-tabs { display:flex; gap:2px; padding:4px;
+          background:var(--ad-line-soft); border-radius:6px;
+          margin:10px 14px 0; font-size:12px; font-weight:500; }
+    .lc-tabs button { flex:1; border:0; padding:5px 8px; border-radius:4px;
+          background:transparent; cursor:pointer; color:var(--ad-text-soft);
+          font-size:12px; font-weight:500; }
+    .lc-tabs button.on { background:#fff; color:var(--ad-text);
+          box-shadow:var(--ad-shadow); }
+    .lc-rows { flex:1; overflow-y:auto; }
+    .lc-row { padding:13px 14px; border-bottom:1px solid var(--ad-line-soft);
+          cursor:pointer; display:flex; gap:11px; align-items:flex-start;
+          position:relative; }
+    .lc-row:hover { background:#FBFBFC; }
+    .lc-row.on { background:var(--ad-primary-soft);
+          border-left:3px solid var(--ad-primary); padding-left:11px; }
+    .lc-row .av-wrap { position:relative; flex:none; }
+    .lc-row .av { width:36px; height:36px; border-radius:50%;
+          background:var(--ad-primary); color:#fff; display:flex;
+          align-items:center; justify-content:center; font-weight:600;
+          font-size:13px; }
+    .lc-row .status-dot { position:absolute; right:-1px; bottom:-1px;
+          width:11px; height:11px; border-radius:50%;
+          border:2px solid #fff; background:var(--ad-text-mute); }
+    .lc-row .status-dot.online { background:var(--ad-success); }
+    .lc-row .status-dot.typing { background:var(--ad-warn); animation:lcPulse 1.4s infinite; }
+    @keyframes lcPulse { 0%, 100% { opacity:1; } 50% { opacity:.4; } }
+    .lc-row .body { flex:1; min-width:0; }
+    .lc-row .top { display:flex; justify-content:space-between; align-items:center;
+          margin-bottom:1px; }
+    .lc-row .name { font-weight:600; font-size:13.5px;
+          overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .lc-row .when { font-size:11px; color:var(--ad-text-mute); flex:none; padding-left:6px; }
+    .lc-row .preview { font-size:12.5px; color:var(--ad-text-soft);
+          overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .lc-row .meta { display:flex; gap:6px; align-items:center; margin-top:3px; }
+    .lc-row .chan { font-size:10px; padding:1px 6px; border-radius:99px;
+          background:var(--ad-line-soft); color:var(--ad-text-soft); font-weight:500; }
+    .lc-row .chan.web   { background:#E8F0FB; color:#1D4ED8; }
+    .lc-row .chan.zalo  { background:#DBEAFE; color:#1D4ED8; }
+    .lc-row .chan.fb    { background:#EFE7FC; color:#6D28D9; }
+    .lc-row .chan.email { background:#FEF3C7; color:#A16207; }
+    .lc-row .unread { position:absolute; right:14px; top:50%;
+          transform:translateY(-50%); background:var(--ad-accent);
+          color:#fff; font-size:10px; font-weight:700; padding:1px 7px;
+          border-radius:99px; }
+
+    /* ---- Active chat (middle) ---- */
+    .lc-chat { min-width:0; display:flex; flex-direction:column;
+          border-right:1px solid var(--ad-line-soft); }
+    .lc-chat-head { padding:12px 18px; border-bottom:1px solid var(--ad-line-soft);
+          display:flex; align-items:center; gap:12px; }
+    .lc-chat-head .av { width:36px; height:36px; border-radius:50%;
+          background:var(--ad-primary); color:#fff; display:flex;
+          align-items:center; justify-content:center; font-weight:600; font-size:13px; }
+    .lc-chat-head .info { flex:1; min-width:0; }
+    .lc-chat-head .info .n { font-weight:600; font-size:14.5px; }
+    .lc-chat-head .info .s { font-size:11.5px; color:var(--ad-text-mute); }
+    .lc-chat-head .actions { display:flex; gap:4px; }
+    .lc-chat-head .actions button { border:0; background:transparent;
+          color:var(--ad-text-mute); cursor:pointer; width:32px; height:32px;
+          border-radius:6px; display:flex; align-items:center; justify-content:center; }
+    .lc-chat-head .actions button:hover { background:var(--ad-line-soft);
+          color:var(--ad-text); }
+
+    .lc-msgs { flex:1; overflow-y:auto; padding:18px 22px;
+          background:#FAFAFB; display:flex; flex-direction:column; gap:8px; }
+    .lc-day { text-align:center; font-size:11px; color:var(--ad-text-mute);
+          margin:8px 0 4px; }
+    .lc-msg { max-width:65%; padding:9px 13px; border-radius:14px;
+          font-size:13.5px; line-height:1.5; white-space:pre-wrap;
+          overflow-wrap:anywhere; }
+    .lc-msg.them { background:#fff; border:1px solid var(--ad-line);
+          border-top-left-radius:4px; align-self:flex-start; color:var(--ad-text); }
+    .lc-msg.me { background:var(--ad-primary); color:#fff;
+          border-top-right-radius:4px; align-self:flex-end; }
+    .lc-msg.bot { background:var(--ad-warn-soft); color:#92400E;
+          border:1px solid #FDE68A; align-self:flex-start;
+          border-top-left-radius:4px; font-size:13px; }
+    .lc-msg-time { font-size:10.5px; color:var(--ad-text-mute);
+          margin: -2px 0 6px; }
+    .lc-msg-time.them { align-self:flex-start; }
+    .lc-msg-time.me { align-self:flex-end; }
+    .lc-typing { align-self:flex-start; padding:9px 14px;
+          background:#fff; border:1px solid var(--ad-line);
+          border-radius:14px; border-top-left-radius:4px;
+          display:flex; gap:4px; }
+    .lc-typing span { width:6px; height:6px; border-radius:50%;
+          background:var(--ad-text-mute); animation:lcBounce 1.2s infinite; }
+    .lc-typing span:nth-child(2) { animation-delay:.2s; }
+    .lc-typing span:nth-child(3) { animation-delay:.4s; }
+    @keyframes lcBounce { 0%, 100% { opacity:.3; transform:translateY(0); }
+                          50% { opacity:1; transform:translateY(-3px); } }
+
+    .lc-templates { padding:8px 18px; border-top:1px solid var(--ad-line-soft);
+          background:#fff; display:flex; gap:6px; flex-wrap:wrap;
+          align-items:center; }
+    .lc-templates .lbl { font-size:11px; color:var(--ad-text-mute);
+          font-weight:600; letter-spacing:.04em; text-transform:uppercase;
+          margin-right:4px; }
+    .lc-template { font-size:12px; padding:5px 10px; border-radius:99px;
+          background:var(--ad-line-soft); color:var(--ad-text-soft);
+          border:0; cursor:pointer; }
+    .lc-template:hover { background:var(--ad-primary-soft); color:var(--ad-primary); }
+
+    .lc-input { padding:12px 18px; border-top:1px solid var(--ad-line-soft);
+          background:#fff; display:flex; gap:10px; align-items:flex-end; }
+    .lc-input textarea { flex:1; min-height:38px; max-height:120px;
+          border:1px solid var(--ad-line); border-radius:8px;
+          padding:9px 12px; outline:none; resize:none; font-size:13.5px;
+          line-height:1.5; }
+    .lc-input textarea:focus { border-color:var(--ad-primary);
+          box-shadow:0 0 0 3px var(--ad-primary-soft); }
+    .lc-input .tools { display:flex; gap:2px; padding-bottom:4px; }
+    .lc-input .tools button { width:32px; height:32px; border:0;
+          background:transparent; cursor:pointer; color:var(--ad-text-mute);
+          border-radius:6px; display:flex; align-items:center; justify-content:center; }
+    .lc-input .tools button:hover { background:var(--ad-line-soft);
+          color:var(--ad-text); }
+
+    /* ---- Customer info (right) ---- */
+    .lc-side { min-width:0; padding:16px; overflow-y:auto; background:#FCFCFD; }
+    .lc-side .av-big { width:60px; height:60px; border-radius:50%;
+          background:var(--ad-primary); color:#fff; display:flex;
+          align-items:center; justify-content:center; font-weight:700;
+          font-size:20px; margin: 4px auto 10px; }
+    .lc-side .name-big { text-align:center; font-weight:600; font-size:15px; }
+    .lc-side .role-big { text-align:center; font-size:12px; color:var(--ad-text-mute);
+          margin-bottom:14px; }
+    .lc-card { background:#fff; border:1px solid var(--ad-line);
+          border-radius:8px; margin-bottom:12px; }
+    .lc-card-head { padding:10px 12px; font-size:11px; font-weight:600;
+          color:var(--ad-text-mute); letter-spacing:.05em;
+          text-transform:uppercase; border-bottom:1px solid var(--ad-line-soft); }
+    .lc-card-body { padding:10px 12px; font-size:12.5px; }
+    .lc-card-body .kv { display:flex; gap:6px; margin-bottom:6px;
+          align-items:center; }
+    .lc-card-body .kv:last-child { margin-bottom:0; }
+    .lc-card-body .kv .key { color:var(--ad-text-mute); flex:none;
+          min-width:62px; }
+    .lc-card-body .kv .val { color:var(--ad-text); font-weight:500;
+          overflow:hidden; text-overflow:ellipsis; }
+
+    .lc-actions { display:grid; grid-template-columns:1fr 1fr; gap:6px;
+          margin-bottom:12px; }
+    .lc-actions button { padding:8px; font-size:12px; border:1px solid var(--ad-line);
+          background:#fff; border-radius:6px; cursor:pointer;
+          color:var(--ad-text-soft); display:flex; align-items:center;
+          gap:6px; justify-content:center; }
+    .lc-actions button:hover { background:var(--ad-line-soft); color:var(--ad-text); }
+    .lc-actions button.full { grid-column: 1 / -1; }
+
+    .lc-tag { display:inline-block; padding:2px 8px; border-radius:99px;
+          background:var(--ad-line-soft); color:var(--ad-text-soft);
+          font-size:11px; font-weight:500; margin:0 4px 4px 0; }
+
+    @media (max-width: 1100px) {
+      .lc-layout { grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr); }
+      .lc-side { display:none; }
+    }
+    @media (max-width: 760px) {
+      .lc-layout { grid-template-columns: 1fr; height:auto; }
+      .lc-list { max-height:280px; border-right:0;
+            border-bottom:1px solid var(--ad-line); }
+    }
+  `;
+  document.head.appendChild(style);
+
+  /* Mock data */
+  const CONVERSATIONS = [
+    { id: 1, name: 'Trần Quốc Bảo',  company: 'CT Polymers',     av: 'TB',
+      status: 'online', chan: 'web', unread: 3, when: '14:32',
+      last: 'Bên mình cần 100 tấn CCR-T1 cho lô tháng 6, mong sớm có báo giá',
+      email: 'baotq@ctpolymers.vn', phone: '0912 345 678',
+      country: 'Việt Nam · TP.HCM', firstSeen: 'Hôm nay · 14:08',
+      pageViews: 12, conversations: 2,
+      tags: ['Khách tiềm năng', 'Compound nhựa', 'CCR-T1'] },
+    { id: 2, name: 'Mai Linh',        company: 'ABC Paint Vina',  av: 'ML',
+      status: 'typing', chan: 'zalo', unread: 1, when: '14:18',
+      last: 'Đang gõ…',
+      email: 'mailinh@abcpaint.vn', phone: '0987 654 321',
+      country: 'Việt Nam · Hà Nội', firstSeen: '03/05/2026',
+      pageViews: 28, conversations: 5,
+      tags: ['Khách hàng cũ', 'Sơn nước'] },
+    { id: 3, name: 'James Wilson',    company: 'KSE Korea Co.',   av: 'JW',
+      status: 'online', chan: 'web', unread: 0, when: '13:55',
+      last: 'Thanks, let me check with the team and reply tomorrow.',
+      email: 'james@kse-korea.com', phone: '+82 10 1234 5678',
+      country: 'South Korea · Seoul', firstSeen: '12/04/2026',
+      pageViews: 56, conversations: 9,
+      tags: ['Đối tác xuất khẩu', 'Export', 'Korea'] },
+    { id: 4, name: 'Phạm Hùng',       company: 'Sơn Việt JSC',    av: 'PH',
+      status: 'offline', chan: 'fb', unread: 0, when: '11:40',
+      last: 'Cảm ơn team đã hỗ trợ. Mình confirm đơn hôm nay.',
+      email: 'hungpham@sonviet.com', phone: '0934 567 890',
+      country: 'Việt Nam · Đà Nẵng', firstSeen: '20/03/2026',
+      pageViews: 41, conversations: 12,
+      tags: ['Khách hàng cũ', 'Đại lý'] },
+    { id: 5, name: 'Khách webchat',   company: 'Ẩn danh',         av: '?',
+      status: 'online', chan: 'web', unread: 2, when: '10:30',
+      last: 'Cho mình hỏi giá đá Slab 1.6×2.4m loại 18mm ạ?',
+      email: '—', phone: '—',
+      country: 'Việt Nam · Hà Nội',
+      firstSeen: 'Hôm nay · 10:18',
+      pageViews: 3, conversations: 1,
+      tags: ['Chưa định danh', 'Đá Slab'] },
+    { id: 6, name: 'Mohammed Ali',    company: 'Gulf Plastics',   av: 'MA',
+      status: 'offline', chan: 'email', unread: 0, when: '09:12',
+      last: 'Please send COA for batch #4582.',
+      email: 'mohammed@gulfplastics.ae', phone: '+971 50 123 4567',
+      country: 'UAE · Dubai', firstSeen: '02/01/2026',
+      pageViews: 22, conversations: 7,
+      tags: ['Export', 'UAE', 'COA'] },
+  ];
+
+  const TEMPLATES = [
+    'Cảm ơn anh/chị đã liên hệ. Em là tư vấn viên Long Anh, em hỗ trợ ngay ạ.',
+    'Em đã forward yêu cầu cho phòng kinh doanh. ETA phản hồi trong 4h làm việc ạ.',
+    'Anh/chị vui lòng cho em xin: số lượng, cỡ hạt mong muốn và cảng đến để báo giá chính xác.',
+    'Em gửi anh/chị file COA và MSDS qua email trong ít phút nữa ạ.',
+  ];
+
+  /* Thread per conversation. Time-sorted oldest -> newest. */
+  const THREADS = {
+    1: [
+      { who: 'bot',  text: '👋 Khách mới truy cập trang /products.html và bắt đầu cuộc trò chuyện.', when: '14:08' },
+      { who: 'them', text: 'Chào team, mình quan tâm dòng bột phủ Stearic CCR-T1.', when: '14:09' },
+      { who: 'them', text: 'Có thể cho mình xin báo giá 100 tấn không ạ?', when: '14:09' },
+      { who: 'me',   text: 'Chào anh Bảo, cảm ơn anh đã liên hệ Long Anh.\nAnh cho em xin thêm: cỡ hạt mong muốn (3 / 5 / 10 µm…) và cảng nhận ạ?', when: '14:14' },
+      { who: 'them', text: 'Cỡ hạt 5 µm, giao tại kho HCM mỗi tháng.', when: '14:18' },
+      { who: 'them', text: 'Hợp đồng có thể ký dài hạn 6 tháng.', when: '14:18' },
+      { who: 'me',   text: 'Vâng em ghi nhận. Em forward báo giá FOB + giá DAP HCM cho anh trong vòng 2h ạ.', when: '14:25' },
+      { who: 'them', text: 'Bên mình cần 100 tấn CCR-T1 cho lô tháng 6, mong sớm có báo giá', when: '14:32' },
+    ],
+    2: [
+      { who: 'them', text: 'Mình bên ABC Paint, vẫn đang chờ COA lô #4521 ạ.', when: '14:00' },
+      { who: 'me',   text: 'Dạ em kiểm tra lại với phòng QC giúp chị ngay ạ.', when: '14:05' },
+      { who: 'them', text: 'Đang gõ…', when: '14:18' },
+    ],
+    3: [
+      { who: 'them', text: 'Hi, do you have FOB pricing for 200 tons of stearic-coated CaCO₃, 5 µm?', when: '13:30' },
+      { who: 'me',   text: 'Hi James, yes — let me prepare a quote with current shipping rates to Busan.', when: '13:35' },
+      { who: 'them', text: 'Thanks, let me check with the team and reply tomorrow.', when: '13:55' },
+    ],
+    4: [
+      { who: 'them', text: 'Bên Long Anh báo giá đá xẻ giúp mình với, lô 500m² nhé.', when: '10:15' },
+      { who: 'me',   text: 'Em gửi báo giá kèm spec rồi anh check mail giúp em ạ.', when: '10:45' },
+      { who: 'them', text: 'Cảm ơn team đã hỗ trợ. Mình confirm đơn hôm nay.', when: '11:40' },
+    ],
+    5: [
+      { who: 'bot',  text: '👋 Khách webchat ẩn danh, đang xem trang /products.html', when: '10:18' },
+      { who: 'them', text: 'Cho mình hỏi giá đá Slab 1.6×2.4m loại 18mm ạ?', when: '10:25' },
+      { who: 'them', text: 'Cảm ơn!', when: '10:30' },
+    ],
+    6: [
+      { who: 'them', text: 'Please send COA for batch #4582.', when: '09:12' },
+    ],
+  };
+
+  function LiveChat() {
+    const [tab,    setTab]    = React.useState('all');
+    const [selId,  setSelId]  = React.useState(1);
+    const [search, setSearch] = React.useState('');
+    const [draft,  setDraft]  = React.useState('');
+    const [online, setOnline] = React.useState(true);
+    const msgsRef = React.useRef(null);
+
+    /* Auto-scroll to bottom when switching conversation */
+    React.useEffect(() => {
+      if (msgsRef.current) msgsRef.current.scrollTop = msgsRef.current.scrollHeight;
+    }, [selId]);
+
+    const filtered = CONVERSATIONS
+      .filter(c => tab === 'all'
+                || (tab === 'unread' && c.unread > 0)
+                || (tab === 'open'   && c.status !== 'offline')
+                || (tab === 'closed' && c.status === 'offline'))
+      .filter(c => !search
+                || c.name.toLowerCase().includes(search.toLowerCase())
+                || (c.company || '').toLowerCase().includes(search.toLowerCase()));
+
+    const sel = CONVERSATIONS.find(c => c.id === selId) || CONVERSATIONS[0];
+    const thread = THREADS[sel.id] || [];
+    const totalUnread = CONVERSATIONS.reduce((s, c) => s + c.unread, 0);
+    const openCount = CONVERSATIONS.filter(c => c.status !== 'offline').length;
+
+    function sendMsg() {
+      if (!draft.trim()) return;
+      thread.push({ who: 'me', text: draft, when: '14:35' });
+      setDraft('');
+      setTimeout(() => { if (msgsRef.current) msgsRef.current.scrollTop = msgsRef.current.scrollHeight; }, 30);
+    }
+    function fillTemplate(t) { setDraft(d => d ? d + ' ' + t : t); }
+
+    const Header = (
+      <>
+        <label style={{ display: 'flex', alignItems: 'center', gap: 8,
+                        fontSize: 13, padding: '6px 12px',
+                        border: '1px solid var(--ad-line)', borderRadius: 6,
+                        background: online ? 'var(--ad-success-soft)' : '#fff',
+                        color: online ? '#15803D' : 'var(--ad-text-soft)' }}>
+          <span style={{
+            width: 8, height: 8, borderRadius: '50%',
+            background: online ? 'var(--ad-success)' : 'var(--ad-text-mute)',
+          }} />
+          {online ? 'Đang trực tuyến' : 'Đang offline'}
+          <AdSwitch on={online} onChange={setOnline} />
+        </label>
+        <button className="ad-btn">
+          <AdIcon name="download" size={13} /> Xuất chat log
+        </button>
+        <button className="ad-btn primary">
+          <AdIcon name="plus" size={13} /> Tạo ticket
+        </button>
+      </>
+    );
+
+    return (
+      <AdPage active="livechat" full
+        crumb={[{ label: 'Trang chủ', href: 'index.html' }, { label: 'Hỗ trợ trực tiếp' }]}
+        title="Hỗ trợ trực tiếp"
+        sub={`${openCount} đang mở · ${totalUnread} tin chưa đọc · trung bình phản hồi 4 phút`}
+        actions={Header}>
+
+        <div className="lc-layout">
+          {/* LEFT — Conversation list */}
+          <div className="lc-list">
+            <div className="lc-list-head">
+              <div className="lc-list-search-wrap">
+                <AdIcon name="search" size={14} />
+                <input className="lc-list-search" style={{ width: '100%' }}
+                       placeholder="Tìm theo tên, công ty…"
+                       value={search} onChange={e => setSearch(e.target.value)} />
+              </div>
+            </div>
+            <div className="lc-tabs">
+              {[
+                ['all',    `Tất cả ${CONVERSATIONS.length}`],
+                ['unread', `Chưa đọc ${totalUnread}`],
+                ['open',   `Đang mở ${openCount}`],
+                ['closed', 'Đã đóng'],
+              ].map(([k, l]) => (
+                <button key={k} onClick={() => setTab(k)}
+                        className={tab === k ? 'on' : ''}>{l}</button>
+              ))}
+            </div>
+            <div className="lc-rows">
+              {filtered.map(c => (
+                <div key={c.id} className={`lc-row ${c.id === selId ? 'on' : ''}`}
+                     onClick={() => setSelId(c.id)}>
+                  <div className="av-wrap">
+                    <div className="av">{c.av}</div>
+                    <span className={`status-dot ${c.status}`} />
+                  </div>
+                  <div className="body">
+                    <div className="top">
+                      <span className="name">{c.name}</span>
+                      <span className="when">{c.when}</span>
+                    </div>
+                    <div className="preview">{c.last}</div>
+                    <div className="meta">
+                      <span className={`chan ${c.chan}`}>
+                        {({web: 'Webchat', zalo: 'Zalo', fb: 'Facebook', email: 'Email'})[c.chan]}
+                      </span>
+                      <span style={{ fontSize: 11, color: 'var(--ad-text-mute)',
+                                     overflow: 'hidden', textOverflow: 'ellipsis',
+                                     whiteSpace: 'nowrap' }}>{c.company}</span>
+                    </div>
+                  </div>
+                  {c.unread > 0 && <span className="unread">{c.unread}</span>}
+                </div>
+              ))}
+              {filtered.length === 0 && (
+                <div style={{ padding: 32, textAlign: 'center', color: 'var(--ad-text-mute)', fontSize: 13 }}>
+                  Không có cuộc trò chuyện nào phù hợp.
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* MIDDLE — Active chat thread */}
+          <div className="lc-chat">
+            <div className="lc-chat-head">
+              <div className="av-wrap" style={{ position: 'relative' }}>
+                <div className="av">{sel.av}</div>
+                <span className={`status-dot ${sel.status}`}
+                      style={{ position: 'absolute', right: -1, bottom: -1,
+                               width: 11, height: 11, borderRadius: '50%',
+                               border: '2px solid #fff',
+                               background: sel.status === 'online' ? 'var(--ad-success)'
+                                         : sel.status === 'typing' ? 'var(--ad-warn)'
+                                         : 'var(--ad-text-mute)' }} />
+              </div>
+              <div className="info">
+                <div className="n">{sel.name}</div>
+                <div className="s">
+                  {sel.status === 'online' ? 'Đang trực tuyến'
+                   : sel.status === 'typing' ? 'Đang nhập tin…'
+                   : 'Offline · hoạt động cuối ' + sel.when} · {sel.company}
+                </div>
+              </div>
+              <div className="actions">
+                <button title="Gọi"><AdIcon name="bell" size={16} /></button>
+                <button title="Gửi email"><AdIcon name="mail" size={16} /></button>
+                <button title="Chuyển nhân viên khác"><AdIcon name="users" size={16} /></button>
+                <button title="Thêm"><AdIcon name="more" size={16} /></button>
+              </div>
+            </div>
+
+            <div className="lc-msgs" ref={msgsRef}>
+              <div className="lc-day">Hôm nay</div>
+              {thread.map((m, i) => (
+                <React.Fragment key={i}>
+                  <div className={`lc-msg ${m.who}`}>{m.text}</div>
+                  <div className={`lc-msg-time ${m.who}`}>{m.when}</div>
+                </React.Fragment>
+              ))}
+              {sel.status === 'typing' && (
+                <div className="lc-typing"><span /><span /><span /></div>
+              )}
+            </div>
+
+            <div className="lc-templates">
+              <span className="lbl">Mẫu trả lời:</span>
+              {TEMPLATES.map((t, i) => (
+                <button key={i} className="lc-template" onClick={() => fillTemplate(t)}
+                        title={t}>
+                  {t.length > 38 ? t.slice(0, 38) + '…' : t}
+                </button>
+              ))}
+            </div>
+
+            <div className="lc-input">
+              <div className="tools">
+                <button title="Đính kèm tệp"><AdIcon name="upload" size={17} /></button>
+                <button title="Gửi ảnh"><AdIcon name="image" size={17} /></button>
+                <button title="Liên kết"><AdIcon name="link" size={17} /></button>
+                <button title="Emoji" style={{ fontSize: 16 }}>😊</button>
+              </div>
+              <textarea placeholder="Nhập tin nhắn… (Enter để gửi, Shift+Enter để xuống dòng)"
+                        value={draft}
+                        onChange={e => setDraft(e.target.value)}
+                        onKeyDown={e => {
+                          if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMsg(); }
+                        }} />
+              <button className="ad-btn primary" onClick={sendMsg} disabled={!draft.trim()}>
+                <AdIcon name="arrowRight" size={14} /> Gửi
+              </button>
+            </div>
+          </div>
+
+          {/* RIGHT — Customer info */}
+          <aside className="lc-side">
+            <div className="av-big">{sel.av}</div>
+            <div className="name-big">{sel.name}</div>
+            <div className="role-big">{sel.company}</div>
+
+            <div className="lc-actions">
+              <button><AdIcon name="check" size={13} /> Đã xử lý</button>
+              <button><AdIcon name="star" size={13} /> Ghim</button>
+              <button className="full"><AdIcon name="mail" size={13} /> Tạo phiếu liên hệ trong CRM</button>
+            </div>
+
+            <div className="lc-card">
+              <div className="lc-card-head">Thông tin liên hệ</div>
+              <div className="lc-card-body">
+                <div className="kv"><span className="key">Email</span><span className="val">{sel.email}</span></div>
+                <div className="kv"><span className="key">SĐT</span>  <span className="val">{sel.phone}</span></div>
+                <div className="kv"><span className="key">Khu vực</span><span className="val">{sel.country}</span></div>
+              </div>
+            </div>
+
+            <div className="lc-card">
+              <div className="lc-card-head">Hành trình khách</div>
+              <div className="lc-card-body">
+                <div className="kv"><span className="key">Lần đầu</span><span className="val">{sel.firstSeen}</span></div>
+                <div className="kv"><span className="key">Page views</span><span className="val">{sel.pageViews}</span></div>
+                <div className="kv"><span className="key">Số chat</span><span className="val">{sel.conversations} cuộc</span></div>
+              </div>
+            </div>
+
+            <div className="lc-card">
+              <div className="lc-card-head">Tag</div>
+              <div className="lc-card-body">
+                {sel.tags.map(t => <span key={t} className="lc-tag">{t}</span>)}
+                <button style={{ fontSize: 11, padding: '2px 8px', borderRadius: 99,
+                                  border: '1px dashed var(--ad-line)',
+                                  background: 'transparent', color: 'var(--ad-text-mute)',
+                                  cursor: 'pointer', marginLeft: 4 }}>
+                  + Thêm tag
+                </button>
+              </div>
+            </div>
+
+            <div className="lc-card">
+              <div className="lc-card-head">Ghi chú nội bộ</div>
+              <div className="lc-card-body">
+                <textarea
+                  placeholder="Note để team biết tình trạng khách…"
+                  defaultValue={sel.id === 1 ? 'Khách hỏi 5 µm, hợp đồng 6 tháng. Đã forward cho a. Hùng — KD.' : ''}
+                  style={{ width: '100%', minHeight: 64, fontSize: 12.5,
+                            border: '1px solid var(--ad-line)', borderRadius: 6,
+                            padding: '8px 10px', resize: 'vertical', outline: 'none' }} />
+              </div>
+            </div>
+          </aside>
+        </div>
+      </AdPage>
+    );
+  }
+
+  ReactDOM.createRoot(document.getElementById('root')).render(<LiveChat />);
+</script>
+</body>
+</html>

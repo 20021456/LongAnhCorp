@@ -17,7 +17,7 @@ const AD_USERS = {
     name: 'Quý Đỗm',
     initials: 'QD',
     role: 'Biên tập viên',
-    allow: ['news', 'products', 'contacts', 'subscribers'],
+    allow: ['news', 'products', 'contacts', 'subscribers', 'livechat'],
   },
 };
 
@@ -38,9 +38,9 @@ function adCanAccess(itemId) {
 /* Each sidebar item id → file it links to. Used for the default-landing redirect. */
 const AD_ID_TO_HREF = {
   dashboard: 'index.html', pages: 'pages.html', news: 'news.html',
-  products: 'products.html', categories: '#', gallery: 'media.html',
-  team: '#', testimonials: '#', faq: '#',
+  products: 'products.html', gallery: 'media.html',
   settings: 'settings.html', menu: '#', i18n: '#', seo: '#',
+  livechat: 'livechat.html',
   contacts: 'contacts.html', subscribers: '#',
   roles: 'roles.html',
 };
@@ -68,6 +68,7 @@ function adCurrentPageId() {
   if (path === 'news.html')                    return 'news';
   if (path === 'news-edit.html')               return 'news';
   if (path === 'contacts.html')                return 'contacts';
+  if (path === 'livechat.html')                return 'livechat';
   if (path === 'media.html')                   return 'gallery';
   if (path === 'roles.html')                   return 'roles';
   if (path === 'settings.html')                return 'settings';
@@ -415,17 +416,14 @@ function AdSidebar({ active = 'dashboard' }) {
     { type: 'item', id: 'pages', label: 'Trang', icon: 'file', href: 'pages.html' },
     { type: 'item', id: 'news', label: 'Tin tức', icon: 'news', href: 'news.html' },
     { type: 'item', id: 'products', label: 'Sản phẩm', icon: 'rock', href: 'products.html' },
-    { type: 'item', id: 'categories', label: 'Danh mục', icon: 'folder', href: '#' },
     { type: 'item', id: 'gallery', label: 'Gallery', icon: 'image', href: 'media.html' },
-    { type: 'item', id: 'team', label: 'Đội ngũ', icon: 'users', href: '#' },
-    { type: 'item', id: 'testimonials', label: 'Testimonials', icon: 'chat', href: '#' },
-    { type: 'item', id: 'faq', label: 'FAQ', icon: 'help', href: '#' },
     { type: 'sec', label: 'Cấu hình' },
     { type: 'item', id: 'settings', label: 'Cài đặt site', icon: 'settings', href: 'settings.html' },
     { type: 'item', id: 'menu', label: 'Menu navigation', icon: 'nav', href: '#' },
     { type: 'item', id: 'i18n', label: 'Ngôn ngữ', icon: 'globe', href: '#' },
     { type: 'item', id: 'seo', label: 'SEO mặc định', icon: 'seo', href: '#' },
     { type: 'sec', label: 'Tương tác' },
+    { type: 'item', id: 'livechat', label: 'Hỗ trợ trực tiếp', icon: 'chat', href: 'livechat.html', badge: '3' },
     { type: 'item', id: 'contacts', label: 'Liên hệ', icon: 'mail', href: 'contacts.html', badge: '5' },
     { type: 'item', id: 'subscribers', label: 'Đăng ký nhận tin', icon: 'bell', href: '#' },
     { type: 'sec', label: 'Hệ thống' },
