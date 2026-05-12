@@ -1029,14 +1029,13 @@ function ProductDetailPage({ tweaks, code }) {
             <Icon name="chevron" size={12}/>
             <a href="products.html">{C.products}</a>
             <Icon name="chevron" size={12}/>
-            <span className="now">{product.code} · {productName}</span>
+            <span className="now">{productName}</span>
           </nav>
 
           <div className="pd-hero-grid" style={{marginTop:24}}>
             <div className="pd-gallery">
               <div className="pd-gallery-main">
                 <img src={product.images[activeImg]} alt={productName} key={activeImg}/>
-                <div className="pd-gallery-badge">{product.code}</div>
                 <div className="pd-gallery-cat">{categoryName}</div>
               </div>
               <div className="pd-gallery-thumbs">
@@ -1051,7 +1050,6 @@ function ProductDetailPage({ tweaks, code }) {
 
             <div className="pd-info">
               <div className="pd-info-meta">
-                <span className="pd-info-meta-chip brand">{product.code}</span>
                 <span className="pd-info-meta-chip cat">{categoryName}</span>
                 <span className="pd-info-meta-chip stock">
                   <Icon name="check" size={11}/> {C.inStock}
@@ -1182,9 +1180,7 @@ function ProductDetailPage({ tweaks, code }) {
                 {productName}
               </div>
               <div style={{fontSize:14,opacity:.65,lineHeight:1.7,marginBottom:24}}>
-                {C.code}: <b style={{color:'var(--brand-primary,#0F3D7A)',
-                  fontFamily:'ui-monospace,Menlo,monospace'}}>{product.code}</b>
-                <br/>{C.category}: <b>{categoryName}</b>
+                {C.category}: <b>{categoryName}</b>
                 <br/>{C.moq}: <b>{product.moq[t.lang]}</b>
                 <br/>{C.leadTime}: <b>{product.leadTime[t.lang]}</b>
               </div>
@@ -1267,9 +1263,9 @@ function ProductDetailPage({ tweaks, code }) {
                    textTransform:'uppercase',color:'var(--brand-accent,#F08023)',marginBottom:14}}>
                 {t.lang==='vi'?'Yêu cầu báo giá':t.lang==='zh'?'请求报价':'Request a quote'}
               </div>
-              <h2>{t.lang==='vi'?`Cần báo giá ${product.code} cho lô hàng tiếp theo?`
-                    :t.lang==='zh'?`需要 ${product.code} 的下次发货报价?`
-                    :`Need a ${product.code} quote for your next shipment?`}</h2>
+              <h2>{t.lang==='vi'?`Cần báo giá ${productName} cho lô hàng tiếp theo?`
+                    :t.lang==='zh'?`需要 ${productName} 的下次发货报价?`
+                    :`Need a ${productName} quote for your next shipment?`}</h2>
               <p style={{marginTop:14}}>{t.lang==='vi'
                 ?'Gửi yêu cầu kèm số lượng và cảng đến — chúng tôi phản hồi trong 24h làm việc với spec sheet, COA và FOB pricing.'
                 :t.lang==='zh'

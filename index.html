@@ -1747,7 +1747,7 @@
               <div style={{ marginBottom: 14 }}>
                 <select className="va-input">
                   <option>{t.lang === 'zh' ? '感兴趣的产品' : t.lang === 'en' ? 'Product of interest' : 'Sản phẩm quan tâm'}</option>
-                  {C.products.map((p, i) => <option key={i}>{p.code} · {p.name}</option>)}
+                  {C.products.map((p, i) => <option key={i}>{p.name}</option>)}
                 </select>
               </div>
               <textarea className="va-input" placeholder={t.lang === 'zh' ? '需求详情(数量、规格、目的港...)' : t.lang === 'en' ? 'Your request (quantity, spec, destination port...)' : 'Nội dung yêu cầu (số lượng, quy cách, cảng đến...)'} />
