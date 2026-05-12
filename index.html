@@ -832,7 +832,8 @@
     const prev = () => setStart((start - 1 + n) % n);
 
     const Card = ({ p, i, isActive }) =>
-      <article className={'la-cc ' + (isActive ? 'is-active' : '')}
+      <a href={'product.html?code='+p.code} className={'la-cc ' + (isActive ? 'is-active' : '')}
+        style={{textDecoration:'none', color:'inherit', display:'block'}}
         onMouseEnter={() => { setHovering(true); setActiveIdx(i); onHover?.(p); }}
         onMouseLeave={() => setHovering(false)}>
         <div className="la-cc-img-wrap">
@@ -853,7 +854,7 @@
             {lang === 'vi' ? 'Xem chi tiết' : 'See details'} →
           </div>
         </div>
-      </article>;
+      </a>;
 
     return (
       <div className={'la-carousel ' + (sideArrows ? 'side-arrows' : '')} style={{ '--carousel-accent': accent }}>
