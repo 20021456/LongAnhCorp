@@ -533,7 +533,7 @@
       capEy: 'Năng lực xuất khẩu',
       capH: 'Sẵn sàng cho thị trường quốc tế',
       capP: 'Hệ thống đóng gói đa dạng từ bao 25 kg, jumbo bag 1 tấn đến container rời. Giao hàng FOB cảng Cửa Lò & Hải Phòng.',
-      markets: ['Hàn Quốc', 'Nhật Bản', 'Ấn Độ', 'Bangladesh', 'Indonesia', 'UAE', 'Ai Cập', 'Thổ Nhĩ Kỳ'],
+      markets: ['Hàn Quốc', 'Nhật Bản', 'Ấn Độ', 'Bangladesh', 'Indonesia', 'UAE', 'Châu Phi', 'EU'],
       contactEy: 'Liên hệ',
       contactH: 'Hãy bắt đầu từ một câu hỏi.',
       contactP: 'Đội ngũ kinh doanh phản hồi trong vòng 24h làm việc — kèm bảng spec, COA và báo giá FOB.',
@@ -608,7 +608,7 @@
       capEy: 'Export capability',
       capH: 'Built for international shipping',
       capP: 'Packaging from 25 kg bag, 1-ton jumbo bag, to bulk container. FOB Cua Lo & Hai Phong.',
-      markets: ['Korea', 'Japan', 'India', 'Bangladesh', 'Indonesia', 'UAE', 'Egypt', 'Türkiye'],
+      markets: ['Korea', 'Japan', 'India', 'Bangladesh', 'Indonesia', 'UAE', 'Africa', 'EU'],
       contactEy: 'Contact',
       contactH: 'Start with a single question.',
       contactP: 'Our sales team replies within 24 business hours — with spec sheet, COA and FOB pricing.',
@@ -684,7 +684,7 @@
       capEy: '出口能力',
       capH: '为国际航运而打造',
       capP: '从25公斤袋装、1吨吨袋到散装集装箱的多种包装。FOB窗碧港和海防港。',
-      markets: ['韩国', '日本', '印度', '孟加拉国', '印度尼西亚', '阿联酋', '埃及', '土耳其'],
+      markets: ['韩国', '日本', '印度', '孟加拉国', '印度尼西亚', '阿联酋', '非洲', '欧盟'],
       contactEy: '联系',
       contactH: '从一个问题开始。',
       contactP: '我们的销售团队在24个工作小时内回复 — 提供规格表、COA和FOB报价。',
@@ -1580,8 +1580,8 @@
                       { x: 750, y: 189 },  // Bangladesh centroid (~90°E, 23.5°N)
                       { x: 828, y: 261 },  // Indonesia centroid (~118°E, -2°N)
                       { x: 653, y: 183 },  // UAE centroid (~54°E, 24°N)
-                      { x: 580, y: 178 },  // Egypt centroid (~30°E, 26°N)
-                      { x: 597, y: 144 },  // Türkiye centroid (~35°E, 39°N)
+                      { x: 556, y: 280 },  // Africa centroid (~20°E, ~10°S)
+                      { x: 542, y: 111 },  // EU centroid (~15°E, 50°N)
                     ].map((d, i) => {
                       const ox = 803, oy = 213;  // Vietnam centroid (~108°E, 16°N)
                       const dx = d.x - ox, dy = d.y - oy;
@@ -1607,8 +1607,8 @@
                       { x: 750, y: 189, key: 3 },  // Bangladesh (centroid)
                       { x: 828, y: 261, key: 4 },  // Indonesia (centroid)
                       { x: 653, y: 183, key: 5 },  // UAE (centroid)
-                      { x: 580, y: 178, key: 6 },  // Ai Cập / Egypt (centroid)
-                      { x: 597, y: 144, key: 7 },  // Thổ Nhĩ Kỳ (centroid)
+                      { x: 556, y: 280, key: 6 },  // Châu Phi / Africa
+                      { x: 542, y: 111, key: 7 },  // EU (Europe)
                     ];
                     return (
                       <g className="va-dests">
@@ -1616,9 +1616,13 @@
                           // Hàn Quốc (key 0) and Bangladesh (key 3) labels go ABOVE the dot
                           // to avoid overlapping Nhật Bản and Ấn Độ respectively.
                           const above = d.key === 0 || d.key === 3;
-                          const tx = above ? 0 : (d.x > 750 ? 10 : -10);
+                          // Africa (key 6) and EU (key 7) sit near the left edge of the visible
+                          // map — force their labels to the RIGHT of the dot so they don't clip.
+                          const rightAlways = d.key === 6 || d.key === 7;
+                          const placeRight = rightAlways || d.x > 750;
+                          const tx = above ? 0 : (placeRight ? 10 : -10);
                           const ty = above ? -10 : 3;
-                          const anchor = above ? 'middle' : (d.x > 750 ? 'start' : 'end');
+                          const anchor = above ? 'middle' : (placeRight ? 'start' : 'end');
                           return (
                           <g key={i} transform={`translate(${d.x},${d.y})`}>
                             <circle r="8" fill="#5B9BD5" opacity="0.18">
